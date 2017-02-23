@@ -5,6 +5,7 @@ using System.Reflection;
 using RevitFamilyBrowser.WPF_Classes;
 using RevitFamilyBrowser.Revit_Classes;
 using RevitFamilyBrowser.Properties;
+using System.IO;
 
 #endregion
 
@@ -42,7 +43,22 @@ namespace RevitFamilyBrowser
 
         public Result OnShutdown(UIControlledApplication a)
         {
-            return Result.Succeeded;
+            try
+            {
+                DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\");
+                foreach (var item in di.GetFiles())
+                {
+                    item.Delete();
+                }
+                return Result.Succeeded;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+           
         }
 
         private System.Windows.Media.Imaging.BitmapSource GetImage(IntPtr bm)

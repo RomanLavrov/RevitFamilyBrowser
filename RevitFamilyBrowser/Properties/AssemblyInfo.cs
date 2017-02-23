@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("RevitFamilyBrowser")]
 [assembly: AssemblyDescription("Revit Add-In Description for RevitFamilyBrowser")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Autodesk Inc.")]
+[assembly: AssemblyCompany("Global 17 East Ltd.")]
 [assembly: AssemblyProduct("RevitFamilyBrowser Revit Add-In")]
-[assembly: AssemblyCopyright("Copyright 2015 © Jeremy Tammik Autodesk Inc.")]
+[assembly: AssemblyCopyright("Copyright 2017 © Roman Lavrov Global 17 East Ltd.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2016.0.0.0")]
-[assembly: AssemblyFileVersion("2016.0.0.0")]
+[assembly: AssemblyVersion("2017.0.0.0")]
+[assembly: AssemblyFileVersion("2017.0.0.0")]

@@ -6,6 +6,9 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.Attributes;
 using System.IO;
 using RevitFamilyBrowser.WPF_Classes;
+using System.Windows.Media.Imaging;
+using System.Windows;
+using System.Drawing;
 
 namespace RevitFamilyBrowser.Revit_Classes
 {
@@ -21,7 +24,7 @@ namespace RevitFamilyBrowser.Revit_Classes
             UIApplication uiapp = commandData.Application;
             UIDocument uidoc = uiapp.ActiveUIDocument;
             Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
-            Document doc = uidoc.Document;
+            Document doc = uidoc.Document;          
 
             DockPanel panel = new DockPanel();
           
@@ -35,6 +38,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                 Properties.Settings.Default.Save();
                 Directories = Directory.GetDirectories(fbd.SelectedPath).ToList();
             }
+
             else
             {                
                 return Result.Cancelled;
@@ -101,7 +105,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                 foreach (var item in FamilyPath)
                 {
                     Family family = null;
-                    FamilySymbol symbol = null;
+                    FamilySymbol symbol = null;                 
 
                     if (!doc.LoadFamily(item, out family))
                     {
@@ -114,11 +118,51 @@ namespace RevitFamilyBrowser.Revit_Classes
                     {
                         symbol = family.Document.GetElement(id) as FamilySymbol;
                         FamilyInstance.Add(symbol.Name.ToString() + " " + item);
+
+                        System.Drawing.Size imgSize = new System.Drawing.Size(200, 200);
+                        Bitmap image = symbol.GetPreviewImage(imgSize);                           
+
+                        //  encode image to jpeg for test display purposes:
+                        JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+                        encoder.Frames.Add(BitmapFrame.Create(ConvertBitmapToBitmapSource(image)));
+                        encoder.QualityLevel = 100;
+
+                        //------------Create temporary folder for images--------
+                        string TempImgFolder = System.IO.Path.GetTempPath() + "FamilyBrowser\\";
+                        if (!System.IO.Directory.Exists(TempImgFolder))
+                        {
+                            System.IO.Directory.CreateDirectory(TempImgFolder);
+                        }
+
+                        string filename = TempImgFolder + symbol.Name + ".bmp";
+                        //// if (!System.IO.Directory.Exists(TempImgFolder + fi.Name + ".bmp"))
+                        //{
+                            FileStream file = new FileStream(filename, FileMode.Create, FileAccess.Write);
+                            encoder.Save(file);
+                            file.Close();
+                        //}
+                        //------------------------------------------------------
                     }
                 }
                 transaction.RollBack();
                 return FamilyInstance;
             }
-        }       
+        }
+
+        public void GenerateImages(List<string>FamilyPath)
+        {
+
+        }
+
+
+        static BitmapSource ConvertBitmapToBitmapSource(Bitmap bmp)
+        {
+            return System.Windows.Interop.Imaging
+              .CreateBitmapSourceFromHBitmap(
+                bmp.GetHbitmap(),
+                IntPtr.Zero,
+                Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
+        }
     }
 }

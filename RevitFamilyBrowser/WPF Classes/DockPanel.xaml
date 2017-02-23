@@ -15,13 +15,13 @@
                   HorizontalGridLinesBrush="DarkGray"
                   HeadersVisibility="Column" SelectionChanged="dataGrid_SelectionChanged">
             <DataGrid.Columns>
-                <!--<DataGridTemplateColumn Header="Image">
+                <DataGridTemplateColumn Header="Image">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Image Source="{Binding img}" Width ="81" MaxWidth="80"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>-->
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" >
                     <DataGridTextColumn.ElementStyle>
                         <Style>

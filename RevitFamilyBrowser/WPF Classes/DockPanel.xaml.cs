@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Autodesk.Revit.UI;
 using RevitFamilyBrowser.Revit_Classes;
+using System.IO;
 
 namespace RevitFamilyBrowser.WPF_Classes
 {
@@ -54,15 +55,29 @@ namespace RevitFamilyBrowser.WPF_Classes
                 List<string> list = new List<string>(temp.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
                 List<FamilyData> fi = new List<FamilyData>();
 
+                string[] ImageList = Directory.GetFiles(System.IO.Path.GetTempPath() + "FamilyBrowser\\");
+
                 foreach (var item in list)
                 {
                     FamilyData instance = new FamilyData();
                     int index = item.IndexOf(' ');
                     instance.Name = item.Substring(0, index);
                     instance.FullName = item.Substring(index + 1);
+                    foreach (var imageName in ImageList)
+                    {                        
+                        //imageName.ToUpper();
+                        if (imageName.Contains(instance.Name.TrimEnd()))
+                        {
+                            instance.img = new Uri(imageName);
+                        }
+                       // else
+                           // instance.img = new Uri(ImageList[4]);
+                    }                    
                     fi.Add(instance);
                 }
                 dataGrid.ItemsSource = fi;
+               // Array.Clear(ImageList, 0, ImageList.Length);
+               
             }
         }
 

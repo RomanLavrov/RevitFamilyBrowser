@@ -19,16 +19,6 @@ namespace RevitFamilyBrowser.Revit_Classes
 
     class Image : IExternalCommand
     {
-        static BitmapSource ConvertBitmapToBitmapSource( Bitmap bmp)
-        {
-            return System.Windows.Interop.Imaging
-              .CreateBitmapSourceFromHBitmap(
-                bmp.GetHbitmap(),
-                IntPtr.Zero,
-                Int32Rect.Empty,
-                BitmapSizeOptions.FromEmptyOptions());
-        }
-
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             UIApplication uiapp = commandData.Application;
@@ -41,8 +31,7 @@ namespace RevitFamilyBrowser.Revit_Classes
 
             foreach (FamilyInstance fi in collector)
             {
-                Debug.Assert(null != fi.Category,
-                  "expected family instance to have a valid category");
+                Debug.Assert(null != fi.Category, "expected family instance to have a valid category");
 
                 ElementId typeId = fi.GetTypeId();
                 ElementType type = doc.GetElement(typeId) as ElementType;
@@ -50,30 +39,41 @@ namespace RevitFamilyBrowser.Revit_Classes
                 System.Drawing.Size imgSize = new System.Drawing.Size(200, 200);
                 Bitmap image = type.GetPreviewImage(imgSize);
 
-                // encode image to jpeg for test display purposes:
+                //  encode image to jpeg for test display purposes:
+                  JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+                  encoder.Frames.Add(BitmapFrame.Create(ConvertBitmapToBitmapSource(image)));
+                  encoder.QualityLevel = 100;
 
-                JpegBitmapEncoder encoder
-                  = new JpegBitmapEncoder();
+                //------------Create temporary folder for images--------
+                string TempImgFolder = System.IO.Path.GetTempPath() + "FamilyBrowser\\";
+                if (!System.IO.Directory.Exists(TempImgFolder))
+                {
+                    System.IO.Directory.CreateDirectory(TempImgFolder);
+                }
 
-                encoder.Frames.Add(BitmapFrame.Create(
-                  ConvertBitmapToBitmapSource(image)));
-
-                encoder.QualityLevel = 100;
-
-                string filename = "a.jpg";
-
-                FileStream file = new FileStream(
-                  filename, FileMode.Create, FileAccess.Write);
-
-                encoder.Save(file);
-                file.Close();
-
-                Process.Start(filename); // test display
-
+                string filename = TempImgFolder + fi.Name + ".bmp";
+               // if (!System.IO.Directory.Exists(TempImgFolder + fi.Name + ".bmp"))
+                {
+                    FileStream file = new FileStream(filename, FileMode.Create, FileAccess.Write);
+                    encoder.Save(file);
+                    file.Close();
+                }
+                //------------------------------------------------------
+                // Process.Start(filename); // test display
             }
-
             return Result.Succeeded;
         }
+
+        static BitmapSource ConvertBitmapToBitmapSource(Bitmap bmp)
+        {
+            return System.Windows.Interop.Imaging
+              .CreateBitmapSourceFromHBitmap(
+                bmp.GetHbitmap(),
+                IntPtr.Zero,
+                Int32Rect.Empty,
+                BitmapSizeOptions.FromEmptyOptions());
+        }
+
     }
 }
 
