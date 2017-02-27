@@ -16,18 +16,16 @@ namespace RevitFamilyBrowser.Revit_Classes
     public class FolderSelect : IExternalCommand
     {
         public List<string> FamilyPath { get; set; }
-        public List<string> FamilyName { get; set; }       
-        public List<string> SymbolName { get; set; }     
-                
+        public List<string> FamilyName { get; set; }
+        public List<string> SymbolName { get; set; }
+       
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             UIApplication uiapp = commandData.Application;
             UIDocument uidoc = uiapp.ActiveUIDocument;
             Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
-            Document doc = uidoc.Document;          
+            Document doc = uidoc.Document;         
 
-            DockPanel panel = new DockPanel();
-          
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
             fbd.SelectedPath = Properties.Settings.Default.RootFolder;
             List<string> Directories = new List<string>();
@@ -40,19 +38,19 @@ namespace RevitFamilyBrowser.Revit_Classes
             }
 
             else
-            {                
+            {
                 return Result.Cancelled;
-            }                
+            }
 
             FamilyPath = GetFamilyPath(fbd.SelectedPath);
-            FamilyName = GetFamilyName(FamilyPath);          
+            FamilyName = GetFamilyName(FamilyPath);
             Properties.Settings.Default.SymbolList = string.Empty;
+            SymbolName = GetSymbols(FamilyPath, doc);
 
-            foreach (var item in GetSymbols(FamilyPath, doc))
+            foreach (var item in SymbolName)
             {
                 Properties.Settings.Default.SymbolList += item + "\n";
             }
-           
             return Result.Succeeded;
         }
 
@@ -97,7 +95,7 @@ namespace RevitFamilyBrowser.Revit_Classes
         }
 
         public List<string> GetSymbols(List<string> FamilyPath, Document doc)
-        {
+        {         
             List<string> FamilyInstance = new List<string>();
             using (var transaction = new Transaction(doc, "Family Symbol Collecting"))
             {
@@ -105,13 +103,13 @@ namespace RevitFamilyBrowser.Revit_Classes
                 foreach (var item in FamilyPath)
                 {
                     Family family = null;
-                    FamilySymbol symbol = null;                 
+                    FamilySymbol symbol = null;
 
                     if (!doc.LoadFamily(item, out family))
                     {
                         // TaskDialog.Show("Load failed", "Unable to load " + item);
                         continue;
-                    }
+                    }                  
 
                     ISet<ElementId> familySymbolId = family.GetFamilySymbolIds();
                     foreach (ElementId id in familySymbolId)
@@ -120,7 +118,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                         FamilyInstance.Add(symbol.Name.ToString() + " " + item);
 
                         System.Drawing.Size imgSize = new System.Drawing.Size(200, 200);
-                        Bitmap image = symbol.GetPreviewImage(imgSize);                           
+                        Bitmap image = symbol.GetPreviewImage(imgSize);
 
                         //  encode image to jpeg for test display purposes:
                         JpegBitmapEncoder encoder = new JpegBitmapEncoder();
@@ -133,13 +131,13 @@ namespace RevitFamilyBrowser.Revit_Classes
                         {
                             System.IO.Directory.CreateDirectory(TempImgFolder);
                         }
-
+                                               
                         string filename = TempImgFolder + symbol.Name + ".bmp";
                         //// if (!System.IO.Directory.Exists(TempImgFolder + fi.Name + ".bmp"))
                         //{
-                            FileStream file = new FileStream(filename, FileMode.Create, FileAccess.Write);
-                            encoder.Save(file);
-                            file.Close();
+                        FileStream file = new FileStream(filename, FileMode.Create, FileAccess.Write);
+                        encoder.Save(file);
+                        file.Close();
                         //}
                         //------------------------------------------------------
                     }
@@ -149,7 +147,7 @@ namespace RevitFamilyBrowser.Revit_Classes
             }
         }
 
-        public void GenerateImages(List<string>FamilyPath)
+        public void GenerateImages(List<string> FamilyPath)
         {
 
         }

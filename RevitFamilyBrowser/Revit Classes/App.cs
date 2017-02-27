@@ -43,22 +43,23 @@ namespace RevitFamilyBrowser
 
         public Result OnShutdown(UIControlledApplication a)
         {
-            try
+            DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\");
+            foreach (var imgfile in di.GetFiles())
             {
-                DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\");
-                foreach (var item in di.GetFiles())
+                if (imgfile.LastAccessTime > new DateTime (DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 1))
                 {
-                    item.Delete();
+                    try
+                    {
+                        imgfile.Delete();
+                    }
+                    catch (Exception)
+                    {
+
+                    }
                 }
-                return Result.Succeeded;
+                         
             }
-            catch (Exception)
-            {
-
-                throw;
-            }
-
-           
+            return Result.Succeeded;           
         }
 
         private System.Windows.Media.Imaging.BitmapSource GetImage(IntPtr bm)

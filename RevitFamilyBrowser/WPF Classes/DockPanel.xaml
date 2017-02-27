@@ -6,32 +6,147 @@
              xmlns:local="clr-namespace:RevitFamilyBrowser.WPF_Classes"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" Background="WhiteSmoke">
-    <Grid>
-        <DataGrid x:Name="dataGrid" 
-                  MouseDoubleClick="dataGrid_MouseDoubleClick" 
-                  IsReadOnly="True" DragEnter="drag_DragEnter" 
-                  AutoGenerateColumns="False"
-                  VerticalGridLinesBrush="White"
-                  HorizontalGridLinesBrush="DarkGray"
-                  HeadersVisibility="Column" SelectionChanged="dataGrid_SelectionChanged">
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Header="Image">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Image Source="{Binding img}" Width ="81" MaxWidth="80"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" >
-                    <DataGridTextColumn.ElementStyle>
-                        <Style>
-                            <Setter Property="TextBlock.VerticalAlignment" Value="Center" />
-                            <Setter Property="TextBlock.Margin" Value="10, 0, 10, 0"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
 
-            </DataGrid.Columns>
-        </DataGrid>      
+    <UserControl.Resources>
+        <Style x:Key="FamilyHeaderStyle" TargetType="{x:Type GroupItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GroupItem}">
+                        <Expander x:Name="Expander" 
+                                  IsExpanded="True" 
+                                  Background="White" 
+                                  Foreground="Black" 
+                                  BorderBrush="LightGray">
+                            <Expander.Header>
+                                <Border BorderBrush="Gainsboro" BorderThickness="1">
+                                    <StackPanel Orientation ="Horizontal" Background="WhiteSmoke" Width="500" >
+                                        <TextBlock Width="5" Background="White"/>
+                                        <Image Grid.Row="0" Grid.Column="0" Source="{Binding Items[0].img}" Height="50" Width ="50" MaxWidth="80"/>
+                                        <TextBlock Width="5" Background="White"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Name}" Margin="5,0,0,0" Width="500" 
+                                                   HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                            </Expander.Header>
+                            <ItemsPresenter/>
+                        </Expander>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <TabControl x:Name="tabControl"  Margin="0,0,0,0" >
+            <TabItem Header="New Elements">
+                <Grid Background="WhiteSmoke">
+
+                    <Label x:Name="label" Content="Category: " HorizontalAlignment="Left" VerticalAlignment="Top" Width="60"/>
+                    <Label x:Name="label_CategoryName" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="220" Margin="80,0,0,0" />
+                    <DataGrid   x:Name="dataGrid"                                
+                                MouseDoubleClick="dataGrid_MouseDoubleClick" 
+                                IsReadOnly="True" DragEnter="drag_DragEnter" 
+                                AutoGenerateColumns="False"
+                                Margin="0, 25, 0, 0"
+                                VerticalGridLinesBrush="White"
+                                HorizontalGridLinesBrush="WhiteSmoke"
+                                BorderThickness="0"
+                                EnableRowVirtualization="false" 
+                                EnableColumnVirtualization="false" 
+                                HeadersVisibility="Column" SelectionChanged="dataGrid_SelectionChanged" 
+                                PreviewMouseDoubleClick="dataGrid_PreviewMouseDoubleClick">
+                        
+                        <DataGrid.GroupStyle>
+                            <GroupStyle ContainerStyle="{StaticResource FamilyHeaderStyle}">
+                                <GroupStyle.Panel>
+                                    <ItemsPanelTemplate>
+                                        <DataGridRowsPresenter/>
+                                    </ItemsPanelTemplate>
+                                </GroupStyle.Panel>
+                            </GroupStyle>
+                        </DataGrid.GroupStyle>
+
+                        <DataGrid.Columns>
+
+                            <DataGridTemplateColumn Header="Image" Width="85"  >
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate >
+                                        <!--<Image Source="{Binding img}" Width ="80" MaxWidth="80"/>-->
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="FrameworkElement.VerticalAlignment" Value="Center" />
+                                        <Setter Property="FrameworkElement.Margin" Value="10, 0, 10, 0"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <!--<DataGridTextColumn Header="Family Name" Binding="{Binding FamilyName}" >
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="FrameworkElement.VerticalAlignment" Value="Center" />
+                                        <Setter Property="FrameworkElement.Margin" Value="10, 0, 10, 0"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>-->
+
+                        </DataGrid.Columns>
+
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Elements in project">
+                <Grid Background="WhiteSmoke">
+                    <DataGrid   x:Name="dataGridHistory"                                
+                                MouseDoubleClick="dataGrid_MouseDoubleClick" 
+                                IsReadOnly="True" DragEnter="drag_DragEnter" 
+                                AutoGenerateColumns="False"
+                                Margin="0, 25, 0, 0"
+                                VerticalGridLinesBrush="White"
+                                HorizontalGridLinesBrush="WhiteSmoke"
+                                BorderThickness="0"
+                                EnableRowVirtualization="false" 
+                                EnableColumnVirtualization="false" 
+                                HeadersVisibility="Column" SelectionChanged="dataGrid_SelectionChanged" 
+                                PreviewMouseDoubleClick="dataGrid_PreviewMouseDoubleClick">
+
+                        <DataGrid.GroupStyle>
+                            <GroupStyle ContainerStyle="{StaticResource FamilyHeaderStyle}">
+                                <GroupStyle.Panel>
+                                    <ItemsPanelTemplate>
+                                        <DataGridRowsPresenter/>
+                                    </ItemsPanelTemplate>
+                                </GroupStyle.Panel>
+                            </GroupStyle>
+                        </DataGrid.GroupStyle>
+
+                        <DataGrid.Columns>
+
+                            <DataGridTemplateColumn Header="Image" Width="85"  >
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate >
+                                        <!--<Image Source="{Binding img}" Width ="80" MaxWidth="80"/>-->
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="FrameworkElement.VerticalAlignment" Value="Center" />
+                                        <Setter Property="FrameworkElement.Margin" Value="10, 0, 10, 0"/>
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                        
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>

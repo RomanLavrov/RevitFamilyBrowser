@@ -6,12 +6,12 @@ using System.Windows.Input;
 using Autodesk.Revit.UI;
 using RevitFamilyBrowser.Revit_Classes;
 using System.IO;
+using System.Windows.Data;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace RevitFamilyBrowser.WPF_Classes
-{
-    /// <summary>
-    /// Interaction logic for Pane.xaml
-    /// </summary>
+{    
     public partial class DockPanel : UserControl, IDockablePaneProvider
     {
         private ExternalEvent m_ExEvent;
@@ -27,13 +27,13 @@ namespace RevitFamilyBrowser.WPF_Classes
 
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 1);
             dispatcherTimer.Start();
         }
 
         public DockPanel()
         {
-            InitializeComponent();
+            InitializeComponent();           
         }
 
         public void SetupDockablePane(DockablePaneProviderData data)
@@ -52,10 +52,13 @@ namespace RevitFamilyBrowser.WPF_Classes
             if (temp != Properties.Settings.Default.SymbolList)
             {
                 temp = Properties.Settings.Default.SymbolList;
-                List<string> list = new List<string>(temp.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
-                List<FamilyData> fi = new List<FamilyData>();
 
                 string[] ImageList = Directory.GetFiles(System.IO.Path.GetTempPath() + "FamilyBrowser\\");
+                string category = Properties.Settings.Default.RootFolder;
+                label_CategoryName.Content =" " + category.Substring(category.LastIndexOf("\\")+1);                
+
+                List<string> list = new List<string>(temp.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
+                ObservableCollection<FamilyData> fi = new ObservableCollection<FamilyData>();
 
                 foreach (var item in list)
                 {
@@ -63,21 +66,26 @@ namespace RevitFamilyBrowser.WPF_Classes
                     int index = item.IndexOf(' ');
                     instance.Name = item.Substring(0, index);
                     instance.FullName = item.Substring(index + 1);
+
+                    string Name = item.Substring(index + 1);
+                    Name = Name.Substring(Name.LastIndexOf("\\")+1);
+                    Name = Name.Substring(0, Name.IndexOf('.'));
+                    instance.FamilyName = Name;
+
                     foreach (var imageName in ImageList)
-                    {                        
-                        //imageName.ToUpper();
+                    {
                         if (imageName.Contains(instance.Name.TrimEnd()))
                         {
                             instance.img = new Uri(imageName);
                         }
-                       // else
-                           // instance.img = new Uri(ImageList[4]);
-                    }                    
-                    fi.Add(instance);
+                        
+                    }                                   
+                    fi.Add(instance);                                       
                 }
-                dataGrid.ItemsSource = fi;
-               // Array.Clear(ImageList, 0, ImageList.Length);
-               
+                //------Collection to sort data in XAML------
+                ListCollectionView collection = new ListCollectionView(fi);
+                collection.GroupDescriptions.Add(new PropertyGroupDescription("FamilyName"));
+                dataGrid.ItemsSource = collection;
             }
         }
 
@@ -96,12 +104,17 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            GenerateGrid();
+            GenerateGrid();           
         }
 
         private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }
-    }
+
+        private void dataGrid_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+    }   
 }
