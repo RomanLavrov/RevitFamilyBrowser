@@ -70,5 +70,17 @@ namespace RevitFamilyBrowser.Properties {
                 this["RootFolder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CollectedData {
+            get {
+                return ((string)(this["CollectedData"]));
+            }
+            set {
+                this["CollectedData"] = value;
+            }
+        }
     }
 }

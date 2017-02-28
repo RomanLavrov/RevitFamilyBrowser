@@ -12,24 +12,26 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type GroupItem}">
-                        <Expander x:Name="Expander" 
+                       
+                            <Expander x:Name="Expander" 
                                   IsExpanded="True" 
                                   Background="White" 
                                   Foreground="Black" 
-                                  BorderBrush="LightGray">
-                            <Expander.Header>
-                                <Border BorderBrush="Gainsboro" BorderThickness="1">
-                                    <StackPanel Orientation ="Horizontal" Background="WhiteSmoke" Width="500" >
-                                        <TextBlock Width="5" Background="White"/>
-                                        <Image Grid.Row="0" Grid.Column="0" Source="{Binding Items[0].img}" Height="50" Width ="50" MaxWidth="80"/>
-                                        <TextBlock Width="5" Background="White"/>
-                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Name}" Margin="5,0,0,0" Width="500" 
+                                  BorderBrush="LightGray">                            
+                                <Expander.Header>
+                                    <Border BorderBrush="Gainsboro" BorderThickness="1">
+                                        <StackPanel Orientation ="Horizontal" Background="WhiteSmoke" Width="500" >
+                                            <TextBlock Width="5" Background="White"/>
+                                            <Image Grid.Row="0" Grid.Column="0" Source="{Binding Items[0].img}" Height="50" Width ="50" MaxWidth="80"/>
+                                            <TextBlock Width="5" Background="White"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Name}" Margin="5,0,0,0" Width="500" 
                                                    HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Border>
-                            </Expander.Header>
+                                        </StackPanel>
+                                    </Border>
+                                </Expander.Header>                          
                             <ItemsPresenter/>
                         </Expander>
+                      
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -55,7 +57,7 @@
                                 EnableColumnVirtualization="false" 
                                 HeadersVisibility="Column" SelectionChanged="dataGrid_SelectionChanged" 
                                 PreviewMouseDoubleClick="dataGrid_PreviewMouseDoubleClick">
-                        
+
                         <DataGrid.GroupStyle>
                             <GroupStyle ContainerStyle="{StaticResource FamilyHeaderStyle}">
                                 <GroupStyle.Panel>
@@ -104,15 +106,15 @@
                     <DataGrid   x:Name="dataGridHistory"                                
                                 MouseDoubleClick="dataGrid_MouseDoubleClick" 
                                 IsReadOnly="True" DragEnter="drag_DragEnter" 
-                                AutoGenerateColumns="False"
+                                AutoGenerateColumns="false"
                                 Margin="0, 25, 0, 0"
                                 VerticalGridLinesBrush="White"
                                 HorizontalGridLinesBrush="WhiteSmoke"
                                 BorderThickness="0"
                                 EnableRowVirtualization="false" 
                                 EnableColumnVirtualization="false" 
-                                HeadersVisibility="Column" SelectionChanged="dataGrid_SelectionChanged" 
-                                PreviewMouseDoubleClick="dataGrid_PreviewMouseDoubleClick">
+                                HeadersVisibility="Column" 
+                                >
 
                         <DataGrid.GroupStyle>
                             <GroupStyle ContainerStyle="{StaticResource FamilyHeaderStyle}">
@@ -129,7 +131,7 @@
                             <DataGridTemplateColumn Header="Image" Width="85"  >
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate >
-                                        <!--<Image Source="{Binding img}" Width ="80" MaxWidth="80"/>-->
+                                        <Image Source="{Binding img}" Width ="80" MaxWidth="80"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -143,7 +145,7 @@
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
                         </DataGrid.Columns>
-                        
+
                     </DataGrid>
                 </Grid>
             </TabItem>

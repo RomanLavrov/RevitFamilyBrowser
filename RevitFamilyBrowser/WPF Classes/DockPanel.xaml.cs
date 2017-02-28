@@ -11,12 +11,13 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 
 namespace RevitFamilyBrowser.WPF_Classes
-{    
+{
     public partial class DockPanel : UserControl, IDockablePaneProvider
     {
         private ExternalEvent m_ExEvent;
         private MyEvent m_Handler;
         private string temp = string.Empty;
+        private string collectedData = string.Empty;
 
         public DockPanel(ExternalEvent exEvent, MyEvent handler)
         {
@@ -33,7 +34,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         public DockPanel()
         {
-            InitializeComponent();           
+            InitializeComponent();
         }
 
         public void SetupDockablePane(DockablePaneProviderData data)
@@ -55,7 +56,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
                 string[] ImageList = Directory.GetFiles(System.IO.Path.GetTempPath() + "FamilyBrowser\\");
                 string category = Properties.Settings.Default.RootFolder;
-                label_CategoryName.Content =" " + category.Substring(category.LastIndexOf("\\")+1);                
+                label_CategoryName.Content = " " + category.Substring(category.LastIndexOf("\\") + 1);
 
                 List<string> list = new List<string>(temp.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
                 ObservableCollection<FamilyData> fi = new ObservableCollection<FamilyData>();
@@ -68,7 +69,7 @@ namespace RevitFamilyBrowser.WPF_Classes
                     instance.FullName = item.Substring(index + 1);
 
                     string Name = item.Substring(index + 1);
-                    Name = Name.Substring(Name.LastIndexOf("\\")+1);
+                    Name = Name.Substring(Name.LastIndexOf("\\") + 1);
                     Name = Name.Substring(0, Name.IndexOf('.'));
                     instance.FamilyName = Name;
 
@@ -78,15 +79,45 @@ namespace RevitFamilyBrowser.WPF_Classes
                         {
                             instance.img = new Uri(imageName);
                         }
-                        
-                    }                                   
-                    fi.Add(instance);                                       
+                    }
+                    fi.Add(instance);
                 }
                 //------Collection to sort data in XAML------
                 ListCollectionView collection = new ListCollectionView(fi);
                 collection.GroupDescriptions.Add(new PropertyGroupDescription("FamilyName"));
                 dataGrid.ItemsSource = collection;
             }
+
+            //-----Get collected data------
+            if (collectedData != Properties.Settings.Default.CollectedData)
+            {
+                collectedData = Properties.Settings.Default.CollectedData;
+                MessageBox.Show("Data Updated");
+                ObservableCollection<FamilyData> collectionData = new ObservableCollection<FamilyData>();
+
+                List<string> listData = new List<string>(collectedData.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
+
+                List<string> test = new List<string>();
+                foreach (var item in listData)
+                {
+                    test.Add("test data");
+                    FamilyData projectInstance = new FamilyData();
+                    int index = item.IndexOf('#');
+                                        
+                    foreach (var symbol in item.Substring(index).Split('#'))
+                    {
+                        projectInstance.Name = symbol;
+                        projectInstance.FamilyName = item.Substring(0, index);
+                        collectionData.Add(projectInstance);
+                    }
+                    
+                }
+                // MessageBox.Show(collectionData[0].Name);
+                ListCollectionView collectionProject = new ListCollectionView(collectionData);
+                collectionProject.GroupDescriptions.Add(new PropertyGroupDescription("FamilyName"));
+                dataGridHistory.ItemsSource = collectionProject;
+            }
+
         }
 
         private void dataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -94,7 +125,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             m_ExEvent.Raise();
             var instance = dataGrid.SelectedItem as FamilyData;
             Properties.Settings.Default.FamilyPath = instance.FullName;
-            Properties.Settings.Default.FamilySymbol = instance.Name;
+            Properties.Settings.Default.FamilySymbol = instance.Name;           
         }
 
         private void drag_DragEnter(object sender, DragEventArgs e)
@@ -104,7 +135,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            GenerateGrid();           
+            GenerateGrid();
         }
 
         private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -116,5 +147,5 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
 
         }
-    }   
+    }
 }

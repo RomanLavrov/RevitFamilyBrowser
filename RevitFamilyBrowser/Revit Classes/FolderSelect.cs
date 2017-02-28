@@ -18,29 +18,29 @@ namespace RevitFamilyBrowser.Revit_Classes
         public List<string> FamilyPath { get; set; }
         public List<string> FamilyName { get; set; }
         public List<string> SymbolName { get; set; }
-       
+
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             UIApplication uiapp = commandData.Application;
             UIDocument uidoc = uiapp.ActiveUIDocument;
             Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
-            Document doc = uidoc.Document;         
+            Document doc = uidoc.Document;
 
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
             fbd.SelectedPath = Properties.Settings.Default.RootFolder;
             List<string> Directories = new List<string>();
 
-            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                Properties.Settings.Default.RootFolder = fbd.SelectedPath;
-                Properties.Settings.Default.Save();
-                Directories = Directory.GetDirectories(fbd.SelectedPath).ToList();
-            }
+                if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    Properties.Settings.Default.RootFolder = fbd.SelectedPath;
+                    Properties.Settings.Default.Save();
+                    Directories = Directory.GetDirectories(fbd.SelectedPath).ToList();
+                }
 
-            else
-            {
-                return Result.Cancelled;
-            }
+                else
+                {
+                    return Result.Cancelled;
+                }
 
             FamilyPath = GetFamilyPath(fbd.SelectedPath);
             FamilyName = GetFamilyName(FamilyPath);
@@ -95,7 +95,7 @@ namespace RevitFamilyBrowser.Revit_Classes
         }
 
         public List<string> GetSymbols(List<string> FamilyPath, Document doc)
-        {         
+        {
             List<string> FamilyInstance = new List<string>();
             using (var transaction = new Transaction(doc, "Family Symbol Collecting"))
             {
@@ -109,7 +109,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                     {
                         // TaskDialog.Show("Load failed", "Unable to load " + item);
                         continue;
-                    }                  
+                    }
 
                     ISet<ElementId> familySymbolId = family.GetFamilySymbolIds();
                     foreach (ElementId id in familySymbolId)
@@ -131,7 +131,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                         {
                             System.IO.Directory.CreateDirectory(TempImgFolder);
                         }
-                                               
+
                         string filename = TempImgFolder + symbol.Name + ".bmp";
                         //// if (!System.IO.Directory.Exists(TempImgFolder + fi.Name + ".bmp"))
                         //{
@@ -146,12 +146,6 @@ namespace RevitFamilyBrowser.Revit_Classes
                 return FamilyInstance;
             }
         }
-
-        public void GenerateImages(List<string> FamilyPath)
-        {
-
-        }
-
 
         static BitmapSource ConvertBitmapToBitmapSource(Bitmap bmp)
         {
