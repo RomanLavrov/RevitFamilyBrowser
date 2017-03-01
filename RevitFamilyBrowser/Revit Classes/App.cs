@@ -17,9 +17,9 @@ namespace RevitFamilyBrowser
         public Result OnStartup(UIControlledApplication a)
         {
             a.CreateRibbonTab("Familien Browser"); //Familien Browser Families Browser
-            RibbonPanel G17 = a.CreateRibbonPanel("Familien Browser", "Familien Browser"); 
+            RibbonPanel G17 = a.CreateRibbonPanel("Familien Browser", "Familien Browser");
             string path = Assembly.GetExecutingAssembly().Location;
-
+          
             MyEvent handler = new MyEvent();
             ExternalEvent exEvent = ExternalEvent.Create(handler);
 
@@ -32,34 +32,30 @@ namespace RevitFamilyBrowser
             RibbonItem ri1 = G17.AddItem(btnShow);
 
             PushButtonData btnFolder = new PushButtonData("OpenFolder", "Verzeichnis\nöffnen", path, "RevitFamilyBrowser.Revit_Classes.FolderSelect");   //Verzeichnis  öffnen        
-            btnFolder.LargeImage = GetImage(Resources.OpenFolder.GetHbitmap());            
+            btnFolder.LargeImage = GetImage(Resources.OpenFolder.GetHbitmap());
             RibbonItem ri2 = G17.AddItem(btnFolder);
 
-            PushButtonData btnImage = new PushButtonData("Image", "Image", path, "RevitFamilyBrowser.Revit_Classes.ProjectFamilyCollector");
+            PushButtonData btnImage = new PushButtonData("Image", "Image", path, "RevitFamilyBrowser.Revit_Classes.Test");
             RibbonItem ri3 = G17.AddItem(btnImage);
-
-            //DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\");
-            //foreach (var imgfile in di.GetFiles())
-            //{
-            //    //if (imgfile.LastAccessTime > new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 1))
-            //    {
-            //        try
-            //        {
-            //            imgfile.Delete();
-            //        }
-            //        catch (Exception)
-            //        {
-            //            TaskDialog.Show("Cleaning", "Some files wasn't removed");
-            //        }
-            //    }
-            //}
 
             return Result.Succeeded;
         }
 
         public Result OnShutdown(UIControlledApplication a)
-        {          
-            return Result.Succeeded;           
+        {
+            Properties.Settings.Default.SymbolList = string.Empty;
+            DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\");
+            foreach (var imgfile in di.GetFiles())
+            {
+                try
+                {
+                    imgfile.Delete();
+                }
+                catch (Exception)
+                {                    
+                }                
+            }
+            return Result.Succeeded;
         }
 
         private System.Windows.Media.Imaging.BitmapSource GetImage(IntPtr bm)
@@ -71,6 +67,6 @@ namespace RevitFamilyBrowser
                 System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
 
             return bmSource;
-        }
+        }        
     }
 }

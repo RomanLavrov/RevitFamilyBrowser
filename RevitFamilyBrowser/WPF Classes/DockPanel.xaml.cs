@@ -16,16 +16,16 @@ namespace RevitFamilyBrowser.WPF_Classes
     {
         private ExternalEvent m_ExEvent;
         private MyEvent m_Handler;
+
         private string temp = string.Empty;
         private string collectedData = string.Empty;
 
         public DockPanel(ExternalEvent exEvent, MyEvent handler)
         {
             InitializeComponent();
-
             m_ExEvent = exEvent;
             m_Handler = handler;
-
+           
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 1);
@@ -50,11 +50,11 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         public void GenerateGrid()
         {
+            string[] ImageList = Directory.GetFiles(System.IO.Path.GetTempPath() + "FamilyBrowser\\");
+            
             if (temp != Properties.Settings.Default.SymbolList)
             {
-                temp = Properties.Settings.Default.SymbolList;
-
-                string[] ImageList = Directory.GetFiles(System.IO.Path.GetTempPath() + "FamilyBrowser\\");
+                temp = Properties.Settings.Default.SymbolList;                
                 string category = Properties.Settings.Default.RootFolder;
                 label_CategoryName.Content = " " + category.Substring(category.LastIndexOf("\\") + 1);
 
@@ -91,33 +91,35 @@ namespace RevitFamilyBrowser.WPF_Classes
             //-----Get collected data------
             if (collectedData != Properties.Settings.Default.CollectedData)
             {
-                collectedData = Properties.Settings.Default.CollectedData;
-                MessageBox.Show("Data Updated");
+                collectedData = Properties.Settings.Default.CollectedData;              
                 ObservableCollection<FamilyData> collectionData = new ObservableCollection<FamilyData>();
-
                 List<string> listData = new List<string>(collectedData.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
-
-                List<string> test = new List<string>();
+              
                 foreach (var item in listData)
-                {
-                    test.Add("test data");
-                    FamilyData projectInstance = new FamilyData();
+                {                                   
                     int index = item.IndexOf('#');
-                                        
-                    foreach (var symbol in item.Substring(index).Split('#'))
-                    {
+                    string[] symbols = item.Substring(index+1).Split('#');                    
+                    foreach (var symbol in symbols)
+                    {                        
+                        FamilyData projectInstance = new FamilyData();
                         projectInstance.Name = symbol;
                         projectInstance.FamilyName = item.Substring(0, index);
+
+                        foreach (var imageName in ImageList)
+                        {
+                            if (imageName.Contains(projectInstance.Name.TrimEnd()))
+                            {
+                                projectInstance.img = new Uri(imageName);
+                            }
+                        }
+
                         collectionData.Add(projectInstance);
-                    }
-                    
-                }
-                // MessageBox.Show(collectionData[0].Name);
+                    }                   
+                }               
                 ListCollectionView collectionProject = new ListCollectionView(collectionData);
                 collectionProject.GroupDescriptions.Add(new PropertyGroupDescription("FamilyName"));
                 dataGridHistory.ItemsSource = collectionProject;
             }
-
         }
 
         private void dataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)

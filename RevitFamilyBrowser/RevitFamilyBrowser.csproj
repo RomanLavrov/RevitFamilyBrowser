@@ -77,8 +77,8 @@
     <Compile Include="Revit Classes\FolderSelect.cs" />
     <Compile Include="Revit Classes\Image.cs" />
     <Compile Include="Revit Classes\MyEvent.cs" />
-    <Compile Include="Revit Classes\ProjectFamilyCollector.cs" />
     <Compile Include="Revit Classes\ShowPanel.cs" />
+    <Compile Include="Revit Classes\Test.cs" />
     <Compile Include="WPF Classes\DockPanel.xaml.cs">
       <DependentUpon>DockPanel.xaml</DependentUpon>
     </Compile>

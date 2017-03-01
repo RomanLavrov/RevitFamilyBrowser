@@ -103,8 +103,7 @@
             </TabItem>
             <TabItem Header="Elements in project">
                 <Grid Background="WhiteSmoke">
-                    <DataGrid   x:Name="dataGridHistory"                                
-                                MouseDoubleClick="dataGrid_MouseDoubleClick" 
+                    <DataGrid   x:Name="dataGridHistory"                                                                
                                 IsReadOnly="True" DragEnter="drag_DragEnter" 
                                 AutoGenerateColumns="false"
                                 Margin="0, 25, 0, 0"
@@ -113,8 +112,7 @@
                                 BorderThickness="0"
                                 EnableRowVirtualization="false" 
                                 EnableColumnVirtualization="false" 
-                                HeadersVisibility="Column" 
-                                >
+                                HeadersVisibility="Column" >
 
                         <DataGrid.GroupStyle>
                             <GroupStyle ContainerStyle="{StaticResource FamilyHeaderStyle}">
@@ -131,7 +129,7 @@
                             <DataGridTemplateColumn Header="Image" Width="85"  >
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate >
-                                        <Image Source="{Binding img}" Width ="80" MaxWidth="80"/>
+                                        <!--<Image Source="{Binding img}" Width ="80" MaxWidth="80"/>-->
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
