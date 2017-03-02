@@ -100,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="images\IconShowPanel.png" />
+    <Content Include="images\RevitLogo.png" />
     <None Include="images\OpenFolder.png" />
   </ItemGroup>
   <ItemGroup>

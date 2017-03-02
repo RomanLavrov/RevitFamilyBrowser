@@ -10,44 +10,64 @@ namespace RevitFamilyBrowser.Revit_Classes
     public class MyEvent : IExternalEventHandler
     {
         public void Execute(UIApplication uiapp)
-        {           
+        {
             UIDocument uidoc = uiapp.ActiveUIDocument;
             Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
             string FamilyPath = Properties.Settings.Default.FamilyPath;
             string FamilySymbol = Properties.Settings.Default.FamilySymbol;
+            string FamilyName = Properties.Settings.Default.FamilyName;
 
-            FilteredElementCollector collector = new FilteredElementCollector(doc);
-            collector.OfCategory(BuiltInCategory.OST_ElectricalFixtures);
-            collector.OfClass(typeof(Family));
-
-            FamilySymbol symbol = collector.FirstElement() as FamilySymbol;
-            Family family = FindFamilyByName(doc, typeof(Family), FamilyPath) as Family;
-
-            if (null == family)
+            if (string.IsNullOrEmpty(FamilyPath))
             {
-                using (var trans = new Transaction(doc, "Insert Transaction"))
+                FamilySymbol historySymbol = null;
+                TaskDialog.Show("History Ok", FamilySymbol);
+                Family historyFamily = new FilteredElementCollector(doc).OfClass(typeof(Family))
+                        .FirstOrDefault(e => e.Name.Equals(FamilyName)) as Family;
+
+                ISet<ElementId> HISTORYfamilySymbolId = historyFamily.GetFamilySymbolIds();
+                foreach (ElementId id in HISTORYfamilySymbolId)
                 {
-                    //Family family = new Family();
-                    trans.Start();
-                    if (!doc.LoadFamily(FamilyPath, out family))
-                    {
-                        TaskDialog.Show("Loading", "Unable to load " + FamilyPath);
-                    }
-                    trans.Commit();
+                    // Get name from buffer to compare
+                    if (historyFamily.Document.GetElement(id).Name == FamilySymbol && FamilySymbol != null)
+                        historySymbol = historyFamily.Document.GetElement(id) as FamilySymbol;
                 }
-            }           
-
-            ISet<ElementId> familySymbolId = family.GetFamilySymbolIds();
-            foreach (ElementId id in familySymbolId)
+                uidoc.PostRequestForElementTypePlacement(historySymbol);
+            }
+            else
             {
-                // Get name from buffer to compare
-                if (family.Document.GetElement(id).Name == FamilySymbol && FamilySymbol != null)
-                    symbol = family.Document.GetElement(id) as FamilySymbol;
-            }            
-           // uidoc.PromptForFamilyInstancePlacement(symbol);
-            uidoc.PostRequestForElementTypePlacement(symbol);           
+                FilteredElementCollector collector = new FilteredElementCollector(doc);
+                collector.OfCategory(BuiltInCategory.OST_ElectricalFixtures);
+                collector.OfClass(typeof(Family));
+
+
+                FamilySymbol symbol = collector.FirstElement() as FamilySymbol;
+                Family family = FindFamilyByName(doc, typeof(Family), FamilyPath) as Family;
+
+                if (null == family)
+                {
+                    using (var trans = new Transaction(doc, "Insert Transaction"))
+                    {
+                        //Family family = new Family();
+                        trans.Start();
+                        if (!doc.LoadFamily(FamilyPath, out family))
+                        {
+                            TaskDialog.Show("Loading", "Unable to load " + FamilyPath);
+                        }
+                        trans.Commit();
+                    }
+                }
+
+                ISet<ElementId> familySymbolId = family.GetFamilySymbolIds();
+                foreach (ElementId id in familySymbolId)
+                {
+                    // Get name from buffer to compare
+                    if (family.Document.GetElement(id).Name == FamilySymbol && FamilySymbol != null)
+                        symbol = family.Document.GetElement(id) as FamilySymbol;
+                }
+                uidoc.PostRequestForElementTypePlacement(symbol);
+            }
         }
 
         private static Element FindFamilyByName(Document doc, Type targetType, string familyPath)

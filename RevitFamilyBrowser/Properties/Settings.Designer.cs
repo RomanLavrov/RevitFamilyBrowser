@@ -82,5 +82,17 @@ namespace RevitFamilyBrowser.Properties {
                 this["CollectedData"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FamilyName {
+            get {
+                return ((string)(this["FamilyName"]));
+            }
+            set {
+                this["FamilyName"] = value;
+            }
+        }
     }
 }

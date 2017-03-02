@@ -9,6 +9,8 @@ using System.IO;
 using System.Windows.Data;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using System.Reflection;
+using System.Drawing;
 
 namespace RevitFamilyBrowser.WPF_Classes
 {
@@ -25,11 +27,13 @@ namespace RevitFamilyBrowser.WPF_Classes
             InitializeComponent();
             m_ExEvent = exEvent;
             m_Handler = handler;
-           
+
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 1);
             dispatcherTimer.Start();
+
+            CreateEnptyFamilyImage();
         }
 
         public DockPanel()
@@ -47,14 +51,59 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
             throw new NotImplementedException();
         }
+        public void GenerateHistoryGrid()
+        {
+            string[] ImageList = Directory.GetFiles(System.IO.Path.GetTempPath() + "FamilyBrowser\\");
+
+            if (collectedData != Properties.Settings.Default.CollectedData)
+            {
+                collectedData = Properties.Settings.Default.CollectedData;
+                ObservableCollection<FamilyData> collectionData = new ObservableCollection<FamilyData>();
+                List<string> listData = new List<string>(collectedData.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
+
+                foreach (var item in listData)
+                {
+                    int index = item.IndexOf('#');
+                    string[] symbols = item.Substring(index + 1).Split('#');
+                    foreach (var symbol in symbols)
+                    {
+                        FamilyData projectInstance = new FamilyData();
+                        projectInstance.Name = symbol;
+                        DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\RevitLogo.png");
+                        projectInstance.img = new Uri(di.ToString());
+
+                        try
+                        {
+                            projectInstance.FamilyName = item.Substring(0, index);
+                        }
+                        catch (Exception)
+                        {
+                            projectInstance.FamilyName = "NO FAMILY NAME";
+                        }
+
+                        foreach (var imageName in ImageList)
+                        {
+                            if (imageName.Contains(projectInstance.Name.TrimEnd()))
+                            {
+                                projectInstance.img = new Uri(imageName);
+                            }
+                        }
+                        collectionData.Add(projectInstance);
+                    }
+                }
+                ListCollectionView collectionProject = new ListCollectionView(collectionData);
+                collectionProject.GroupDescriptions.Add(new PropertyGroupDescription("FamilyName"));
+                dataGridHistory.ItemsSource = collectionProject;
+            }
+        }        
 
         public void GenerateGrid()
         {
             string[] ImageList = Directory.GetFiles(System.IO.Path.GetTempPath() + "FamilyBrowser\\");
-            
+
             if (temp != Properties.Settings.Default.SymbolList)
             {
-                temp = Properties.Settings.Default.SymbolList;                
+                temp = Properties.Settings.Default.SymbolList;
                 string category = Properties.Settings.Default.RootFolder;
                 label_CategoryName.Content = " " + category.Substring(category.LastIndexOf("\\") + 1);
 
@@ -78,7 +127,7 @@ namespace RevitFamilyBrowser.WPF_Classes
                         if (imageName.Contains(instance.Name.TrimEnd()))
                         {
                             instance.img = new Uri(imageName);
-                        }
+                        }                             
                     }
                     fi.Add(instance);
                 }
@@ -86,40 +135,7 @@ namespace RevitFamilyBrowser.WPF_Classes
                 ListCollectionView collection = new ListCollectionView(fi);
                 collection.GroupDescriptions.Add(new PropertyGroupDescription("FamilyName"));
                 dataGrid.ItemsSource = collection;
-            }
-
-            //-----Get collected data------
-            if (collectedData != Properties.Settings.Default.CollectedData)
-            {
-                collectedData = Properties.Settings.Default.CollectedData;              
-                ObservableCollection<FamilyData> collectionData = new ObservableCollection<FamilyData>();
-                List<string> listData = new List<string>(collectedData.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
-              
-                foreach (var item in listData)
-                {                                   
-                    int index = item.IndexOf('#');
-                    string[] symbols = item.Substring(index+1).Split('#');                    
-                    foreach (var symbol in symbols)
-                    {                        
-                        FamilyData projectInstance = new FamilyData();
-                        projectInstance.Name = symbol;
-                        projectInstance.FamilyName = item.Substring(0, index);
-
-                        foreach (var imageName in ImageList)
-                        {
-                            if (imageName.Contains(projectInstance.Name.TrimEnd()))
-                            {
-                                projectInstance.img = new Uri(imageName);
-                            }
-                        }
-
-                        collectionData.Add(projectInstance);
-                    }                   
-                }               
-                ListCollectionView collectionProject = new ListCollectionView(collectionData);
-                collectionProject.GroupDescriptions.Add(new PropertyGroupDescription("FamilyName"));
-                dataGridHistory.ItemsSource = collectionProject;
-            }
+            }            
         }
 
         private void dataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -127,7 +143,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             m_ExEvent.Raise();
             var instance = dataGrid.SelectedItem as FamilyData;
             Properties.Settings.Default.FamilyPath = instance.FullName;
-            Properties.Settings.Default.FamilySymbol = instance.Name;           
+            Properties.Settings.Default.FamilySymbol = instance.Name;
         }
 
         private void drag_DragEnter(object sender, DragEventArgs e)
@@ -138,6 +154,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             GenerateGrid();
+            GenerateHistoryGrid();
         }
 
         private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -148,6 +165,22 @@ namespace RevitFamilyBrowser.WPF_Classes
         private void dataGrid_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
 
+        }     
+        private void CreateEnptyFamilyImage()
+        {
+            ImageConverter converter = new ImageConverter();
+            DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\RevitLogo.png");
+            File.WriteAllBytes(di.ToString(), (byte[])converter.ConvertTo(Properties.Resources.RevitLogo, typeof(byte[])));
+        }
+
+        private void Expander_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            m_ExEvent.Raise();
+            var instance = dataGridHistory.SelectedItem as FamilyData;
+            MessageBox.Show(instance.Name + "\n" + instance.FamilyName);
+            Properties.Settings.Default.FamilyPath = string.Empty;
+            Properties.Settings.Default.FamilySymbol = instance.Name;
+            Properties.Settings.Default.FamilyName = instance.FamilyName;
         }
     }
 }

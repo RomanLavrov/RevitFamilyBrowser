@@ -24,9 +24,9 @@ namespace RevitFamilyBrowser
             Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
-           // DockablePaneProviderData dpData = new DockablePaneProviderData();
-           // DockPanel browser = new DockPanel();
-          //  dpData.FrameworkElement = browser as System.Windows.FrameworkElement;
+            //DockablePaneProviderData dpData = new DockablePaneProviderData();
+            //DockPanel browser = new DockPanel();
+            //dpData.FrameworkElement = browser as System.Windows.FrameworkElement;
 
             //List<RibbonPanel> ribbon = uiapp.GetRibbonPanels();
 

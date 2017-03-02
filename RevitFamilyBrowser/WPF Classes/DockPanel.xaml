@@ -17,7 +17,7 @@
                                   IsExpanded="True" 
                                   Background="White" 
                                   Foreground="Black" 
-                                  BorderBrush="LightGray">                            
+                                  BorderBrush="LightGray" MouseDoubleClick="Expander_MouseDoubleClick">                            
                                 <Expander.Header>
                                     <Border BorderBrush="Gainsboro" BorderThickness="1">
                                         <StackPanel Orientation ="Horizontal" Background="WhiteSmoke" Width="500" >

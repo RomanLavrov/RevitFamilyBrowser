@@ -27,9 +27,7 @@ namespace RevitFamilyBrowser.Revit_Classes
             UIDocument uidoc = uiapp.ActiveUIDocument;
             Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
             Document doc = uidoc.Document;
-
-       //     app.DocumentChanged += new System.EventHandler<DocumentChangedEventArgs>(OnDocumentChanged);
-           // CreateImages(doc);
+                      
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
             fbd.SelectedPath = Properties.Settings.Default.RootFolder;
             List<string> Directories = new List<string>();
@@ -96,13 +94,11 @@ namespace RevitFamilyBrowser.Revit_Classes
         }
 
         public List<string> GetSymbols(List<string> FamilyPath, Document doc)
-        {           
-                List<string> FamilyInstance = new List<string>();
+        {
+            List<string> FamilyInstance = new List<string>();
             using (var transaction = new Transaction(doc, "Family Symbol Collecting"))
             {
                 transaction.Start();
-
-
                 foreach (var item in FamilyPath)
                 {
                     Family family = null;
@@ -114,9 +110,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                         continue;
                     }
                     
-
                     ISet<ElementId> familySymbolId = family.GetFamilySymbolIds();
-                  
                     foreach (ElementId id in familySymbolId)
                     {
                         symbol = family.Document.GetElement(id) as FamilySymbol;
@@ -162,71 +156,71 @@ namespace RevitFamilyBrowser.Revit_Classes
                 BitmapSizeOptions.FromEmptyOptions());
         }
 
-        public void CreateImages(Document doc)
-        {
-            FilteredElementCollector collector;
-            collector = new FilteredElementCollector(doc).OfClass(typeof(FamilyInstance));
-       
-            foreach (FamilyInstance fi in collector)
-            {
-                ElementId typeId = fi.GetTypeId();
-                ElementType type = doc.GetElement(typeId) as ElementType;
-                System.Drawing.Size imgSize = new System.Drawing.Size(200, 200);
-                //------------Prewiew Image
-                
-                Bitmap image = type.GetPreviewImage(imgSize);
+        //public void CreateImages(Document doc)
+        //{
+        //    FilteredElementCollector collector;
+        //    collector = new FilteredElementCollector(doc).OfClass(typeof(FamilyInstance));
 
-                JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(ConvertBitmapToBitmapSource(image)));
-                encoder.QualityLevel = 25;
+        //    foreach (FamilyInstance fi in collector)
+        //    {
+        //        ElementId typeId = fi.GetTypeId();
+        //        ElementType type = doc.GetElement(typeId) as ElementType;
+        //        System.Drawing.Size imgSize = new System.Drawing.Size(200, 200);
+        //        //------------Prewiew Image
 
-                string TempImgFolder = System.IO.Path.GetTempPath() + "FamilyBrowser\\";
-                if (!System.IO.Directory.Exists(TempImgFolder))
-                {
-                    System.IO.Directory.CreateDirectory(TempImgFolder);
-                }
-                string filename = TempImgFolder + type.Name + ".jpg";
+        //        Bitmap image = type.GetPreviewImage(imgSize);
 
-                foreach (var fileimage in Directory.GetFiles(TempImgFolder))
-                {
-                    if (filename != fileimage)
-                    {
-                        FileStream file = new FileStream(filename, FileMode.Create, FileAccess.Write);
-                        encoder.Save(file);
-                        file.Close();
-                      //  Process.Start(filename);
-                    }
-                }
-            }
-        }
-         
-        void OnDocumentChanged(object sender, DocumentChangedEventArgs e)
-        {
-            Document doc = e.GetDocument();
-            FilteredElementCollector families;
-            Properties.Settings.Default.CollectedData = string.Empty;
-            families = new FilteredElementCollector(doc).OfClass(typeof(Family));
-            string temp = string.Empty;
-          
-            foreach (var item in families)
-            {
-                Family family = item as Family;
-                FamilySymbol symbol;
-                temp += item.Name;
-                ISet<ElementId> familySymbolId = family.GetFamilySymbolIds();
-                foreach (ElementId id in familySymbolId)
-                {
-                    symbol = family.Document.GetElement(id) as FamilySymbol;
-                    {                      
-                        temp += "#" + symbol.Name;                       
-                    }
-                }
-              //  CreateImages(doc);
-                temp += "\n";
-            }         
-            Properties.Settings.Default.CollectedData = temp;
-            TaskDialog.Show("Event + Settings", "Temp: " + temp);
-        }
+        //        JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+        //        encoder.Frames.Add(BitmapFrame.Create(ConvertBitmapToBitmapSource(image)));
+        //        encoder.QualityLevel = 25;
+
+        //        string TempImgFolder = System.IO.Path.GetTempPath() + "FamilyBrowser\\";
+        //        if (!System.IO.Directory.Exists(TempImgFolder))
+        //        {
+        //            System.IO.Directory.CreateDirectory(TempImgFolder);
+        //        }
+        //        string filename = TempImgFolder + type.Name + ".jpg";
+
+        //        foreach (var fileimage in Directory.GetFiles(TempImgFolder))
+        //        {
+        //            if (filename != fileimage)
+        //            {
+        //                FileStream file = new FileStream(filename, FileMode.Create, FileAccess.Write);
+        //                encoder.Save(file);
+        //                file.Close();
+        //                //  Process.Start(filename);
+        //            }
+        //        }
+        //    }
+        //}
+
+        //void OnDocumentChanged(object sender, DocumentChangedEventArgs e)
+        //{
+        //    Document doc = e.GetDocument();
+        //    FilteredElementCollector families;
+        //    Properties.Settings.Default.CollectedData = string.Empty;
+        //    families = new FilteredElementCollector(doc).OfClass(typeof(Family));
+        //    string temp = string.Empty;
+
+        //    foreach (var item in families)
+        //    {
+        //        Family family = item as Family;
+        //        FamilySymbol symbol;
+        //        temp += item.Name;
+        //        ISet<ElementId> familySymbolId = family.GetFamilySymbolIds();
+        //        foreach (ElementId id in familySymbolId)
+        //        {
+        //            symbol = family.Document.GetElement(id) as FamilySymbol;
+        //            {
+        //                temp += "#" + symbol.Name;
+        //            }
+        //        }
+        //        //  CreateImages(doc);
+        //        temp += "\n";
+        //    }
+        //    Properties.Settings.Default.CollectedData = temp;
+        //    TaskDialog.Show("Event + Settings", "Temp: " + temp);
+        //}
     }
 }
 
