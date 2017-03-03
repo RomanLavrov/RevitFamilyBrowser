@@ -12,20 +12,21 @@ using System.Drawing;
 using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Collections.Generic;
+using Autodesk.Revit.UI.Events;
 
 #endregion
 
 namespace RevitFamilyBrowser
 {
     class App : IExternalApplication
-    {
-        public static App thisApp = null;
+    {      
+       // public static App thisApp = null;
         public Result OnStartup(UIControlledApplication a)
         {
             a.CreateRibbonTab("Familien Browser"); //Familien Browser Families Browser
             RibbonPanel G17 = a.CreateRibbonPanel("Familien Browser", "Familien Browser");
             string path = Assembly.GetExecutingAssembly().Location;
-
+            
             MyEvent handler = new MyEvent();
             ExternalEvent exEvent = ExternalEvent.Create(handler);
 
@@ -46,24 +47,9 @@ namespace RevitFamilyBrowser
 
             a.ControlledApplication.DocumentChanged += OnDocChanged;
             a.ControlledApplication.DocumentOpened += OnDocOpened;
-            a.ControlledApplication.DocumentClosed += OnDocClosed;
-            return Result.Succeeded;
-        }
-
-        public Result OnShutdown(UIControlledApplication a)
-        {           
-            DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\");
-            foreach (var imgfile in di.GetFiles())
-            {
-                try
-                {
-                    imgfile.Delete();
-                }
-                catch (Exception){}
-            }
-            a.ControlledApplication.DocumentChanged -= OnDocChanged;
-            a.ControlledApplication.DocumentOpened -= OnDocOpened;
-            a.ControlledApplication.DocumentClosed -= OnDocClosed;
+            a.ControlledApplication.FamilyLoadedIntoDocument += OnFamilyLoad;
+            a.ControlledApplication.DocumentSaved += OnDocSaved;
+            a.ViewActivated += OnViewActivated;
 
             Properties.Settings.Default.CollectedData = string.Empty;
             Properties.Settings.Default.FamilyPath = string.Empty;
@@ -71,26 +57,62 @@ namespace RevitFamilyBrowser
 
             return Result.Succeeded;
         }
-        private void OnDocOpened(object sender, DocumentOpenedEventArgs e)
+
+        public Result OnShutdown(UIControlledApplication a)
         {
+            DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\");
+            foreach (var imgfile in di.GetFiles())
+            {
+                try
+                {
+                    imgfile.Delete();
+                }
+                catch (Exception) { }
+            }
+            a.ControlledApplication.DocumentChanged -= OnDocChanged;
+            a.ControlledApplication.DocumentOpened -= OnDocOpened;
+            a.ControlledApplication.FamilyLoadedIntoDocument -= OnFamilyLoad;
+            a.ControlledApplication.DocumentSaved -= OnDocSaved;
+            a.ViewActivated -= OnViewActivated;
+
             Properties.Settings.Default.CollectedData = string.Empty;
-            Autodesk.Revit.DB.Document doc = e.Document;
-            CollectFamilyData(doc);
+            Properties.Settings.Default.FamilyPath = string.Empty;
+            Properties.Settings.Default.SymbolList = string.Empty;
+
+            return Result.Succeeded;
+        }
+
+        private void OnViewActivated(object sender, ViewActivatedEventArgs e)
+        {
             CreateImages(e.Document);
+            CollectFamilyData(e.Document);          
+        }
+
+        private void OnDocOpened(object sender, DocumentOpenedEventArgs e)
+        {          
+            CreateImages(e.Document);
+            CollectFamilyData(e.Document);
+        }
+
+        private void OnDocSaved(object sender, DocumentSavedEventArgs e)
+        {
+            CreateImages(e.Document);
+            CollectFamilyData(e.Document);
         }
 
         private void OnDocChanged(object sender, DocumentChangedEventArgs e)
-        {           
-            Autodesk.Revit.DB.Document doc = e.GetDocument();
-            CollectFamilyData(doc);
-            CreateImages(doc);
-        }
-        private void OnDocClosed(object sender, DocumentClosedEventArgs e)
-        {
-            Properties.Settings.Default.CollectedData = string.Empty;
+        {            
+            CreateImages(e.GetDocument());
+            CollectFamilyData(e.GetDocument());
         }
 
-        public void CollectFamilyData(Autodesk.Revit.DB.Document doc)
+        private void OnFamilyLoad(object sender, FamilyLoadedIntoDocumentEventArgs e)
+        {
+            CreateImages(e.Document);
+            CollectFamilyData(e.Document);
+        }
+
+        public static void CollectFamilyData(Autodesk.Revit.DB.Document doc)
         {
             FilteredElementCollector families;
             Properties.Settings.Default.CollectedData = string.Empty;
@@ -121,38 +143,38 @@ namespace RevitFamilyBrowser
 
         public void CreateImages(Autodesk.Revit.DB.Document doc)
         {
+           // TaskDialog.Show("Create Image", "Process Images");
             FilteredElementCollector collector;
             collector = new FilteredElementCollector(doc).OfClass(typeof(FamilyInstance));
+            int Instances = 0;
 
             foreach (FamilyInstance fi in collector)
-            {              
-                ElementId typeId = fi.GetTypeId();
-                ElementType type = doc.GetElement(typeId) as ElementType;
-                System.Drawing.Size imgSize = new System.Drawing.Size(200, 200);
-
-                //------------Prewiew Image-----
-                Bitmap image = type.GetPreviewImage(imgSize);
-
-                JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(ConvertBitmapToBitmapSource(image)));
-                encoder.QualityLevel = 25;
-
-                string TempImgFolder = System.IO.Path.GetTempPath() + "FamilyBrowser\\";
-                if (!System.IO.Directory.Exists(TempImgFolder))
+            {
+                try
                 {
-                    System.IO.Directory.CreateDirectory(TempImgFolder);
-                }
-                string filename = TempImgFolder + type.Name + ".bmp";
-                   foreach (var fileimage in Directory.GetFiles(TempImgFolder))
-                {
-                    if (filename != fileimage)
+                    ElementId typeId = fi.GetTypeId();
+                    ElementType type = doc.GetElement(typeId) as ElementType;
+                    System.Drawing.Size imgSize = new System.Drawing.Size(200, 200);
+                    Instances++;
+                    //------------Prewiew Image-----
+                    Bitmap image = type.GetPreviewImage(imgSize);
+
+                    JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+                    encoder.Frames.Add(BitmapFrame.Create(ConvertBitmapToBitmapSource(image)));
+                    encoder.QualityLevel = 25;
+
+                    string TempImgFolder = System.IO.Path.GetTempPath() + "FamilyBrowser\\";
+                    if (!System.IO.Directory.Exists(TempImgFolder))
                     {
-                        FileStream file = new FileStream(filename, FileMode.Create, FileAccess.Write);
-                        encoder.Save(file);
-                        file.Close();
+                        System.IO.Directory.CreateDirectory(TempImgFolder);
                     }
+                    string filename = TempImgFolder + type.Name + ".bmp";
+                    FileStream file = new FileStream(filename, FileMode.Create, FileAccess.Write);
+                    encoder.Save(file);
+                    file.Close();
                 }
-            }
+                catch (Exception){}               
+            }          
         }
 
         private BitmapSource GetImage(IntPtr bm)

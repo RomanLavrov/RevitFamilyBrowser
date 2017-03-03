@@ -21,6 +21,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         private string temp = string.Empty;
         private string collectedData = string.Empty;
+        private int ImageListLength = 0;
 
         public DockPanel(ExternalEvent exEvent, MyEvent handler)
         {
@@ -30,7 +31,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 1);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 1);
             dispatcherTimer.Start();
 
             CreateEnptyFamilyImage();
@@ -54,13 +55,15 @@ namespace RevitFamilyBrowser.WPF_Classes
         public void GenerateHistoryGrid()
         {
             string[] ImageList = Directory.GetFiles(System.IO.Path.GetTempPath() + "FamilyBrowser\\");
-
-            if (collectedData != Properties.Settings.Default.CollectedData)
+           
+            if (collectedData != Properties.Settings.Default.CollectedData || ImageList.Length != ImageListLength)
             {
+               // MessageBox.Show("History Updated");
+                ImageListLength = ImageList.Length;
                 collectedData = Properties.Settings.Default.CollectedData;
                 ObservableCollection<FamilyData> collectionData = new ObservableCollection<FamilyData>();
                 List<string> listData = new List<string>(collectedData.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
-
+                DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\RevitLogo.png");
                 foreach (var item in listData)
                 {
                     int index = item.IndexOf('#');
@@ -69,7 +72,7 @@ namespace RevitFamilyBrowser.WPF_Classes
                     {
                         FamilyData projectInstance = new FamilyData();
                         projectInstance.Name = symbol;
-                        DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\RevitLogo.png");
+                       // DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\RevitLogo.png");
                         projectInstance.img = new Uri(di.ToString());
 
                         try
@@ -83,7 +86,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
                         foreach (var imageName in ImageList)
                         {
-                            if (imageName.Contains(projectInstance.Name.TrimEnd()))
+                            if (imageName.Contains(projectInstance.Name))
                             {
                                 projectInstance.img = new Uri(imageName);
                             }
@@ -91,6 +94,19 @@ namespace RevitFamilyBrowser.WPF_Classes
                         collectionData.Add(projectInstance);
                     }
                 }
+
+                foreach (var symbol in collectionData)
+                {
+                    if (symbol.img == new Uri(di.ToString()))
+                       // MessageBox.Show("Emty image " + symbol.Name );
+                        foreach (var item in collectionData)
+                        {
+                            if (item.FamilyName == symbol.FamilyName && item.img != new Uri(di.ToString()))
+                               // MessageBox.Show(item.img.ToString());
+                                symbol.img = item.img;
+                        }
+                }
+
                 ListCollectionView collectionProject = new ListCollectionView(collectionData);
                 collectionProject.GroupDescriptions.Add(new PropertyGroupDescription("FamilyName"));
                 dataGridHistory.ItemsSource = collectionProject;
@@ -103,6 +119,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
             if (temp != Properties.Settings.Default.SymbolList)
             {
+               // MessageBox.Show("History Upgraded");
                 temp = Properties.Settings.Default.SymbolList;
                 string category = Properties.Settings.Default.RootFolder;
                 label_CategoryName.Content = " " + category.Substring(category.LastIndexOf("\\") + 1);
@@ -126,11 +143,14 @@ namespace RevitFamilyBrowser.WPF_Classes
                     {
                         if (imageName.Contains(instance.Name.TrimEnd()))
                         {
-                            instance.img = new Uri(imageName);
+                            instance.img = new Uri(imageName);                            
                         }                             
                     }
                     fi.Add(instance);
                 }
+                
+
+
                 //------Collection to sort data in XAML------
                 ListCollectionView collection = new ListCollectionView(fi);
                 collection.GroupDescriptions.Add(new PropertyGroupDescription("FamilyName"));
@@ -177,7 +197,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
             m_ExEvent.Raise();
             var instance = dataGridHistory.SelectedItem as FamilyData;
-            MessageBox.Show(instance.Name + "\n" + instance.FamilyName);
+          //  MessageBox.Show(instance.Name + "\n" + instance.FamilyName);
             Properties.Settings.Default.FamilyPath = string.Empty;
             Properties.Settings.Default.FamilySymbol = instance.Name;
             Properties.Settings.Default.FamilyName = instance.FamilyName;

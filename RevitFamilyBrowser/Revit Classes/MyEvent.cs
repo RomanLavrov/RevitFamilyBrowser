@@ -13,7 +13,7 @@ namespace RevitFamilyBrowser.Revit_Classes
         {
             UIDocument uidoc = uiapp.ActiveUIDocument;
             Application app = uiapp.Application;
-            Document doc = uidoc.Document;
+            Document doc = uidoc.Document;           
 
             string FamilyPath = Properties.Settings.Default.FamilyPath;
             string FamilySymbol = Properties.Settings.Default.FamilySymbol;
@@ -22,7 +22,7 @@ namespace RevitFamilyBrowser.Revit_Classes
             if (string.IsNullOrEmpty(FamilyPath))
             {
                 FamilySymbol historySymbol = null;
-                TaskDialog.Show("History Ok", FamilySymbol);
+               // TaskDialog.Show("History Ok", FamilySymbol);
                 Family historyFamily = new FilteredElementCollector(doc).OfClass(typeof(Family))
                         .FirstOrDefault(e => e.Name.Equals(FamilyName)) as Family;
 
@@ -32,15 +32,15 @@ namespace RevitFamilyBrowser.Revit_Classes
                     // Get name from buffer to compare
                     if (historyFamily.Document.GetElement(id).Name == FamilySymbol && FamilySymbol != null)
                         historySymbol = historyFamily.Document.GetElement(id) as FamilySymbol;
-                }
-                uidoc.PostRequestForElementTypePlacement(historySymbol);
+                }               
+                uidoc.PostRequestForElementTypePlacement(historySymbol);              
             }
+
             else
             {
                 FilteredElementCollector collector = new FilteredElementCollector(doc);
                 collector.OfCategory(BuiltInCategory.OST_ElectricalFixtures);
                 collector.OfClass(typeof(Family));
-
 
                 FamilySymbol symbol = collector.FirstElement() as FamilySymbol;
                 Family family = FindFamilyByName(doc, typeof(Family), FamilyPath) as Family;
@@ -68,9 +68,10 @@ namespace RevitFamilyBrowser.Revit_Classes
                 }
                 uidoc.PostRequestForElementTypePlacement(symbol);
             }
+           
         }
 
-        private static Element FindFamilyByName(Document doc, Type targetType, string familyPath)
+        private Element FindFamilyByName(Document doc, Type targetType, string familyPath)
         {
             if (familyPath != null)
             {
