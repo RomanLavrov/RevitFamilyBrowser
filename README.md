@@ -9,3 +9,4 @@ Browser for .rfa Revit family files
  To start work with addin you need to copy dll and zip file to specific folder:
  C:\Users\user\AppData\Roaming\Autodesk\Revit\Addins\2016 (or 2017 - if you use Revit 2017).
  Alternatively you can build source code in VisualStudio - all necessary files will be added in execution process.
+![Panel](https://github.com/RomanLavrov/RevitFamilyBrowser/blob/master/RevitFamilyBrowser/images/Panel.png)
