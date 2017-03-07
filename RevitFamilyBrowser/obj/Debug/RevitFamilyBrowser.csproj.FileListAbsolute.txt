@@ -10,3 +10,4 @@ C:\Users\user\documents\visual studio 2015\Projects\RevitFamilyBrowser\RevitFami
 C:\Users\user\documents\visual studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\RevitFamilyBrowser.csproj.GenerateResource.Cache
 C:\Users\user\documents\visual studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\RevitFamilyBrowser.dll
 C:\Users\user\documents\visual studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\RevitFamilyBrowser.pdb
+C:\Users\user\documents\visual studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\RevitFamilyBrowser.csprojResolveAssemblyReference.cache
