@@ -1,13 +1,14 @@
 ﻿using System;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-using Autodesk.Revit.ApplicationServices;
-using System.Diagnostics;
 using System.Collections.Generic;
-using System.Linq;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI.Selection;
+using System.Windows;
+using RevitFamilyBrowser.WPF_Classes;
+using System.Drawing;
+using System.Windows.Media;
 
 namespace RevitFamilyBrowser.Revit_Classes
 {
@@ -18,18 +19,25 @@ namespace RevitFamilyBrowser.Revit_Classes
         {
             UIApplication uiapp = commandData.Application;
             UIDocument uidoc = uiapp.ActiveUIDocument;
-            Application app = uiapp.Application;
+            Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
             Document doc = uidoc.Document;
-            List<ElementId> SelectedRoom = null;
-            Selection selection = uidoc.Selection;
+            View view = doc.ActiveView;
+            GridSetup grid = new GridSetup();
+            Window window = new Window();
+            window.Width = 1200;
+            window.Height = 800;
+            window.Content = grid;
+
 
             RoomFilter filter = new RoomFilter();
 
             using (var transaction = new Transaction(doc, "Family Symbol Collecting"))
             {
                 transaction.Start();
-
+                List<ElementId> SelectedRoom = null;
+                Selection selection = uidoc.Selection;
                 XYZ point;
+
                 try
                 {
                     point = selection.PickPoint("Point to create a room");
@@ -40,6 +48,18 @@ namespace RevitFamilyBrowser.Revit_Classes
                 }
 
                 Room newRoom = doc.Create.NewRoom(doc.ActiveView.GenLevel, new UV(point.X, point.Y));
+                BoundingBoxXYZ box = newRoom.get_BoundingBox(view);
+
+
+                Coordinates center = new Coordinates();
+                center.Xstart = (int)(box.Min.X - box.Max.X) / 2;
+                center.Ystart = (int)(box.Min.Y - box.Max.Y) / 2;
+                XYZ RoomCenterMin = box.Min;
+                XYZ RoomCenterMax = box.Max;
+                ConversionPoint roomMin = new ConversionPoint(RoomCenterMin);
+                ConversionPoint roomMax = new ConversionPoint(RoomCenterMax);
+             //   TaskDialog.Show("Box", box.Min.ToString());
+
 
                 Location location = newRoom.Location;
                 LocationPoint locationPoint = location as LocationPoint;
@@ -52,33 +72,82 @@ namespace RevitFamilyBrowser.Revit_Classes
                 string temp = string.Empty;
                 int WallNumber = 0;
                 int SegmentNumber = 0;
-
+                List<Coordinates> wallCoord = new List<Coordinates>();
                 XYZ start = null;
                 XYZ segmentStart = null; ///
                 XYZ segmentEnd = null;
-               
+
                 int nLoops = boundary.Count;
                 foreach (IList<BoundarySegment> wall in boundary)
                 {
                     WallNumber++;
                     foreach (BoundarySegment segment in wall)
                     {
+                        Coordinates coord = new Coordinates();
+
                         segmentStart = segment.GetCurve().GetEndPoint(0);
                         ConversionPoint Start = new ConversionPoint(segmentStart);
-                       
+                        coord.Xstart = Start.X;
+                        coord.Ystart = Start.Y;
+
                         segmentEnd = segment.GetCurve().GetEndPoint(1);
                         ConversionPoint End = new ConversionPoint(segmentEnd);
+                        coord.Xend = End.X;
+                        coord.Yend = End.Y;
 
-                        SegmentNumber++;                       
+                        wallCoord.Add(coord);
+
+                        SegmentNumber++;
                         temp += "WallNumber:" + WallNumber + " " + "SegmentNumber:" + SegmentNumber + " " + Start.ToString() + End.ToString() + "\n";
                     }
                 }
-                TaskDialog.Show("Boundaries", temp);
-                
-                    transaction.Commit();
+              //  TaskDialog.Show("Boundaries", temp);
+                window.Show();
+                int CanvasSize = 800;
+                int Scale = GetScale(wallCoord, CanvasSize);
+                Scale = 100;
+
+                System.Windows.Shapes.Line centerLineX = new System.Windows.Shapes.Line();
+                centerLineX.X1 = 0;
+                centerLineX.Y1 = 400;
+                centerLineX.X2 = 800;
+                centerLineX.Y2 = 400;
+                centerLineX.Stroke = System.Windows.Media.Brushes.Red;
+                grid.canvas.Children.Add(centerLineX);
+
+                System.Windows.Shapes.Line centerLineY = new System.Windows.Shapes.Line();
+                centerLineY.X1 = 400;
+                centerLineY.Y1 = 000;
+                centerLineY.X2 = 400;
+                centerLineY.Y2 = 800;
+                centerLineY.Stroke = System.Windows.Media.Brushes.Red;
+                grid.canvas.Children.Add(centerLineY);
+
+                System.Windows.Shapes.Line centerRoom = new System.Windows.Shapes.Line();
+                centerRoom.X1 = 0;
+                centerRoom.Y1 = 0;
+                centerRoom.X2 = roomMin.X / Scale + (roomMax.X / Scale - roomMin.X / Scale) / 2;
+                centerRoom.Y2 = -roomMin.Y / Scale + (roomMax.Y / Scale - roomMin.Y / Scale) / 2;
+                centerRoom.Stroke = System.Windows.Media.Brushes.Red;
+                grid.canvas.Children.Add(centerRoom);
+
+                int derrivationX = (int)(CanvasSize/2 - centerRoom.X2 );
+                int derrivationY = (int)(-CanvasSize / 2 -  centerRoom.Y2);
+              
+                grid.textBox.Text = "Scale: " + Scale.ToString();
+
+                foreach (var item in wallCoord)
+                {
+                    System.Windows.Shapes.Line myLine = new System.Windows.Shapes.Line();
+                    myLine.X1 = (item.Xstart / Scale)  + derrivationX;
+                    myLine.Y1 = (-item.Ystart / Scale) - derrivationY;
+                    myLine.X2 = (item.Xend / Scale)  + derrivationX;
+                    myLine.Y2 = (-item.Yend / Scale) - derrivationY;
+                    myLine.Stroke = System.Windows.Media.Brushes.Red;
+                    grid.canvas.Children.Add(myLine);
+                }
+                transaction.RollBack();
             }
-
-
 
             ////-----User select the Room first-----
             //if (selection.GetElementIds().Count > 0)
@@ -134,6 +203,73 @@ namespace RevitFamilyBrowser.Revit_Classes
             //}
             return Result.Succeeded;
         }
+
+
+        public int GetScale(List<Coordinates> wallCoord, int CanvasSize)
+        {
+            double LongestWall = 0;
+            int Scale = 0;
+
+            foreach (var item in wallCoord)
+            {
+                Coordinates coord = new Coordinates();
+                coord = item;
+                coord.Length(item);
+
+                if (coord.Length(item) > LongestWall)
+                {
+                    LongestWall = coord.Length(item);
+                }
+
+                if ((LongestWall / CanvasSize) < 1)
+                {
+                    Scale = 1;
+                }
+                else if ((LongestWall / CanvasSize) > 1 && (LongestWall / CanvasSize) < 2)
+                {
+                    Scale = 2;
+                }
+                else if ((LongestWall / CanvasSize) > 2 && (LongestWall / CanvasSize) < 5)
+                {
+                    Scale = 5;
+                }
+                else if ((LongestWall / CanvasSize) > 5 && (LongestWall / CanvasSize) < 10)
+                {
+                    Scale = 10;
+                }
+                else if ((LongestWall / CanvasSize) > 10 && (LongestWall / CanvasSize) < 20)
+                {
+                    Scale = 20;
+                }
+                else if ((LongestWall / CanvasSize) > 20 && (LongestWall / CanvasSize) < 25)
+                {
+                    Scale = 25;
+                }
+                else if ((LongestWall / CanvasSize) > 25 && (LongestWall / CanvasSize) < 50)
+                {
+                    Scale = 50;
+                }
+                else if ((LongestWall / CanvasSize) > 50 && (LongestWall / CanvasSize) < 100)
+                {
+                    Scale = 100;
+                }
+                else if ((LongestWall / CanvasSize) > 100 && (LongestWall / CanvasSize) < 200)
+                {
+                    Scale = 200;
+                }
+                else if ((LongestWall / CanvasSize) > 200 && (LongestWall / CanvasSize) < 500)
+                {
+                    Scale = 500;
+                }
+                else if ((LongestWall / CanvasSize) > 500 && (LongestWall / CanvasSize) < 1000)
+                {
+                    Scale = 1000;
+                }
+            }
+
+            return Scale;
+        }
+
         public BuildingAnalysis GetRoom(Room room)
         {
             SpatialElementBoundaryOptions boundaryOption = new SpatialElementBoundaryOptions();
