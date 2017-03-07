@@ -131,14 +131,11 @@ namespace RevitFamilyBrowser.Revit_Classes
                             System.IO.Directory.CreateDirectory(TempImgFolder);
                         }
 
-                        string filename = TempImgFolder + symbol.Name + ".bmp";
-                        //// if (!System.IO.Directory.Exists(TempImgFolder + fi.Name + ".bmp"))
-                        //{
+                        string filename = TempImgFolder + symbol.Name + ".bmp";                      
                         FileStream file = new FileStream(filename, FileMode.Create, FileAccess.Write);
                         encoder.Save(file);
                         file.Close();
-                        //}
-                        //------------------------------------------------------
+                       
                     }
                 }
                 transaction.RollBack();
@@ -154,73 +151,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                 IntPtr.Zero,
                 Int32Rect.Empty,
                 BitmapSizeOptions.FromEmptyOptions());
-        }
-
-        //public void CreateImages(Document doc)
-        //{
-        //    FilteredElementCollector collector;
-        //    collector = new FilteredElementCollector(doc).OfClass(typeof(FamilyInstance));
-
-        //    foreach (FamilyInstance fi in collector)
-        //    {
-        //        ElementId typeId = fi.GetTypeId();
-        //        ElementType type = doc.GetElement(typeId) as ElementType;
-        //        System.Drawing.Size imgSize = new System.Drawing.Size(200, 200);
-        //        //------------Prewiew Image
-
-        //        Bitmap image = type.GetPreviewImage(imgSize);
-
-        //        JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-        //        encoder.Frames.Add(BitmapFrame.Create(ConvertBitmapToBitmapSource(image)));
-        //        encoder.QualityLevel = 25;
-
-        //        string TempImgFolder = System.IO.Path.GetTempPath() + "FamilyBrowser\\";
-        //        if (!System.IO.Directory.Exists(TempImgFolder))
-        //        {
-        //            System.IO.Directory.CreateDirectory(TempImgFolder);
-        //        }
-        //        string filename = TempImgFolder + type.Name + ".jpg";
-
-        //        foreach (var fileimage in Directory.GetFiles(TempImgFolder))
-        //        {
-        //            if (filename != fileimage)
-        //            {
-        //                FileStream file = new FileStream(filename, FileMode.Create, FileAccess.Write);
-        //                encoder.Save(file);
-        //                file.Close();
-        //                //  Process.Start(filename);
-        //            }
-        //        }
-        //    }
-        //}
-
-        //void OnDocumentChanged(object sender, DocumentChangedEventArgs e)
-        //{
-        //    Document doc = e.GetDocument();
-        //    FilteredElementCollector families;
-        //    Properties.Settings.Default.CollectedData = string.Empty;
-        //    families = new FilteredElementCollector(doc).OfClass(typeof(Family));
-        //    string temp = string.Empty;
-
-        //    foreach (var item in families)
-        //    {
-        //        Family family = item as Family;
-        //        FamilySymbol symbol;
-        //        temp += item.Name;
-        //        ISet<ElementId> familySymbolId = family.GetFamilySymbolIds();
-        //        foreach (ElementId id in familySymbolId)
-        //        {
-        //            symbol = family.Document.GetElement(id) as FamilySymbol;
-        //            {
-        //                temp += "#" + symbol.Name;
-        //            }
-        //        }
-        //        //  CreateImages(doc);
-        //        temp += "\n";
-        //    }
-        //    Properties.Settings.Default.CollectedData = temp;
-        //    TaskDialog.Show("Event + Settings", "Temp: " + temp);
-        //}
+        }  
     }
 }
 

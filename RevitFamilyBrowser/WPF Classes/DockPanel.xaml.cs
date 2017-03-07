@@ -188,6 +188,11 @@ namespace RevitFamilyBrowser.WPF_Classes
         }     
         private void CreateEnptyFamilyImage()
         {
+            string TempImgFolder = System.IO.Path.GetTempPath() + "FamilyBrowser\\";
+            if (!System.IO.Directory.Exists(TempImgFolder))
+            {
+                System.IO.Directory.CreateDirectory(TempImgFolder);
+            }
             ImageConverter converter = new ImageConverter();
             DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\RevitLogo.png");
             File.WriteAllBytes(di.ToString(), (byte[])converter.ConvertTo(Properties.Resources.RevitLogo, typeof(byte[])));

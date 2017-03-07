@@ -74,11 +74,11 @@
     <Compile Include="Revit Classes\App.cs" />
     <Compile Include="Revit Classes\Command.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Revit Classes\ConversionPoint.cs" />
     <Compile Include="Revit Classes\FolderSelect.cs" />
-    <Compile Include="Revit Classes\Image.cs" />
     <Compile Include="Revit Classes\MyEvent.cs" />
     <Compile Include="Revit Classes\ShowPanel.cs" />
-    <Compile Include="Revit Classes\Test.cs" />
+    <Compile Include="Revit Classes\Space.cs" />
     <Compile Include="WPF Classes\DockPanel.xaml.cs">
       <DependentUpon>DockPanel.xaml</DependentUpon>
     </Compile>
