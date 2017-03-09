@@ -97,12 +97,10 @@ namespace RevitFamilyBrowser.WPF_Classes
 
                 foreach (var symbol in collectionData)
                 {
-                    if (symbol.img == new Uri(di.ToString()))
-                       // MessageBox.Show("Emty image " + symbol.Name );
+                    if (symbol.img == new Uri(di.ToString()))                      
                         foreach (var item in collectionData)
                         {
-                            if (item.FamilyName == symbol.FamilyName && item.img != new Uri(di.ToString()))
-                               // MessageBox.Show(item.img.ToString());
+                            if (item.FamilyName == symbol.FamilyName && item.img != new Uri(di.ToString()))                              
                                 symbol.img = item.img;
                         }
                 }
@@ -148,8 +146,6 @@ namespace RevitFamilyBrowser.WPF_Classes
                     }
                     fi.Add(instance);
                 }
-                
-
 
                 //------Collection to sort data in XAML------
                 ListCollectionView collection = new ListCollectionView(fi);
@@ -201,8 +197,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         private void Expander_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             m_ExEvent.Raise();
-            var instance = dataGridHistory.SelectedItem as FamilyData;
-          //  MessageBox.Show(instance.Name + "\n" + instance.FamilyName);
+            var instance = dataGridHistory.SelectedItem as FamilyData;          
             Properties.Settings.Default.FamilyPath = string.Empty;
             Properties.Settings.Default.FamilySymbol = instance.Name;
             Properties.Settings.Default.FamilyName = instance.FamilyName;

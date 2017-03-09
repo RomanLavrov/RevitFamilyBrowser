@@ -87,9 +87,11 @@
     <Compile Include="WPF Classes\GridSetup.xaml.cs">
       <DependentUpon>GridSetup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WPF Classes\RoomDimensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

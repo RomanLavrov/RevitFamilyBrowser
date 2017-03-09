@@ -22,7 +22,37 @@ namespace RevitFamilyBrowser.WPF_Classes
     {
         public GridSetup()
         {
-            InitializeComponent();           
+            InitializeComponent();
+        }
+
+        private void buttonAddHorizontal_Click(object sender, RoutedEventArgs e)
+        {
+            int temp = int.Parse(textBoxHorizontal.Text);
+            temp++;
+            textBoxHorizontal.Text = temp.ToString();
+        }
+
+        private void buttonRemoveHorizontal_Click(object sender, RoutedEventArgs e)
+        {
+            int temp = int.Parse(textBoxHorizontal.Text);
+            if (temp > 0)
+                temp--;
+            textBoxHorizontal.Text = temp.ToString();
+        }
+
+        private void buttonAddVertical_Click(object sender, RoutedEventArgs e)
+        {
+            int temp = int.Parse(textBoxVertical.Text);
+            temp++;
+            textBoxVertical.Text = temp.ToString();
+        }
+
+        private void buttonRemoveVertical_Click(object sender, RoutedEventArgs e)
+        {
+            int temp = int.Parse(textBoxVertical.Text);
+            if (temp > 0)
+                temp--;
+            textBoxVertical.Text = temp.ToString();
         }
     }
 }

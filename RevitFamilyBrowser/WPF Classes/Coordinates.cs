@@ -8,6 +8,8 @@ namespace RevitFamilyBrowser.WPF_Classes
 {
     public class Coordinates
     {
+        public int X { get; set; }
+        public int Y { get; set; }
         public int Xstart { get; set; }
         public int Ystart { get; set; }
         public int Xend { get; set; }

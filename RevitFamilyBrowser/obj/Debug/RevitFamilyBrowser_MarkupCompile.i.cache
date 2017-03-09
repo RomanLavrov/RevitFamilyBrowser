@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Users\user\documents\visual studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\
 RevitFamilyBrowser
 none
 false
@@ -12,9 +12,9 @@ DEBUG;TRACE
 
 2-832747281
 2181289535
-18-1889093421
+191512883919
 11-83881380
 WPF Classes\DockPanel.xaml;WPF Classes\GridSetup.xaml;
 
-True
+False
 
