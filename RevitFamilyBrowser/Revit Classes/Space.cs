@@ -7,14 +7,18 @@ using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI.Selection;
 using System.Windows;
 using RevitFamilyBrowser.WPF_Classes;
-using System.Drawing;
 using System.Windows.Media;
+using System.Windows.Input;
+using System.Windows.Controls;
 
 namespace RevitFamilyBrowser.Revit_Classes
 {
     [Transaction(TransactionMode.Manual)]
     public class Space : IExternalCommand
     {
+        int derrivationX = 0;
+        int derrivationY = 0;
+
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             UIApplication uiapp = commandData.Application;
@@ -62,27 +66,11 @@ namespace RevitFamilyBrowser.Revit_Classes
 
                 Location location = newRoom.Location;
                 LocationPoint locationPoint = location as LocationPoint;
-                XYZ roomPoint = locationPoint.Point;              
-                List<Coordinates> wallCoord = roomDimensions.GetWalls(newRoom);
+                XYZ roomPoint = locationPoint.Point;
+                List<System.Windows.Shapes.Line> wallCoord = roomDimensions.GetWalls(newRoom);
 
-                window.Show();
                 int CanvasSize = (int)grid.canvas.Width;
                 int Scale = roomDimensions.GetScale(wallCoord, CanvasSize);
-
-                //System.Windows.Shapes.Line centerLineX = new System.Windows.Shapes.Line();
-                //centerLineX.X1 = 0;
-                //centerLineX.Y1 = CanvasSize/2;
-                //centerLineX.X2 = CanvasSize;
-                //centerLineX.Y2 = CanvasSize/2;
-                //centerLineX.Stroke = System.Windows.Media.Brushes.Red;
-                //   grid.canvas.Children.Add(centerLineX);
-
-                Coordinates centerLineY = new Coordinates();              
-                centerLineY.Xstart = CanvasSize / 2;
-                centerLineY.Ystart = 0;
-                centerLineY.Xend = (CanvasSize / 2);
-                centerLineY.Yend = CanvasSize;
-                grid.canvas.Children.Add(roomDimensions.DrawDashedLine(centerLineY));
 
                 System.Windows.Shapes.Line centerRoom = new System.Windows.Shapes.Line();
                 centerRoom.X1 = 0;
@@ -92,23 +80,77 @@ namespace RevitFamilyBrowser.Revit_Classes
                 centerRoom.Stroke = System.Windows.Media.Brushes.Red;
                 // grid.canvas.Children.Add(centerRoom); 
 
-                int derrivationX = (int)(CanvasSize / 2 - centerRoom.X2);
-                int derrivationY = (int)(CanvasSize / 2 + centerRoom.Y2);
+                derrivationX = (int)(CanvasSize / 2 - centerRoom.X2);
+                derrivationY = (int)(CanvasSize / 2 + centerRoom.Y2);
+
+                window.Show();
 
                 grid.textBox.Text = "Scale 1: " + Scale.ToString();
 
                 foreach (var item in wallCoord)
                 {
                     System.Windows.Shapes.Line myLine = new System.Windows.Shapes.Line();
-                    myLine.X1 = (item.Xstart / Scale) + derrivationX;
-                    myLine.Y1 = ((-item.Ystart / Scale) + derrivationY);
-                    myLine.X2 = (item.Xend / Scale) + derrivationX;
-                    myLine.Y2 = ((-item.Yend / Scale) + derrivationY);
+                    myLine.X1 = (item.X1 / Scale) + derrivationX;
+                    myLine.Y1 = ((-item.Y1 / Scale) + derrivationY);
+                    myLine.X2 = (item.X2 / Scale) + derrivationX;
+                    myLine.Y2 = ((-item.Y2 / Scale) + derrivationY);
                     myLine.Stroke = System.Windows.Media.Brushes.Black;
+                    myLine.StrokeThickness = 3;
 
+                    myLine.StrokeEndLineCap = PenLineCap.Round;
+                    myLine.StrokeStartLineCap = PenLineCap.Round;
+
+                    myLine.MouseDown += new MouseButtonEventHandler(line_MouseDown);
+                    myLine.MouseUp += new MouseButtonEventHandler(line_MouseUp);
+                    myLine.MouseEnter += new MouseEventHandler(line_MouseEnter);
+                    myLine.MouseLeave += new MouseEventHandler(line_MouseLeave);
                     grid.canvas.Children.Add(myLine);
                 }
                 transaction.RollBack();
+            }
+
+            void line_MouseEnter(object sender, MouseEventArgs e)
+            {
+                Coordinates coord = new Coordinates();
+                coord.Xstart = (int)((System.Windows.Shapes.Line)sender).X1;
+                coord.Ystart = (int)((System.Windows.Shapes.Line)sender).Y1;
+                coord.Xend = (int)((System.Windows.Shapes.Line)sender).X2;
+                coord.Yend = (int)((System.Windows.Shapes.Line)sender).Y2;
+
+                string LineData = string.Format("Line Length: {0}\nLine Slope: {1}", coord.GetLength((System.Windows.Shapes.Line)sender).ToString(), coord.GetSlope((System.Windows.Shapes.Line)sender).ToString());
+                //  MessageBox.Show(LineData);
+
+                ((System.Windows.Shapes.Line)sender).Stroke = Brushes.Gray;
+
+            }
+
+            void line_MouseLeave(object sender, MouseEventArgs e)
+            {
+                if (((System.Windows.Shapes.Line)sender).Stroke != Brushes.Red)
+                {
+                    ((System.Windows.Shapes.Line)sender).Stroke = Brushes.Black;
+                }
+            }
+
+            void line_MouseUp(object sender, MouseButtonEventArgs e)
+            {
+                // Change line colour back to normal 
+                ((System.Windows.Shapes.Line)sender).Stroke = System.Windows.Media.Brushes.Red;
+            }
+
+            void line_MouseDown(object sender, MouseButtonEventArgs e)
+            {
+                System.Windows.Shapes.Line line = (System.Windows.Shapes.Line)sender;
+                line.Stroke = Brushes.Red;
+                Coordinates coord = new Coordinates();
+                
+                foreach (var item in coord.DrawPerp(line, coord.SplitLine(line, 5)))
+                {
+                    grid.canvas.Children.Add(item);
+                }
+                
+                //grid.canvas.Children.Add(coord.DrawPerpandicularA(line));
+                //grid.canvas.Children.Add(coord.DrawPerpandicularB(line));
             }
 
             ////-----User select the Room first-----

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 namespace RevitFamilyBrowser.WPF_Classes
@@ -32,7 +33,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         }            
 
         //-----Get coordinates for all walls in Room
-        public List<Coordinates> GetWalls(Room room)
+        public List<System.Windows.Shapes.Line> GetWalls(Room room)
         {
             SpatialElementBoundaryOptions boundaryOption = new SpatialElementBoundaryOptions();
             boundaryOption.SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.Center;
@@ -42,29 +43,29 @@ namespace RevitFamilyBrowser.WPF_Classes
             string temp = string.Empty; //can be used to see Wall and segment numbers  
             int WallNumber = 0;
             int SegmentNumber = 0;
-            List<Coordinates> wallCoord = new List<Coordinates>();           
+            List<System.Windows.Shapes.Line> wallCoord = new List<System.Windows.Shapes.Line>();           
             XYZ segmentStart = null; ///
             XYZ segmentEnd = null;
 
             int nLoops = boundary.Count;
-            foreach (IList<BoundarySegment> wall in boundary)
+            foreach (IList<BoundarySegment> walls in boundary)
             {
                 WallNumber++;
-                foreach (BoundarySegment segment in wall)
+                foreach (BoundarySegment segment in walls)
                 {
-                    Coordinates coord = new Coordinates();
+                    System.Windows.Shapes.Line wall = new System.Windows.Shapes.Line();
 
                     segmentStart = segment.GetCurve().GetEndPoint(0);
                     ConversionPoint Start = new ConversionPoint(segmentStart);
-                    coord.Xstart = Start.X;
-                    coord.Ystart = Start.Y;
+                    wall.X1 = Start.X;
+                    wall.Y1 = Start.Y;
 
                     segmentEnd = segment.GetCurve().GetEndPoint(1);
                     ConversionPoint End = new ConversionPoint(segmentEnd);
-                    coord.Xend = End.X;
-                    coord.Yend = End.Y;
+                    wall.X2 = End.X;
+                    wall.Y2 = End.Y;
 
-                    wallCoord.Add(coord);
+                    wallCoord.Add(wall);
 
                     SegmentNumber++;
                     temp += "WallNumber:" + WallNumber + " " + "SegmentNumber:" + SegmentNumber + " " + Start.ToString() + End.ToString() + "\n";
@@ -75,7 +76,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         }
 
         //-----Compare Longest Wall in Room with Canvas to fit room boundary into Canvas
-        public int GetScale(List<Coordinates> wallCoord, int CanvasSize)
+        public int GetScale(List<System.Windows.Shapes.Line> wallCoord, int CanvasSize)
         {
             double LongestWall = 0;
             int Scale = 0;
@@ -83,12 +84,13 @@ namespace RevitFamilyBrowser.WPF_Classes
             foreach (var item in wallCoord)
             {
                 Coordinates coord = new Coordinates();
-                coord = item;
-                coord.Length(item);
+                System.Windows.Shapes.Line baseLine = new System.Windows.Shapes.Line();
+                baseLine = item;
+                coord.GetLength(item);
 
-                if (coord.Length(item) > LongestWall)
+                if (coord.GetLength(item) > LongestWall)
                 {
-                    LongestWall = coord.Length(item);
+                    LongestWall = coord.GetLength(item);
                 }
 
                 if ((LongestWall / CanvasSize) < 1)
@@ -139,40 +141,6 @@ namespace RevitFamilyBrowser.WPF_Classes
             return Scale;
         }
 
-        //-----Draw Center Line on Canvas by given Start and End points
-        public System.Windows.Shapes.Line DrawCenterLine(Coordinates coord)
-        {
-            System.Windows.Shapes.Line line = new System.Windows.Shapes.Line();
-            line.X1 = coord.Xstart;
-            line.Y1 = coord.Ystart;
-            line.X2 = coord.Xend;
-            line.Y2 = coord.Yend;
-
-            line.Stroke = System.Windows.Media.Brushes.Red;
-            DoubleCollection dash = new DoubleCollection() {130 , 8, 15, 8 };           
-            line.StrokeDashArray = dash;
-            line.SnapsToDevicePixels = true;
-            line.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
-
-            return line;
-        }
-
-        //-----Draw Dashed Line on Canvas by given Start and End points
-        public System.Windows.Shapes.Line DrawDashedLine(Coordinates coord)
-        {
-            System.Windows.Shapes.Line line = new System.Windows.Shapes.Line();
-            line.X1 = coord.Xstart;
-            line.Y1 = coord.Ystart;
-            line.X2 = coord.Xend;
-            line.Y2 = coord.Yend;
-
-            line.Stroke = System.Windows.Media.Brushes.Gray;
-            DoubleCollection dash = new DoubleCollection() { 12, 12};
-            line.StrokeDashArray = dash;
-            line.SnapsToDevicePixels = true;
-            line.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
-
-            return line;
-        }
+      
     }   
 }
