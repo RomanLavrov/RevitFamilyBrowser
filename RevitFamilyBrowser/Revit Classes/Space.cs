@@ -18,6 +18,7 @@ namespace RevitFamilyBrowser.Revit_Classes
     {
         int derrivationX = 0;
         int derrivationY = 0;
+        List<System.Windows.Shapes.Line> BoundingBox;
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
@@ -39,7 +40,7 @@ namespace RevitFamilyBrowser.Revit_Classes
             using (var transaction = new Transaction(doc, "Family Symbol Collecting"))
             {
                 transaction.Start();
-                List<ElementId> SelectedRoom = null;
+               // List<ElementId> SelectedRoom = null;
                 Selection selection = uidoc.Selection;
                 XYZ point;
 
@@ -54,7 +55,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                 View view = doc.ActiveView;
                 Room newRoom = doc.Create.NewRoom(view.GenLevel, new UV(point.X, point.Y));
 
-                BoundingBoxXYZ box = newRoom.get_BoundingBox(view);
+                BoundingBoxXYZ box = newRoom.get_BoundingBox(view);               
 
                 Coordinates center = new Coordinates();
                 center.Xstart = (int)(box.Min.X - box.Max.X) / 2;
@@ -70,7 +71,9 @@ namespace RevitFamilyBrowser.Revit_Classes
                 List<System.Windows.Shapes.Line> wallCoord = roomDimensions.GetWalls(newRoom);
 
                 int CanvasSize = (int)grid.canvas.Width;
-                int Scale = roomDimensions.GetScale(wallCoord, CanvasSize);
+                //-------------------------------------------------------------------------------Scale
+                int Scale = roomDimensions.GetScale(roomMin, roomMax, CanvasSize);
+               // int Scale = 100;
 
                 System.Windows.Shapes.Line centerRoom = new System.Windows.Shapes.Line();
                 centerRoom.X1 = 0;
@@ -82,6 +85,14 @@ namespace RevitFamilyBrowser.Revit_Classes
 
                 derrivationX = (int)(CanvasSize / 2 - centerRoom.X2);
                 derrivationY = (int)(CanvasSize / 2 + centerRoom.Y2);
+
+                Coordinates bBox = new Coordinates();
+                BoundingBox = bBox.GetBoundingBox(roomMin, roomMax, Scale, derrivationX, derrivationY);
+
+                foreach (var item in BoundingBox)
+                {
+                    grid.canvas.Children.Add(item);
+                }               
 
                 window.Show();
 
@@ -110,18 +121,8 @@ namespace RevitFamilyBrowser.Revit_Classes
             }
 
             void line_MouseEnter(object sender, MouseEventArgs e)
-            {
-                Coordinates coord = new Coordinates();
-                coord.Xstart = (int)((System.Windows.Shapes.Line)sender).X1;
-                coord.Ystart = (int)((System.Windows.Shapes.Line)sender).Y1;
-                coord.Xend = (int)((System.Windows.Shapes.Line)sender).X2;
-                coord.Yend = (int)((System.Windows.Shapes.Line)sender).Y2;
-
-                string LineData = string.Format("Line Length: {0}\nLine Slope: {1}", coord.GetLength((System.Windows.Shapes.Line)sender).ToString(), coord.GetSlope((System.Windows.Shapes.Line)sender).ToString());
-                //  MessageBox.Show(LineData);
-
+            {               
                 ((System.Windows.Shapes.Line)sender).Stroke = Brushes.Gray;
-
             }
 
             void line_MouseLeave(object sender, MouseEventArgs e)
@@ -142,15 +143,15 @@ namespace RevitFamilyBrowser.Revit_Classes
             {
                 System.Windows.Shapes.Line line = (System.Windows.Shapes.Line)sender;
                 line.Stroke = Brushes.Red;
+              //  List<System.Windows.Shapes.Line> normals = new List<System.Windows.Shapes.Line>();
                 Coordinates coord = new Coordinates();
+                List<System.Drawing.Point> listPointsOnWall = coord.SplitLine(line, Convert.ToInt32(grid.textBoxHorizontal.Text));
+                List<System.Windows.Shapes.Line> listPerpendiculars = coord.DrawPerp(line, listPointsOnWall);
                 
-                foreach (var item in coord.DrawPerp(line, coord.SplitLine(line, 5)))
-                {
-                    grid.canvas.Children.Add(item);
+                foreach (var item in listPerpendiculars)
+                {                  
+                    grid.canvas.Children.Add(coord.BuildBoundedLine(BoundingBox, item));
                 }
-                
-                //grid.canvas.Children.Add(coord.DrawPerpandicularA(line));
-                //grid.canvas.Children.Add(coord.DrawPerpandicularB(line));
             }
 
             ////-----User select the Room first-----

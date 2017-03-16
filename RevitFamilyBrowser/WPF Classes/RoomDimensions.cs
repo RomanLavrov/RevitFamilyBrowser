@@ -75,13 +75,33 @@ namespace RevitFamilyBrowser.WPF_Classes
             return wallCoord;
         }
 
-        //-----Compare Longest Wall in Room with Canvas to fit room boundary into Canvas
-        public int GetScale(List<System.Windows.Shapes.Line> wallCoord, int CanvasSize)
+        public int GetScale (ConversionPoint min, ConversionPoint max, int CanvasSize)
         {
             double LongestWall = 0;
             int Scale = 0;
-            CanvasSize = CanvasSize - 5;
-            foreach (var item in wallCoord)
+            List<System.Windows.Shapes.Line> sides = new List<System.Windows.Shapes.Line>();
+
+            System.Windows.Shapes.Line sideA = new System.Windows.Shapes.Line();
+            sideA.X1 = min.X; sideA.Y1 = min.Y;
+            sideA.X2 = min.X; sideA.Y2 = max.Y;
+            sides.Add(sideA);
+
+            System.Windows.Shapes.Line sideB = new System.Windows.Shapes.Line();
+            sideB.X1 = min.X; sideB.Y1 = max.Y;
+            sideB.X2 = max.X; sideB.Y2 = max.Y;
+            sides.Add(sideB);
+
+            System.Windows.Shapes.Line sideC = new System.Windows.Shapes.Line();
+            sideC.X1 = max.X; sideC.Y1 = max.Y;
+            sideC.X2 = max.X; sideC.Y2 = min.Y;
+            sides.Add(sideC);
+
+            System.Windows.Shapes.Line sideD = new System.Windows.Shapes.Line();
+            sideD.X1 = max.X; sideD.Y1 = min.Y;
+            sideD.X2 = min.X; sideD.Y2 = min.Y;
+            sides.Add(sideD);
+
+            foreach (var item in sides)
             {
                 Coordinates coord = new Coordinates();
                 System.Windows.Shapes.Line baseLine = new System.Windows.Shapes.Line();
@@ -140,7 +160,70 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             return Scale;
         }
+        //-----Compare Longest Wall in Room with Canvas to fit room boundary into Canvas
+        //public int GetScale(List<System.Windows.Shapes.Line> wallCoord, int CanvasSize)
+        //{
+        //    double LongestWall = 0;
+        //    int Scale = 0;
+        //    CanvasSize = CanvasSize - 5;
+        //    foreach (var item in wallCoord)
+        //    {
+        //        Coordinates coord = new Coordinates();
+        //        System.Windows.Shapes.Line baseLine = new System.Windows.Shapes.Line();
+        //        baseLine = item;
+        //        coord.GetLength(item);
 
-      
+        //        if (coord.GetLength(item) > LongestWall)
+        //        {
+        //            LongestWall = coord.GetLength(item);
+        //        }
+
+        //        if ((LongestWall / CanvasSize) < 1)
+        //        {
+        //            Scale = 1;
+        //        }
+        //        else if ((LongestWall / CanvasSize) > 1 && (LongestWall / CanvasSize) < 2)
+        //        {
+        //            Scale = 2;
+        //        }
+        //        else if ((LongestWall / CanvasSize) > 2 && (LongestWall / CanvasSize) < 5)
+        //        {
+        //            Scale = 5;
+        //        }
+        //        else if ((LongestWall / CanvasSize) > 5 && (LongestWall / CanvasSize) < 10)
+        //        {
+        //            Scale = 10;
+        //        }
+        //        else if ((LongestWall / CanvasSize) > 10 && (LongestWall / CanvasSize) < 20)
+        //        {
+        //            Scale = 20;
+        //        }
+        //        else if ((LongestWall / CanvasSize) > 20 && (LongestWall / CanvasSize) < 25)
+        //        {
+        //            Scale = 25;
+        //        }
+        //        else if ((LongestWall / CanvasSize) > 25 && (LongestWall / CanvasSize) < 50)
+        //        {
+        //            Scale = 50;
+        //        }
+        //        else if ((LongestWall / CanvasSize) > 50 && (LongestWall / CanvasSize) < 100)
+        //        {
+        //            Scale = 100;
+        //        }
+        //        else if ((LongestWall / CanvasSize) > 100 && (LongestWall / CanvasSize) < 200)
+        //        {
+        //            Scale = 200;
+        //        }
+        //        else if ((LongestWall / CanvasSize) > 200 && (LongestWall / CanvasSize) < 500)
+        //        {
+        //            Scale = 500;
+        //        }
+        //        else if ((LongestWall / CanvasSize) > 500 && (LongestWall / CanvasSize) < 1000)
+        //        {
+        //            Scale = 1000;
+        //        }
+        //    }
+        //    return Scale;
+        //}      
     }   
 }

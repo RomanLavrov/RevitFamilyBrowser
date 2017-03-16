@@ -1,9 +1,11 @@
-﻿using System;
+﻿using RevitFamilyBrowser.Revit_Classes;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -18,11 +20,12 @@ namespace RevitFamilyBrowser.WPF_Classes
         public int Xend { get; set; }
         public int Yend { get; set; }
 
+        //-----Return Line length
         public double GetLength(Line line)
         {
             return Math.Sqrt(Math.Pow((line.X1 - line.X2), 2) + Math.Pow((line.Y1 - line.Y1), 2));
         }
-
+        //-----Return Line slope
         public double GetSlope(Line line)
         {
             return (line.Y2 - line.Y1) / (line.X2 - line.X1);
@@ -35,44 +38,268 @@ namespace RevitFamilyBrowser.WPF_Classes
             return point;
         }
 
+        //-----Return coefficients of Line equation ax+by+c=0
+        public static List<double> LineEquation(Line line)
+        {
+            List<double> result = new List<double>();
+            double a = line.Y2 - line.Y1;
+            double b = line.X1 - line.X2;
+            double c = line.Y1 * (line.X1 - line.X2) - line.X1 * (line.Y1 - line.Y2);
+            result.Add(a);
+            result.Add(b);
+            result.Add(-c);
+            return result;
+        }
+
+        //-----Get two lines and return intersection point
+        public Point GetIntersection(Line box, Line wall)
+        {
+            List<double> wallCoefs = LineEquation(wall);
+            double a1 = wallCoefs[0];
+            double b1 = wallCoefs[1];
+            double c1 = wallCoefs[2];
+
+            List<double> boxCoefs = LineEquation(box);
+            double a2 = boxCoefs[0];
+            double b2 = boxCoefs[1];
+            double c2 = boxCoefs[2];
+
+            double x = (int)(c1 * b2 - c2 * b1) / (a2 * b1 - a1 * b2);
+            double y = 0;
+            if (b1 == 0)
+            {
+                y = (int)(-c2 - a2 * x) / b2;
+            }
+            else if (b2 == 0)
+                y = (int)(-c1 - a1 * x) / b1;
+
+            else
+                y = (-c2 - (a2 * x)) / b2;
+
+            Point intersection = new Point();
+            intersection.X = (int)x;
+            intersection.Y = (int)y;
+
+            return intersection;
+        }
+
+        public bool IntersectionPositionCheck(Line line, Point point)
+        {
+            int lineMaxX = (int)(line.X1 > line.X2 ? line.X1 : line.X2);
+            int lineMinX = (int)(line.X1 < line.X2 ? line.X1 : line.X2);
+            int lineMaxY = (int)(line.Y1 > line.Y2 ? line.Y1 : line.Y2);
+            int lineMinY = (int)(line.Y1 < line.Y2 ? line.Y1 : line.Y2);
+
+            if (point.X <= lineMaxX && point.X >= lineMinX && point.Y <= lineMaxY && point.Y >= lineMinY)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public Line OrtoNormalization(Line perpend)
+        {
+            Line normal = new Line();
+            int xA = 0; int xB = 0;
+            int yA = 0; int yB = 0;
+
+            if (perpend.X1 != int.MaxValue || perpend.X1 != int.MinValue)
+            {
+                xA = (int)perpend.X1;
+            }
+            if (perpend.Y1 != int.MaxValue || perpend.Y1 != int.MinValue)
+            {
+                yA = (int)perpend.Y1;
+            }
+            if (perpend.X2 != int.MaxValue || perpend.X2 != int.MinValue)
+            {
+                xB = (int)perpend.X2;
+            }
+            if (perpend.Y2 != int.MaxValue || perpend.Y2 != int.MinValue)
+            {
+                yB = (int)perpend.Y2;
+            }
+
+            if ((xA == int.MaxValue || xA == int.MinValue) && yA == 0)
+            {
+                yA = 0; xA = xB;
+            }
+
+            if ((xB == int.MaxValue || xB == int.MinValue) && yB == 0)
+            {
+                xB = 0; yB = yA;
+            }
+
+            if ((yA == int.MaxValue || yA == int.MinValue) && xA == 0)
+            {
+                yA = 0; xA = xB;
+            }
+
+            if ((yB == int.MaxValue || yB == int.MinValue) && xB == 0)
+            {
+                yB = 0; xB = xA;
+            }
+            normal.X1 = xA;
+            normal.X2 = xB;
+            normal.Y1 = yA;
+            normal.Y2 = yB;
+
+            return normal;
+        }
+
+        public Line BuildBoundedLine(List<Line> boundingBox, Line perpend)
+        {
+            Line gridLine = new Line();
+            Line normal = OrtoNormalization(perpend);
+            //---------------------------------------------------------
+            //Line normal = new Line();
+            //int xA = 0;
+            //int xB = 0;
+            //int yA = 0;
+            //int yB = 0;
+
+            //if (perpend.X1 != int.MaxValue || perpend.X1 != int.MinValue)
+            //{
+            //    xA = (int)perpend.X1;
+            //}
+            //if (perpend.Y1 != int.MaxValue || perpend.Y1 != int.MinValue)
+            //{
+            //    yA = (int)perpend.Y1;
+            //}
+            //if (perpend.X2 != int.MaxValue || perpend.X2 != int.MinValue)
+            //{
+            //    xB = (int)perpend.X2;
+            //}
+            //if (perpend.Y2 != int.MaxValue || perpend.Y2 != int.MinValue)
+            //{
+            //    yB = (int)perpend.Y2;
+            //}
+
+            //if ((xA == int.MaxValue || xA == int.MinValue) && yA == 0)
+            //{
+            //    yA = 0; xA = xB;
+            //}
+
+            //if ((xB == int.MaxValue || xB == int.MinValue) && yB == 0)
+            //{
+            //    xB = 0; yB = yA;
+            //}
+
+
+            //if ((yA == int.MaxValue || yA == int.MinValue) && xA == 0)
+            //{
+            //    yA = 0; xA = xB;
+            //}
+
+            //if ((yB == int.MaxValue || yB == int.MinValue) && xB == 0)
+            //{
+            //    yB = 0; xB = xA;
+            //}
+
+
+            //normal.X1 = xA;
+            //normal.X2 = xB;
+            //normal.Y1 = yA;
+            //normal.Y2 = yB;
+            //---------------------------------------------------------
+            List<Point> allIntersections = new List<Point>();
+            foreach (var side in boundingBox)
+            {
+                //MessageBox.Show("Box" + side.X1.ToString() + " " + side.Y1.ToString() + " " + side.X2.ToString() + " " + side.Y2.ToString() + "\n");
+                //MessageBox.Show("Normal" + perpend.X1.ToString() + " " + perpend.Y1.ToString() + " " + perpend.X2.ToString() + " " + perpend.Y2.ToString() + "\n");
+
+                Point intersection = GetIntersection(side, normal);
+                if (IntersectionPositionCheck(side, intersection))
+                {
+                    allIntersections.Add(intersection);
+                }
+            }
+
+            string temp = string.Empty;
+            int count = 0;
+            foreach (var item in allIntersections)
+            {
+                count++;
+                if (count == 1)
+                {
+                    gridLine.X1 = item.X;
+                    gridLine.Y1 = item.Y;
+                }
+                else if (count == 2)
+                {
+                    gridLine.X2 = item.X;
+                    gridLine.Y2 = item.Y;
+                }
+                temp += "X = " + item.X.ToString() + " Y = " + item.Y.ToString() + "\n";
+            }
+
+            gridLine.Stroke = System.Windows.Media.Brushes.Green;
+
+            return DrawDashedLine(gridLine);
+        }
+
         public List<Point> SplitLine(Line line, int lineNumber)
         {
             List<Point> points = new List<Point>();
-            double length = GetLength(line);
-            int partNumber = lineNumber + 1;
-            double partLength = length / (lineNumber + 1);
 
+            int partNumber = lineNumber + 1;
             for (int i = 1; i < partNumber; i++)
             {
                 Point point = new Point();
-                point.X = (int)((line.X1 + line.X2) / (partNumber) * i);
-                point.Y = (int)((line.Y1 + line.Y2) / (partNumber) * i);
+                double top = i;
+                double bottom = (partNumber - i);
+                double proportion;
+                if ((partNumber - i) == 0)
+                {
+                    bottom = 1;
+                }
+                proportion = top / bottom;
+                point.X = Convert.ToInt32((line.X1 + (line.X2 * proportion)) / (1 + proportion));
+                point.Y = Convert.ToInt32((line.Y1 + (line.Y2 * proportion)) / (1 + proportion));
                 points.Add(point);
             }
             return points;
         }
 
-        public Line SetLineLength(Line line, int length)
+        public List<Line> GetBoundingBox(ConversionPoint min, ConversionPoint max, int Scale, int derX, int derY)
         {
-            Point end = new Point();
-            end.X = 0;
-            end.Y = 0;
+            List<Line> boxSides = new List<Line>();
+            int offset = 500 / Scale;
 
-            for (int x = int.MinValue; x < int.MaxValue; x++)
+            Line SideA = new Line();
+            SideA.X1 = min.X / Scale + derX - offset;
+            SideA.Y1 = -min.Y / Scale + derY + offset;
+            SideA.X2 = min.X / Scale + derX - offset;
+            SideA.Y2 = -max.Y / Scale + derY - offset;
+            boxSides.Add(SideA);
+
+            Line SideB = new Line();
+            SideB.X1 = min.X / Scale + derX - offset;
+            SideB.Y1 = -max.Y / Scale + derY - offset;
+            SideB.X2 = max.X / Scale + derX + offset;
+            SideB.Y2 = -max.Y / Scale + derY - offset;
+            boxSides.Add(SideB);
+
+            Line SideC = new Line();
+            SideC.X1 = max.X / Scale + derX + offset;
+            SideC.Y1 = -max.Y / Scale + derY - offset;
+            SideC.X2 = max.X / Scale + derX + offset;
+            SideC.Y2 = -min.Y / Scale + derY + offset;
+            boxSides.Add(SideC);
+
+            Line SideD = new Line();
+            SideD.X1 = max.X / Scale + derX + offset;
+            SideD.Y1 = -min.Y / Scale + derY + offset;
+            SideD.X2 = min.X / Scale + derX - offset;
+            SideD.Y2 = -min.Y / Scale + derY + offset;
+            boxSides.Add(SideD);
+            foreach (var item in boxSides)
             {
-                for (int y = int.MinValue; y < int.MaxValue; y++)
-                {
-                    if (length == Math.Sqrt(Math.Pow((line.X1 - x), 2) + Math.Pow((line.Y2 - y), 2)))
-                    {
-                        end.X = x;
-                        end.Y = y;
-                    }
-                }
+                item.Stroke = System.Windows.Media.Brushes.DeepSkyBlue;
             }
-            line.X2 = end.X;
-            line.Y2 = end.Y;
-            return line;
+            return boxSides;
         }
+
         public List<Line> DrawPerp(Line baseWall, List<Point> points)
         {
             List<Line> lines = new List<Line>();
@@ -93,42 +320,6 @@ namespace RevitFamilyBrowser.WPF_Classes
                 lines.Add(perpendicular);
             }
             return lines;
-        }
-
-        public Line DrawPerpandicularA(Line line)
-        {
-            Point center = this.GetCenter(line);
-            double slope = -1 / (GetSlope(line));
-            Point target = new Point();
-            target.X = 0;
-            target.Y = (int)(center.Y - (slope * center.X));
-
-            Line perpendicular = new Line();
-            perpendicular.X1 = target.X;
-            perpendicular.Y1 = target.Y;
-            perpendicular.X2 = center.X;
-            perpendicular.Y2 = center.Y;
-            perpendicular.Stroke = System.Windows.Media.Brushes.Red;
-            //  DrawDashedLine(perpendicular);
-            return perpendicular;
-        }
-
-        public Line DrawPerpandicularB(Line line)
-        {
-            Point center = this.GetCenter(line);
-            double slope = -1 / (GetSlope(line));
-            Point target = new Point();
-            target.X = (int)(center.X - (center.Y / slope));
-            target.Y = 0;
-
-            Line perpendicular = new Line();
-            perpendicular.X1 = center.X;
-            perpendicular.Y1 = center.Y;
-            perpendicular.X2 = target.X;
-            perpendicular.Y2 = target.Y;
-            perpendicular.Stroke = System.Windows.Media.Brushes.Red;
-            // DrawCenterLine(perpendicular);
-            return perpendicular;
         }
 
         //-----Draw Center Line on Canvas by given Start and End points
