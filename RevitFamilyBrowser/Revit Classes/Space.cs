@@ -10,6 +10,7 @@ using RevitFamilyBrowser.WPF_Classes;
 using System.Windows.Media;
 using System.Windows.Input;
 using System.Windows.Controls;
+using System.Linq;
 
 namespace RevitFamilyBrowser.Revit_Classes
 {
@@ -97,6 +98,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                 window.Show();
 
                 grid.textBox.Text = "Scale 1: " + Scale.ToString();
+                grid.buttonReset.Click += buttonReset_Click;
 
                 foreach (var item in wallCoord)
                 {
@@ -143,14 +145,31 @@ namespace RevitFamilyBrowser.Revit_Classes
             {
                 System.Windows.Shapes.Line line = (System.Windows.Shapes.Line)sender;
                 line.Stroke = Brushes.Red;
-              //  List<System.Windows.Shapes.Line> normals = new List<System.Windows.Shapes.Line>();
+              
                 Coordinates coord = new Coordinates();
-                List<System.Drawing.Point> listPointsOnWall = coord.SplitLine(line, Convert.ToInt32(grid.textBoxHorizontal.Text));
+                List<System.Drawing.Point> listPointsOnWall;
+                if (grid.radioEqual.IsChecked == true)
+                {
+                    listPointsOnWall = coord.SplitLine(line, Convert.ToInt32(grid.textBoxHorizontal.Text));
+                }
+                else
+                    listPointsOnWall = coord.SplitLineProportional(line, Convert.ToInt32(grid.textBoxHorizontal.Text));
+
                 List<System.Windows.Shapes.Line> listPerpendiculars = coord.DrawPerp(line, listPointsOnWall);
                 
                 foreach (var item in listPerpendiculars)
                 {                  
                     grid.canvas.Children.Add(coord.BuildBoundedLine(BoundingBox, item));
+                }
+            }
+
+            void buttonReset_Click(object sender, RoutedEventArgs e)
+            {
+                List<System.Windows.Shapes.Line> lines = grid.canvas.Children.OfType<System.Windows.Shapes.Line>().Where(r => r.Stroke == Brushes.SteelBlue).ToList();
+                
+                foreach (var item in lines)
+                {
+                    grid.canvas.Children.Remove(item);
                 }
             }
 

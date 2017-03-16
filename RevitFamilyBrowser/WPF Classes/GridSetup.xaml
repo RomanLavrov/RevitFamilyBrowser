@@ -4,11 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RevitFamilyBrowser.WPF_Classes"
-             mc:Ignorable="d" Width="1200" Height="725" Background="White">
+             mc:Ignorable="d" Width="915" Height="725">
     <Grid>
         <Canvas x:Name="canvas" 
                 HorizontalAlignment="Left" 
-                Height="600" Margin="275,70,0,0" 
+                Height="600" Margin="275,40,0,0" 
                 VerticalAlignment="Top" 
                 Width="600" 
                 Background="White">
@@ -19,19 +19,17 @@
         </Canvas>
 
         <Grid Height="725" VerticalAlignment="Bottom">
-            <Label x:Name="labelHorizontal" Content="Horizontal Axes" HorizontalAlignment="Left" VerticalAlignment="Top" Height="24" Width="94" FontSize="12" Margin="530,10,0,0"/>
-            <TextBox x:Name="textBoxHorizontal" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="558,39,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-            <Button x:Name="buttonAddHorizontal" FontSize="12" Content="+" HorizontalAlignment="Left" Margin="594,39,0,0" VerticalAlignment="Top" Width="22" Height="22" Click="buttonAddHorizontal_Click"/>
-            <Button x:Name="buttonRemoveHorizontal"  FontSize="12" Content="-" HorizontalAlignment="Left" Margin="536,39,0,0" VerticalAlignment="Top" Width="22" Height="22" Click="buttonRemoveHorizontal_Click"/>
-        </Grid>
+            <Label x:Name="labelHorizontal" Content="Set Axes Number" HorizontalAlignment="Left" VerticalAlignment="Top" Height="24" Width="101" FontSize="12" Margin="137,82,0,0"/>
+            <TextBox x:Name="textBoxHorizontal" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="79,84,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            <Button x:Name="buttonAddHorizontal" FontSize="12" Content="+" HorizontalAlignment="Left" Margin="115,84,0,0" VerticalAlignment="Top" Width="22" Height="22" Click="buttonAddHorizontal_Click"/>
+            <Button x:Name="buttonRemoveHorizontal"  FontSize="12" Content="-" HorizontalAlignment="Left" Margin="57,84,0,0" VerticalAlignment="Top" Width="22" Height="22" Click="buttonRemoveHorizontal_Click"/>
+            <Button x:Name="buttonReset" FontSize="12" Content="Reset grid" Width="80" Height="22" Margin="57,174,778,529" Click="buttonReset_Click" />
+            <RadioButton GroupName ="SplitOption" x:Name="radioEqual" Content="Equal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="57,125,0,0"/>
+            <RadioButton GroupName ="SplitOption" x:Name="radioProportoinal" Content="Proportional" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="57,145,0,0"/>
 
-        <Grid >
-            <Label x:Name="labelVertical" Content="Vertical Axes" HorizontalAlignment="Left" VerticalAlignment="Top" Height="24" Width="82" FontSize="12" Margin="173,330,0,0"/>
-            <TextBox x:Name="textBoxVertical" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="194,359,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" RenderTransformOrigin="0.525,0.625"/>
-            <Button x:Name="buttonAddVertical"  FontSize="12" Content="+" HorizontalAlignment="Left" Margin="234,359,0,0" VerticalAlignment="Top" Width="22" Height="22" Click="buttonAddVertical_Click"/>
-            <Button x:Name="buttonRemoveVertical" FontSize="12" Content="-" HorizontalAlignment="Left" Margin="172,359,0,0" VerticalAlignment="Top" Width="22" Height="22" Click="buttonRemoveVertical_Click"/>
         </Grid>
         <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="20" Margin="775,80,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="90" BorderBrush="Transparent" HorizontalContentAlignment="Right"/>
+
 
     </Grid>
 </UserControl>

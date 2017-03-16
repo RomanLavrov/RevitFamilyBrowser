@@ -20,17 +20,17 @@ namespace RevitFamilyBrowser.WPF_Classes
     {
         public int MyProperty { get; set; }
 
-       public void GetBoundingBox(Room newRoom, View view)
+        public void GetBoundingBox(Room newRoom, View view)
         {
             BoundingBoxXYZ box = newRoom.get_BoundingBox(view);
             Coordinates center = new Coordinates();
 
             center.X = (int)(box.Min.X - box.Max.X) / 2;
             center.Y = (int)(box.Min.Y - box.Max.Y) / 2;
-          
+
             ConversionPoint roomMin = new ConversionPoint(box.Min);
             ConversionPoint roomMax = new ConversionPoint(box.Max);
-        }            
+        }
 
         //-----Get coordinates for all walls in Room
         public List<System.Windows.Shapes.Line> GetWalls(Room room)
@@ -43,7 +43,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             string temp = string.Empty; //can be used to see Wall and segment numbers  
             int WallNumber = 0;
             int SegmentNumber = 0;
-            List<System.Windows.Shapes.Line> wallCoord = new List<System.Windows.Shapes.Line>();           
+            List<System.Windows.Shapes.Line> wallCoord = new List<System.Windows.Shapes.Line>();
             XYZ segmentStart = null; ///
             XYZ segmentEnd = null;
 
@@ -75,7 +75,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             return wallCoord;
         }
 
-        public int GetScale (ConversionPoint min, ConversionPoint max, int CanvasSize)
+        public int GetScale(ConversionPoint min, ConversionPoint max, int CanvasSize)
         {
             double LongestWall = 0;
             int Scale = 0;
@@ -102,63 +102,58 @@ namespace RevitFamilyBrowser.WPF_Classes
             sideD.X2 = min.X; sideD.Y2 = min.Y;
             sides.Add(sideD);
             Coordinates coord = new Coordinates();
-            
+
             foreach (var item in sides)
             {
-                if(coord.GetLength(item)>LongestWall)
+                if (coord.GetLength(item) > LongestWall)
                     LongestWall = coord.GetLength(item);
-                MessageBox.Show(coord.GetLength(item).ToString());
             }
-            MessageBox.Show(LongestWall.ToString());
 
-          //  foreach (var item in sides)
-            { 
-
-                if ((LongestWall / CanvasSize) < 1)
-                {
-                    Scale = 1;
-                }
-                else if ((LongestWall / CanvasSize) > 1 && (LongestWall / CanvasSize) < 2)
-                {
-                    Scale = 2;
-                }
-                else if ((LongestWall / CanvasSize) > 2 && (LongestWall / CanvasSize) < 5)
-                {
-                    Scale = 5;
-                }
-                else if ((LongestWall / CanvasSize) > 5 && (LongestWall / CanvasSize) < 10)
-                {
-                    Scale = 10;
-                }
-                else if ((LongestWall / CanvasSize) > 10 && (LongestWall / CanvasSize) < 20)
-                {
-                    Scale = 20;
-                }
-                else if ((LongestWall / CanvasSize) > 20 && (LongestWall / CanvasSize) < 25)
-                {
-                    Scale = 25;
-                }
-                else if ((LongestWall / CanvasSize) > 25 && (LongestWall / CanvasSize) < 50)
-                {
-                    Scale = 50;
-                }
-                else if ((LongestWall / CanvasSize) > 50 && (LongestWall / CanvasSize) < 100)
-                {
-                    Scale = 100;
-                }
-                else if ((LongestWall / CanvasSize) > 100 && (LongestWall / CanvasSize) < 200)
-                {
-                    Scale = 200;
-                }
-                else if ((LongestWall / CanvasSize) > 200 && (LongestWall / CanvasSize) < 500)
-                {
-                    Scale = 500;
-                }
-                else if ((LongestWall / CanvasSize) > 500 && (LongestWall / CanvasSize) < 1000)
-                {
-                    Scale = 1000;
-                }
+            if ((LongestWall / CanvasSize) < 1)
+            {
+                Scale = 1;
             }
+            else if ((LongestWall / CanvasSize) > 1 && (LongestWall / CanvasSize) < 2)
+            {
+                Scale = 2;
+            }
+            else if ((LongestWall / CanvasSize) > 2 && (LongestWall / CanvasSize) < 5)
+            {
+                Scale = 5;
+            }
+            else if ((LongestWall / CanvasSize) > 5 && (LongestWall / CanvasSize) < 10)
+            {
+                Scale = 10;
+            }
+            else if ((LongestWall / CanvasSize) > 10 && (LongestWall / CanvasSize) < 20)
+            {
+                Scale = 20;
+            }
+            else if ((LongestWall / CanvasSize) > 20 && (LongestWall / CanvasSize) < 25)
+            {
+                Scale = 25;
+            }
+            else if ((LongestWall / CanvasSize) > 25 && (LongestWall / CanvasSize) < 50)
+            {
+                Scale = 50;
+            }
+            else if ((LongestWall / CanvasSize) > 50 && (LongestWall / CanvasSize) < 100)
+            {
+                Scale = 100;
+            }
+            else if ((LongestWall / CanvasSize) > 100 && (LongestWall / CanvasSize) < 200)
+            {
+                Scale = 200;
+            }
+            else if ((LongestWall / CanvasSize) > 200 && (LongestWall / CanvasSize) < 500)
+            {
+                Scale = 500;
+            }
+            else if ((LongestWall / CanvasSize) > 500 && (LongestWall / CanvasSize) < 1000)
+            {
+                Scale = 1000;
+            }
+
             return Scale;
         }
         //-----Compare Longest Wall in Room with Canvas to fit room boundary into Canvas
@@ -226,5 +221,5 @@ namespace RevitFamilyBrowser.WPF_Classes
         //    }
         //    return Scale;
         //}      
-    }   
+    }
 }

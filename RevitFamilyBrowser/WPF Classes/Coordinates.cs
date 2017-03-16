@@ -150,58 +150,8 @@ namespace RevitFamilyBrowser.WPF_Classes
         public Line BuildBoundedLine(List<Line> boundingBox, Line perpend)
         {
             Line gridLine = new Line();
-            Line normal = OrtoNormalization(perpend);
-            //---------------------------------------------------------
-            //Line normal = new Line();
-            //int xA = 0;
-            //int xB = 0;
-            //int yA = 0;
-            //int yB = 0;
-
-            //if (perpend.X1 != int.MaxValue || perpend.X1 != int.MinValue)
-            //{
-            //    xA = (int)perpend.X1;
-            //}
-            //if (perpend.Y1 != int.MaxValue || perpend.Y1 != int.MinValue)
-            //{
-            //    yA = (int)perpend.Y1;
-            //}
-            //if (perpend.X2 != int.MaxValue || perpend.X2 != int.MinValue)
-            //{
-            //    xB = (int)perpend.X2;
-            //}
-            //if (perpend.Y2 != int.MaxValue || perpend.Y2 != int.MinValue)
-            //{
-            //    yB = (int)perpend.Y2;
-            //}
-
-            //if ((xA == int.MaxValue || xA == int.MinValue) && yA == 0)
-            //{
-            //    yA = 0; xA = xB;
-            //}
-
-            //if ((xB == int.MaxValue || xB == int.MinValue) && yB == 0)
-            //{
-            //    xB = 0; yB = yA;
-            //}
-
-
-            //if ((yA == int.MaxValue || yA == int.MinValue) && xA == 0)
-            //{
-            //    yA = 0; xA = xB;
-            //}
-
-            //if ((yB == int.MaxValue || yB == int.MinValue) && xB == 0)
-            //{
-            //    yB = 0; xB = xA;
-            //}
-
-
-            //normal.X1 = xA;
-            //normal.X2 = xB;
-            //normal.Y1 = yA;
-            //normal.Y2 = yB;
-            //---------------------------------------------------------
+            Line normal = OrtoNormalization(perpend);         
+     
             List<Point> allIntersections = new List<Point>();
             foreach (var side in boundingBox)
             {
@@ -232,10 +182,28 @@ namespace RevitFamilyBrowser.WPF_Classes
                 }
                 temp += "X = " + item.X.ToString() + " Y = " + item.Y.ToString() + "\n";
             }
-
-            gridLine.Stroke = System.Windows.Media.Brushes.Green;
-
             return DrawDashedLine(gridLine);
+        }
+        public List<Point> SplitLineProportional(Line line, int lineNumber)
+        {
+            List<Point> points = new List<Point>();
+            int partNumber = lineNumber * 2;
+            for (int i = 1; i < partNumber; i=i+2)
+            {
+                Point point = new Point();
+                double top = i;
+                double bottom = (partNumber - i);
+                double proportion;
+                if ((partNumber - i) == 0)
+                {
+                    bottom = 1;
+                }
+                proportion = top / bottom;
+                point.X = Convert.ToInt32((line.X1 + (line.X2 * proportion)) / (1 + proportion));
+                point.Y = Convert.ToInt32((line.Y1 + (line.Y2 * proportion)) / (1 + proportion));
+                points.Add(point);
+            }
+            return points;
         }
 
         public List<Point> SplitLine(Line line, int lineNumber)
@@ -295,7 +263,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             boxSides.Add(SideD);
             foreach (var item in boxSides)
             {
-                item.Stroke = System.Windows.Media.Brushes.DeepSkyBlue;
+                item.Stroke = System.Windows.Media.Brushes.Transparent;
             }
             return boxSides;
         }
@@ -327,22 +295,16 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
             line.Stroke = System.Windows.Media.Brushes.Red;
             DoubleCollection dash = new DoubleCollection() { 130, 8, 15, 8 };
-            line.StrokeDashArray = dash;
-            line.SnapsToDevicePixels = true;
-            line.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
-
+            line.StrokeDashArray = dash;            
             return line;
         }
 
         //-----Draw Dashed Line on Canvas by given Start and End points
         public System.Windows.Shapes.Line DrawDashedLine(System.Windows.Shapes.Line line)
         {
-            line.Stroke = System.Windows.Media.Brushes.Gray;
-            DoubleCollection dash = new DoubleCollection() { 12, 12 };
-            line.StrokeDashArray = dash;
-            line.SnapsToDevicePixels = true;
-            line.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
-
+            line.Stroke = System.Windows.Media.Brushes.SteelBlue;
+            DoubleCollection dash = new DoubleCollection() { 20, 10, 20, 10 };
+            line.StrokeDashArray = dash;           
             return line;
         }
     }

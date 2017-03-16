@@ -23,6 +23,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         public GridSetup()
         {
             InitializeComponent();
+            radioEqual.IsChecked = true;
         }
 
         private void buttonAddHorizontal_Click(object sender, RoutedEventArgs e)
@@ -38,21 +39,10 @@ namespace RevitFamilyBrowser.WPF_Classes
             if (temp > 0)
                 temp--;
             textBoxHorizontal.Text = temp.ToString();
-        }
+        }      
 
-        private void buttonAddVertical_Click(object sender, RoutedEventArgs e)
+        private void buttonReset_Click(object sender, RoutedEventArgs e)
         {
-            int temp = int.Parse(textBoxVertical.Text);
-            temp++;
-            textBoxVertical.Text = temp.ToString();
-        }
-
-        private void buttonRemoveVertical_Click(object sender, RoutedEventArgs e)
-        {
-            int temp = int.Parse(textBoxVertical.Text);
-            if (temp > 0)
-                temp--;
-            textBoxVertical.Text = temp.ToString();
         }
     }
 }
