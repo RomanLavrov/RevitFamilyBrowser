@@ -79,6 +79,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
             double LongestWall = 0;
             int Scale = 0;
+            CanvasSize = CanvasSize - 5;
             List<System.Windows.Shapes.Line> sides = new List<System.Windows.Shapes.Line>();
 
             System.Windows.Shapes.Line sideA = new System.Windows.Shapes.Line();
@@ -100,18 +101,18 @@ namespace RevitFamilyBrowser.WPF_Classes
             sideD.X1 = max.X; sideD.Y1 = min.Y;
             sideD.X2 = min.X; sideD.Y2 = min.Y;
             sides.Add(sideD);
-
+            Coordinates coord = new Coordinates();
+            
             foreach (var item in sides)
             {
-                Coordinates coord = new Coordinates();
-                System.Windows.Shapes.Line baseLine = new System.Windows.Shapes.Line();
-                baseLine = item;
-                coord.GetLength(item);
-
-                if (coord.GetLength(item) > LongestWall)
-                {
+                if(coord.GetLength(item)>LongestWall)
                     LongestWall = coord.GetLength(item);
-                }
+                MessageBox.Show(coord.GetLength(item).ToString());
+            }
+            MessageBox.Show(LongestWall.ToString());
+
+          //  foreach (var item in sides)
+            { 
 
                 if ((LongestWall / CanvasSize) < 1)
                 {

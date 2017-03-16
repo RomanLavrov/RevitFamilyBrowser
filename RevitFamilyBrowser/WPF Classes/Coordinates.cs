@@ -23,7 +23,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         //-----Return Line length
         public double GetLength(Line line)
         {
-            return Math.Sqrt(Math.Pow((line.X1 - line.X2), 2) + Math.Pow((line.Y1 - line.Y1), 2));
+            return Math.Sqrt(Math.Pow((line.X1 - line.X2), 2) + Math.Pow((line.Y1 - line.Y2), 2));
         }
         //-----Return Line slope
         public double GetSlope(Line line)
