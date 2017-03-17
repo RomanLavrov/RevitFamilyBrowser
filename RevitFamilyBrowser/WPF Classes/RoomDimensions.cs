@@ -23,7 +23,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         public void GetBoundingBox(Room newRoom, View view)
         {
             BoundingBoxXYZ box = newRoom.get_BoundingBox(view);
-            Coordinates center = new Coordinates();
+            ProcessCoordinates center = new ProcessCoordinates();
 
             center.X = (int)(box.Min.X - box.Max.X) / 2;
             center.Y = (int)(box.Min.Y - box.Max.Y) / 2;
@@ -79,7 +79,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
             double LongestWall = 0;
             int Scale = 0;
-            CanvasSize = CanvasSize - 5;
+            CanvasSize = CanvasSize - 20;
             List<System.Windows.Shapes.Line> sides = new List<System.Windows.Shapes.Line>();
 
             System.Windows.Shapes.Line sideA = new System.Windows.Shapes.Line();
@@ -101,7 +101,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             sideD.X1 = max.X; sideD.Y1 = min.Y;
             sideD.X2 = min.X; sideD.Y2 = min.Y;
             sides.Add(sideD);
-            Coordinates coord = new Coordinates();
+            ProcessCoordinates coord = new ProcessCoordinates();
 
             foreach (var item in sides)
             {
@@ -113,113 +113,48 @@ namespace RevitFamilyBrowser.WPF_Classes
             {
                 Scale = 1;
             }
-            else if ((LongestWall / CanvasSize) > 1 && (LongestWall / CanvasSize) < 2)
+            else if ((LongestWall / CanvasSize) >= 1 && (LongestWall / CanvasSize) < 2)
             {
                 Scale = 2;
             }
-            else if ((LongestWall / CanvasSize) > 2 && (LongestWall / CanvasSize) < 5)
+            else if ((LongestWall / CanvasSize) >= 2 && (LongestWall / CanvasSize) < 5)
             {
                 Scale = 5;
             }
-            else if ((LongestWall / CanvasSize) > 5 && (LongestWall / CanvasSize) < 10)
+            else if ((LongestWall / CanvasSize) >= 5 && (LongestWall / CanvasSize) < 10)
             {
                 Scale = 10;
             }
-            else if ((LongestWall / CanvasSize) > 10 && (LongestWall / CanvasSize) < 20)
+            else if ((LongestWall / CanvasSize) >= 10 && (LongestWall / CanvasSize) < 20)
             {
                 Scale = 20;
             }
-            else if ((LongestWall / CanvasSize) > 20 && (LongestWall / CanvasSize) < 25)
+            else if ((LongestWall / CanvasSize) >= 20 && (LongestWall / CanvasSize) < 25)
             {
                 Scale = 25;
             }
-            else if ((LongestWall / CanvasSize) > 25 && (LongestWall / CanvasSize) < 50)
+            else if ((LongestWall / CanvasSize) >= 25 && (LongestWall / CanvasSize) < 50)
             {
                 Scale = 50;
             }
-            else if ((LongestWall / CanvasSize) > 50 && (LongestWall / CanvasSize) < 100)
+            else if ((LongestWall / CanvasSize) >= 50 && (LongestWall / CanvasSize) < 100)
             {
                 Scale = 100;
             }
-            else if ((LongestWall / CanvasSize) > 100 && (LongestWall / CanvasSize) < 200)
+            else if ((LongestWall / CanvasSize) >= 100 && (LongestWall / CanvasSize) < 200)
             {
                 Scale = 200;
             }
-            else if ((LongestWall / CanvasSize) > 200 && (LongestWall / CanvasSize) < 500)
+            else if ((LongestWall / CanvasSize) >= 200 && (LongestWall / CanvasSize) < 500)
             {
                 Scale = 500;
             }
-            else if ((LongestWall / CanvasSize) > 500 && (LongestWall / CanvasSize) < 1000)
+            else if ((LongestWall / CanvasSize) >= 500 && (LongestWall / CanvasSize) < 1000)
             {
                 Scale = 1000;
             }
 
             return Scale;
-        }
-        //-----Compare Longest Wall in Room with Canvas to fit room boundary into Canvas
-        //public int GetScale(List<System.Windows.Shapes.Line> wallCoord, int CanvasSize)
-        //{
-        //    double LongestWall = 0;
-        //    int Scale = 0;
-        //    CanvasSize = CanvasSize - 5;
-        //    foreach (var item in wallCoord)
-        //    {
-        //        Coordinates coord = new Coordinates();
-        //        System.Windows.Shapes.Line baseLine = new System.Windows.Shapes.Line();
-        //        baseLine = item;
-        //        coord.GetLength(item);
-
-        //        if (coord.GetLength(item) > LongestWall)
-        //        {
-        //            LongestWall = coord.GetLength(item);
-        //        }
-
-        //        if ((LongestWall / CanvasSize) < 1)
-        //        {
-        //            Scale = 1;
-        //        }
-        //        else if ((LongestWall / CanvasSize) > 1 && (LongestWall / CanvasSize) < 2)
-        //        {
-        //            Scale = 2;
-        //        }
-        //        else if ((LongestWall / CanvasSize) > 2 && (LongestWall / CanvasSize) < 5)
-        //        {
-        //            Scale = 5;
-        //        }
-        //        else if ((LongestWall / CanvasSize) > 5 && (LongestWall / CanvasSize) < 10)
-        //        {
-        //            Scale = 10;
-        //        }
-        //        else if ((LongestWall / CanvasSize) > 10 && (LongestWall / CanvasSize) < 20)
-        //        {
-        //            Scale = 20;
-        //        }
-        //        else if ((LongestWall / CanvasSize) > 20 && (LongestWall / CanvasSize) < 25)
-        //        {
-        //            Scale = 25;
-        //        }
-        //        else if ((LongestWall / CanvasSize) > 25 && (LongestWall / CanvasSize) < 50)
-        //        {
-        //            Scale = 50;
-        //        }
-        //        else if ((LongestWall / CanvasSize) > 50 && (LongestWall / CanvasSize) < 100)
-        //        {
-        //            Scale = 100;
-        //        }
-        //        else if ((LongestWall / CanvasSize) > 100 && (LongestWall / CanvasSize) < 200)
-        //        {
-        //            Scale = 200;
-        //        }
-        //        else if ((LongestWall / CanvasSize) > 200 && (LongestWall / CanvasSize) < 500)
-        //        {
-        //            Scale = 500;
-        //        }
-        //        else if ((LongestWall / CanvasSize) > 500 && (LongestWall / CanvasSize) < 1000)
-        //        {
-        //            Scale = 1000;
-        //        }
-        //    }
-        //    return Scale;
-        //}      
+        }   
     }
 }
