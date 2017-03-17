@@ -19,16 +19,95 @@
         </Canvas>
 
         <Grid Height="725" VerticalAlignment="Bottom">
-            <Label x:Name="labelHorizontal" Content="Set Axes Number" HorizontalAlignment="Left" VerticalAlignment="Top" Height="24" Width="101" FontSize="12" Margin="137,82,0,0"/>
-            <TextBox x:Name="textBoxHorizontal" FontSize="12" HorizontalAlignment="Left" Height="22" Margin="79,84,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-            <Button x:Name="buttonAddHorizontal" FontSize="12" Content="+" HorizontalAlignment="Left" Margin="115,84,0,0" VerticalAlignment="Top" Width="22" Height="22" Click="buttonAddHorizontal_Click"/>
-            <Button x:Name="buttonRemoveHorizontal"  FontSize="12" Content="-" HorizontalAlignment="Left" Margin="57,84,0,0" VerticalAlignment="Top" Width="22" Height="22" Click="buttonRemoveHorizontal_Click"/>
-            <Button x:Name="buttonReset" FontSize="12" Content="Reset grid" Width="80" Height="22" Margin="57,174,778,529" Click="buttonReset_Click" />
-            <RadioButton GroupName ="SplitOption" x:Name="radioEqual" Content="Equal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="57,125,0,0"/>
-            <RadioButton GroupName ="SplitOption" x:Name="radioProportoinal" Content="Proportional" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="57,145,0,0"/>
+
+            <Label x:Name="labelHorizontal" 
+                   Content="Set Axes Number" 
+                   HorizontalAlignment="Left" 
+                   VerticalAlignment="Top" 
+                   Height="32" Width="133" 
+                   FontSize="16" 
+                   Margin="50,52,0,0"/>
+
+            <TextBox x:Name="textBoxHorizontal" 
+                     FontSize="16" HorizontalAlignment="Left" 
+                     Height="30" Margin="86,84,0,0" 
+                     TextWrapping="Wrap" Text="0" 
+                     VerticalAlignment="Top" 
+                     Width="62" 
+                     BorderBrush="DarkSlateBlue"
+                     HorizontalContentAlignment="Center" 
+                     VerticalContentAlignment="Center" />
+
+            <Button x:Name="buttonAddHorizontal" 
+                    FontSize="16" 
+                    Content="+" 
+                    HorizontalAlignment="Left" 
+                    Margin="147,84,0,0" 
+                    VerticalAlignment="Top" 
+                    VerticalContentAlignment="Center"
+                    Width="30" Height="30" 
+                    Background="SteelBlue"
+                    BorderBrush="DarkSlateBlue"
+                    Foreground="White"
+                    Click="buttonAddHorizontal_Click"/>
+
+            <Button x:Name="buttonRemoveHorizontal"  
+                    FontSize="16" Content="-" 
+                    HorizontalAlignment="Left" 
+                    Margin="57,84,0,0" 
+                    VerticalAlignment="Top" 
+                    Width="30" Height="30" 
+                    Background="SteelBlue"
+                    BorderBrush="DarkSlateBlue"
+                    Foreground="White"
+                    VerticalContentAlignment="Center"
+                    Click="buttonRemoveHorizontal_Click"
+                    />
+
+            <Button x:Name="buttonReset" 
+                    FontSize="16" 
+                    Content="Reset grid" 
+                    Width="Auto" 
+                    Height="Auto" 
+                    Margin="57,200,738,495" 
+                    Click="buttonReset_Click" 
+                    Background="SteelBlue"
+                    BorderBrush="DarkSlateBlue"
+                    Foreground="White"/>
+
+
+            <RadioButton GroupName ="SplitOption" 
+                         x:Name="radioEqual" 
+                         Content="Equal" 
+                          FontSize="16" 
+                         HorizontalAlignment="Left" 
+                         VerticalAlignment="Top" 
+                         Margin="57,146,0,0" VerticalContentAlignment="Center"/>
+
+            <RadioButton GroupName ="SplitOption" 
+                         x:Name="radioProportoinal" 
+                         Content="Proportional" 
+                         FontSize="16" 
+                         HorizontalAlignment="Left" 
+                         VerticalAlignment="Top" 
+                         Margin="57,166,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 
         </Grid>
-        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="20" Margin="775,80,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="90" BorderBrush="Transparent" HorizontalContentAlignment="Right"/>
+        <TextBox x:Name="textBox" 
+                 HorizontalAlignment="Left" 
+                 Height="30" 
+                 Margin="745,80,0,0" 
+                 TextWrapping="Wrap" 
+                 Text="TextBox" 
+                 VerticalAlignment="Top" 
+                 Width="120" 
+                             
+                 Background="SteelBlue"
+                 Foreground="White"
+                 FontSize="16"
+                 BorderBrush="DarkSlateBlue"
+                 HorizontalContentAlignment="Center"
+                 VerticalContentAlignment="Center"/>
 
 
     </Grid>

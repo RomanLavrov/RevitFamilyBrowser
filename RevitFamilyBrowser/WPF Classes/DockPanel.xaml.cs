@@ -34,7 +34,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 1);
             dispatcherTimer.Start();
 
-            CreateEnptyFamilyImage();
+            CreateEmptyFamilyImage();
         }
 
         public DockPanel()
@@ -182,7 +182,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
 
         }     
-        private void CreateEnptyFamilyImage()
+        private void CreateEmptyFamilyImage()
         {
             string TempImgFolder = System.IO.Path.GetTempPath() + "FamilyBrowser\\";
             if (!System.IO.Directory.Exists(TempImgFolder))

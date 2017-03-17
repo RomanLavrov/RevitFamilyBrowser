@@ -5,13 +5,12 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace RevitFamilyBrowser.WPF_Classes
 {
-    public class Coordinates
+    public class ProcessCoordinates
     {
         public int X { get; set; }
         public int Y { get; set; }
@@ -83,6 +82,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             return intersection;
         }
 
+        //-----Check if point belongs to line
         public bool IntersectionPositionCheck(Line line, Point point)
         {
             int lineMaxX = (int)(line.X1 > line.X2 ? line.X1 : line.X2);
@@ -97,6 +97,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             return false;
         }
 
+        //-----If line is paralle to one of axis replace infinity coord to defined
         public Line OrtoNormalization(Line perpend)
         {
             Line normal = new Line();
@@ -147,6 +148,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             return normal;
         }
 
+
         public Line BuildBoundedLine(List<Line> boundingBox, Line perpend)
         {
             Line gridLine = new Line();
@@ -154,18 +156,14 @@ namespace RevitFamilyBrowser.WPF_Classes
      
             List<Point> allIntersections = new List<Point>();
             foreach (var side in boundingBox)
-            {
-                //MessageBox.Show("Box" + side.X1.ToString() + " " + side.Y1.ToString() + " " + side.X2.ToString() + " " + side.Y2.ToString() + "\n");
-                //MessageBox.Show("Normal" + perpend.X1.ToString() + " " + perpend.Y1.ToString() + " " + perpend.X2.ToString() + " " + perpend.Y2.ToString() + "\n");
-
+            {                
                 Point intersection = GetIntersection(side, normal);
                 if (IntersectionPositionCheck(side, intersection))
                 {
                     allIntersections.Add(intersection);
                 }
             }
-
-            string temp = string.Empty;
+                        
             int count = 0;
             foreach (var item in allIntersections)
             {
@@ -179,11 +177,11 @@ namespace RevitFamilyBrowser.WPF_Classes
                 {
                     gridLine.X2 = item.X;
                     gridLine.Y2 = item.Y;
-                }
-                temp += "X = " + item.X.ToString() + " Y = " + item.Y.ToString() + "\n";
+                }               
             }
             return DrawDashedLine(gridLine);
         }
+
         public List<Point> SplitLineProportional(Line line, int lineNumber)
         {
             List<Point> points = new List<Point>();
@@ -300,7 +298,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         }
 
         //-----Draw Dashed Line on Canvas by given Start and End points
-        public System.Windows.Shapes.Line DrawDashedLine(System.Windows.Shapes.Line line)
+        public Line DrawDashedLine(System.Windows.Shapes.Line line)
         {
             line.Stroke = System.Windows.Media.Brushes.SteelBlue;
             DoubleCollection dash = new DoubleCollection() { 20, 10, 20, 10 };

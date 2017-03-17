@@ -20,13 +20,14 @@ namespace RevitFamilyBrowser.Revit_Classes
         int derrivationX = 0;
         int derrivationY = 0;
         List<System.Windows.Shapes.Line> BoundingBox;
+        List<List<System.Windows.Shapes.Line>> wallNormals;
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             UIApplication uiapp = commandData.Application;
             UIDocument uidoc = uiapp.ActiveUIDocument;
             Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
-            Document doc = uidoc.Document;
+            Document doc = uidoc.Document;            
 
             GridSetup grid = new GridSetup();
             Window window = new Window();
@@ -36,45 +37,46 @@ namespace RevitFamilyBrowser.Revit_Classes
             window.Background = System.Windows.Media.Brushes.WhiteSmoke;
             window.Topmost = true;
 
-            RoomFilter filter = new RoomFilter();
-            RoomDimensions roomDimensions = new RoomDimensions();
+            Selection selection = uidoc.Selection;
+            Room newRoom = null;
+            //-----User select the Room first-----
+            if (selection.GetElementIds().Count > 0)
+            {
+                foreach (var item in selection.GetElementIds())
+                {
+                    Element elementType = doc.GetElement(item);
+                    if ((elementType.ToString() == typeof(Room).ToString()))
+                    {
+                        newRoom = elementType as Room;
+                    }
+                }
+            }
+            
             using (var transaction = new Transaction(doc, "Family Symbol Collecting"))
             {
-                transaction.Start();
-               // List<ElementId> SelectedRoom = null;
-                Selection selection = uidoc.Selection;
-                XYZ point;
-
-                try
-                {
-                    point = selection.PickPoint("Point to create a room");
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
+                transaction.Start();              
                 View view = doc.ActiveView;
-                Room newRoom = doc.Create.NewRoom(view.GenLevel, new UV(point.X, point.Y));
+                if (newRoom == null)
+                {
+                    try
+                    {
+                        XYZ point = selection.PickPoint("Point to create a room");
+                        newRoom = doc.Create.NewRoom(view.GenLevel, new UV(point.X, point.Y));
+                    }
+                    catch (Autodesk.Revit.Exceptions.OperationCanceledException)
+                    {                       
+                        return Result.Cancelled;
+                    }
+                    
+                }
 
-                BoundingBoxXYZ box = newRoom.get_BoundingBox(view);               
-
-                Coordinates center = new Coordinates();
-                center.Xstart = (int)(box.Min.X - box.Max.X) / 2;
-                center.Ystart = (int)(box.Min.Y - box.Max.Y) / 2;
-                XYZ RoomCenterMin = box.Min;
-                XYZ RoomCenterMax = box.Max;
-                ConversionPoint roomMin = new ConversionPoint(RoomCenterMin);
-                ConversionPoint roomMax = new ConversionPoint(RoomCenterMax);
-
-                Location location = newRoom.Location;
-                LocationPoint locationPoint = location as LocationPoint;
-                XYZ roomPoint = locationPoint.Point;
-                List<System.Windows.Shapes.Line> wallCoord = roomDimensions.GetWalls(newRoom);
+                BoundingBoxXYZ box = newRoom.get_BoundingBox(view);
+                ConversionPoint roomMin = new ConversionPoint(box.Min);
+                ConversionPoint roomMax = new ConversionPoint(box.Max);
+                RoomDimensions roomDimensions = new RoomDimensions();
 
                 int CanvasSize = (int)grid.canvas.Width;
-                //-------------------------------------------------------------------------------Scale
                 int Scale = roomDimensions.GetScale(roomMin, roomMax, CanvasSize);
-               // int Scale = 100;
 
                 System.Windows.Shapes.Line centerRoom = new System.Windows.Shapes.Line();
                 centerRoom.X1 = 0;
@@ -83,23 +85,17 @@ namespace RevitFamilyBrowser.Revit_Classes
                 centerRoom.Y2 = roomMin.Y / Scale + (roomMax.Y / Scale - roomMin.Y / Scale) / 2;
                 centerRoom.Stroke = System.Windows.Media.Brushes.Red;
                 // grid.canvas.Children.Add(centerRoom); 
-
                 derrivationX = (int)(CanvasSize / 2 - centerRoom.X2);
                 derrivationY = (int)(CanvasSize / 2 + centerRoom.Y2);
 
-                Coordinates bBox = new Coordinates();
+                ProcessCoordinates bBox = new ProcessCoordinates();
                 BoundingBox = bBox.GetBoundingBox(roomMin, roomMax, Scale, derrivationX, derrivationY);
 
-                foreach (var item in BoundingBox)
-                {
-                    grid.canvas.Children.Add(item);
-                }               
-
                 window.Show();
-
                 grid.textBox.Text = "Scale 1: " + Scale.ToString();
                 grid.buttonReset.Click += buttonReset_Click;
 
+                List<System.Windows.Shapes.Line> wallCoord = roomDimensions.GetWalls(newRoom);
                 foreach (var item in wallCoord)
                 {
                     System.Windows.Shapes.Line myLine = new System.Windows.Shapes.Line();
@@ -123,7 +119,7 @@ namespace RevitFamilyBrowser.Revit_Classes
             }
 
             void line_MouseEnter(object sender, MouseEventArgs e)
-            {               
+            {
                 ((System.Windows.Shapes.Line)sender).Stroke = Brushes.Gray;
             }
 
@@ -145,8 +141,8 @@ namespace RevitFamilyBrowser.Revit_Classes
             {
                 System.Windows.Shapes.Line line = (System.Windows.Shapes.Line)sender;
                 line.Stroke = Brushes.Red;
-              
-                Coordinates coord = new Coordinates();
+
+                ProcessCoordinates coord = new ProcessCoordinates();
                 List<System.Drawing.Point> listPointsOnWall;
                 if (grid.radioEqual.IsChecked == true)
                 {
@@ -156,77 +152,42 @@ namespace RevitFamilyBrowser.Revit_Classes
                     listPointsOnWall = coord.SplitLineProportional(line, Convert.ToInt32(grid.textBoxHorizontal.Text));
 
                 List<System.Windows.Shapes.Line> listPerpendiculars = coord.DrawPerp(line, listPointsOnWall);
+                wallNormals.Add(listPerpendiculars);
                 
                 foreach (var item in listPerpendiculars)
-                {                  
+                {
                     grid.canvas.Children.Add(coord.BuildBoundedLine(BoundingBox, item));
                 }
+                List<System.Drawing.Point> nolmalsIntersectionPoints = new List<System.Drawing.Point>();
+
+                //if (wallNormals.Count > 1)
+                //{
+                //    foreach (var wall in wallNormals)
+                //    {
+                //        foreach (var normal1 in wall)
+                //        {
+                //            foreach (var normal2 in wall)
+                //            {
+                //                coord.GetIntersection(normal1, normal2);
+                //                nolmalsIntersectionPoints.Add(coord.GetIntersection(normal1, normal2));
+                //            }
+                //        }
+                //    }
+                //}
+               
+                //MessageBox.Show("Total intersection = " + nolmalsIntersectionPoints.Count);
             }
 
             void buttonReset_Click(object sender, RoutedEventArgs e)
             {
                 List<System.Windows.Shapes.Line> lines = grid.canvas.Children.OfType<System.Windows.Shapes.Line>().Where(r => r.Stroke == Brushes.SteelBlue).ToList();
-                
+
                 foreach (var item in lines)
                 {
                     grid.canvas.Children.Remove(item);
                 }
             }
-
-            ////-----User select the Room first-----
-            //if (selection.GetElementIds().Count > 0)
-            //{
-            //    foreach (var item in selection.GetElementIds())
-            //    {
-            //        //if (!(item.GetType() == typeof(Room)))
-            //        //{
-            //        //    TaskDialog.Show("Please select room", "Only Room can be selected");
-            //        //    return Result.Failed;
-            //        //}
-
-            //        if (SelectedRoom == null)
-            //        {
-            //            SelectedRoom = new List<ElementId>(1);
-            //        }
-            //        SelectedRoom.Add(item);
-            //    }
-            //}
-
-            ////-----Ask user to select the Room-----
-            //if (SelectedRoom == null)
-            //{
-            //    IList<Reference> reference = null;
-            //    try
-            //    {
-            //        reference = selection.PickObjects(ObjectType.Element, new RoomSelectionFilter(), "Please select room");
-            //    }
-            //    catch (Exception)
-            //    {
-            //        return Result.Cancelled;
-            //    }
-            //    SelectedRoom = new List<ElementId>(reference.Select(r => r.ElementId));
-            //}
-
             return Result.Succeeded;
         }
-
-
-        public class RoomSelectionFilter : ISelectionFilter
-        {
-            public bool AllowElement(Element elem)
-            {
-                if (elem.Category.Name == "Room")
-                {
-                    return true;
-                }
-                return false;
-            }
-
-            public bool AllowReference(Reference reference, XYZ position)
-            {
-                return false;
-            }
-        }
-
     }
 }
