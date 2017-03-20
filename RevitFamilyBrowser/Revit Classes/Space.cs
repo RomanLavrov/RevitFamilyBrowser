@@ -1,16 +1,15 @@
-﻿using System;
+﻿using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using System.Collections.Generic;
-using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB.Architecture;
+using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
-using System.Windows;
 using RevitFamilyBrowser.WPF_Classes;
-using System.Windows.Media;
-using System.Windows.Input;
-using System.Windows.Controls;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace RevitFamilyBrowser.Revit_Classes
 {
@@ -20,14 +19,14 @@ namespace RevitFamilyBrowser.Revit_Classes
         int derrivationX = 0;
         int derrivationY = 0;
         List<System.Windows.Shapes.Line> BoundingBox;
-        List<List<System.Windows.Shapes.Line>> wallNormals;
+        List<List<System.Windows.Shapes.Line>> wallNormals = new List<List<System.Windows.Shapes.Line>>();
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             UIApplication uiapp = commandData.Application;
             UIDocument uidoc = uiapp.ActiveUIDocument;
             Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
-            Document doc = uidoc.Document;            
+            Document doc = uidoc.Document;
 
             GridSetup grid = new GridSetup();
             Window window = new Window();
@@ -51,23 +50,23 @@ namespace RevitFamilyBrowser.Revit_Classes
                     }
                 }
             }
-            
+
             using (var transaction = new Transaction(doc, "Family Symbol Collecting"))
             {
-                transaction.Start();              
+                transaction.Start();
+                XYZ point;
                 View view = doc.ActiveView;
                 if (newRoom == null)
                 {
                     try
                     {
-                        XYZ point = selection.PickPoint("Point to create a room");
+                        point = selection.PickPoint("Point to create a room");
                         newRoom = doc.Create.NewRoom(view.GenLevel, new UV(point.X, point.Y));
                     }
                     catch (Autodesk.Revit.Exceptions.OperationCanceledException)
-                    {                       
+                    {
                         return Result.Cancelled;
                     }
-                    
                 }
 
                 BoundingBoxXYZ box = newRoom.get_BoundingBox(view);
@@ -152,30 +151,54 @@ namespace RevitFamilyBrowser.Revit_Classes
                     listPointsOnWall = coord.SplitLineProportional(line, Convert.ToInt32(grid.textBoxHorizontal.Text));
 
                 List<System.Windows.Shapes.Line> listPerpendiculars = coord.DrawPerp(line, listPointsOnWall);
-                wallNormals.Add(listPerpendiculars);
-                
                 foreach (var item in listPerpendiculars)
                 {
                     grid.canvas.Children.Add(coord.BuildBoundedLine(BoundingBox, item));
                 }
+
+                //--------------------------------------------------------------------------------------------------------------
+                if (listPerpendiculars.Count > 0)
+                {
+                    wallNormals.Add(listPerpendiculars);
+                    MessageBox.Show("Walls with perpendiculars = " + wallNormals.Count.ToString());
+                }
+
                 List<System.Drawing.Point> nolmalsIntersectionPoints = new List<System.Drawing.Point>();
 
-                //if (wallNormals.Count > 1)
-                //{
-                //    foreach (var wall in wallNormals)
-                //    {
-                //        foreach (var normal1 in wall)
-                //        {
-                //            foreach (var normal2 in wall)
-                //            {
-                //                coord.GetIntersection(normal1, normal2);
-                //                nolmalsIntersectionPoints.Add(coord.GetIntersection(normal1, normal2));
-                //            }
-                //        }
-                //    }
-                //}
-               
-                //MessageBox.Show("Total intersection = " + nolmalsIntersectionPoints.Count);
+                foreach (var normalA in wallNormals)
+                {
+                    foreach (var lineA in normalA)
+                    {
+                        foreach (var normalB in wallNormals)
+                        {
+                            foreach (var lineB in normalB)
+                            {
+                                if (lineA != lineB)
+                                    nolmalsIntersectionPoints.Add(coord.GetIntersection(lineA, lineB));                                
+                            }
+                        }
+                    }
+                }
+
+                IEnumerable<System.Drawing.Point> distinctPoints = nolmalsIntersectionPoints.Distinct();
+
+                string test = string.Empty;
+                int count = 0;
+                foreach (var item in distinctPoints)
+                {
+                    System.Windows.Shapes.Line intersect = new System.Windows.Shapes.Line();
+                    intersect.X1 = 0;
+                    intersect.Y1 = 0;
+                    intersect.X2 = item.X;
+                    intersect.Y2 = item.Y;
+                    count++;
+                    test += count.ToString() + ". X=" + item.X.ToString() + " Y=" + item.Y.ToString() + "\n";
+                    grid.canvas.Children.Add(intersect);
+                }
+
+                MessageBox.Show("Total intersection = " + distinctPoints.Count());
+                MessageBox.Show("Coordinates " + "\n" + test.ToString());
+                //-----------------------------------------------------------------------------------------------------------------------
             }
 
             void buttonReset_Click(object sender, RoutedEventArgs e)

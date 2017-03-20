@@ -148,7 +148,6 @@ namespace RevitFamilyBrowser.WPF_Classes
             return normal;
         }
 
-
         public Line BuildBoundedLine(List<Line> boundingBox, Line perpend)
         {
             Line gridLine = new Line();
