@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -53,31 +54,37 @@ namespace RevitFamilyBrowser.WPF_Classes
         //-----Get two lines and return intersection point
         public Point GetIntersection(Line box, Line wall)
         {
-            List<double> wallCoefs = LineEquation(wall);
+            Line normalBox = OrtoNormalization(box);
+            Line normalWall = OrtoNormalization(wall);
+
+            List<double> wallCoefs = LineEquation(normalWall);
             double a1 = wallCoefs[0];
             double b1 = wallCoefs[1];
             double c1 = wallCoefs[2];
 
-            List<double> boxCoefs = LineEquation(box);
+            List<double> boxCoefs = LineEquation(normalBox);
             double a2 = boxCoefs[0];
             double b2 = boxCoefs[1];
             double c2 = boxCoefs[2];
-
-            double x = (int)(c1 * b2 - c2 * b1) / (a2 * b1 - a1 * b2);
-            double y = 0;
-            if (b1 == 0)
-            {
-                y = (int)(-c2 - a2 * x) / b2;
-            }
-            else if (b2 == 0)
-                y = (int)(-c1 - a1 * x) / b1;
-
-            else
-                y = (-c2 - (a2 * x)) / b2;
-
             Point intersection = new Point();
-            intersection.X = (int)x;
-            intersection.Y = (int)y;
+
+            {
+                double x = (int)(c1 * b2 - c2 * b1) / (a2 * b1 - a1 * b2);
+                double y = 0;
+                if (b1 == 0)
+                {
+                    y = (int)(-c2 - a2 * x) / b2;
+                }
+                else if (b2 == 0)
+                    y = (int)(-c1 - a1 * x) / b1;
+
+                else
+                    y = (-c2 - (a2 * x)) / b2;
+
+                intersection.X = (int)x;
+                intersection.Y = (int)y;
+            }
+
 
             return intersection;
         }
@@ -148,22 +155,21 @@ namespace RevitFamilyBrowser.WPF_Classes
             return normal;
         }
 
-
+        //-----Build dashed line in limits of box around the room
         public Line BuildBoundedLine(List<Line> boundingBox, Line perpend)
         {
             Line gridLine = new Line();
-            Line normal = OrtoNormalization(perpend);         
-     
+            Line normal = OrtoNormalization(perpend);
             List<Point> allIntersections = new List<Point>();
             foreach (var side in boundingBox)
-            {                
+            {
                 Point intersection = GetIntersection(side, normal);
                 if (IntersectionPositionCheck(side, intersection))
                 {
                     allIntersections.Add(intersection);
                 }
             }
-                        
+
             int count = 0;
             foreach (var item in allIntersections)
             {
@@ -177,7 +183,7 @@ namespace RevitFamilyBrowser.WPF_Classes
                 {
                     gridLine.X2 = item.X;
                     gridLine.Y2 = item.Y;
-                }               
+                }
             }
             return DrawDashedLine(gridLine);
         }
@@ -186,7 +192,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
             List<Point> points = new List<Point>();
             int partNumber = lineNumber * 2;
-            for (int i = 1; i < partNumber; i=i+2)
+            for (int i = 1; i < partNumber; i = i + 2)
             {
                 Point point = new Point();
                 double top = i;
@@ -227,6 +233,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             return points;
         }
 
+        //-----Create 4 lines in given scale and central position around selected room
         public List<Line> GetBoundingBox(ConversionPoint min, ConversionPoint max, int Scale, int derX, int derY)
         {
             List<Line> boxSides = new List<Line>();
@@ -266,6 +273,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             return boxSides;
         }
 
+        //-----Create perpendiculars to given line in given points
         public List<Line> DrawPerp(Line baseWall, List<Point> points)
         {
             List<Line> lines = new List<Line>();
@@ -293,7 +301,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
             line.Stroke = System.Windows.Media.Brushes.Red;
             DoubleCollection dash = new DoubleCollection() { 130, 8, 15, 8 };
-            line.StrokeDashArray = dash;            
+            line.StrokeDashArray = dash;
             return line;
         }
 
@@ -302,8 +310,91 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
             line.Stroke = System.Windows.Media.Brushes.SteelBlue;
             DoubleCollection dash = new DoubleCollection() { 20, 10, 20, 10 };
-            line.StrokeDashArray = dash;           
+            line.StrokeDashArray = dash;
             return line;
+        }
+
+        public List<Point> GetGridPoints(List<Line> listPerpendiculars, List<List<Line>> wallNormals)
+        {
+            List<Point> gridPoints = new List<Point>();
+            if (listPerpendiculars.Count > 0)
+            {
+                wallNormals.Add(listPerpendiculars);
+               // System.Windows.MessageBox.Show("Walls with perpendiculars = " + wallNormals.Count.ToString());
+            }
+            List<System.Drawing.Point> temp = new List<System.Drawing.Point>();
+
+            foreach (var normalA in wallNormals)
+            {
+                foreach (var lineA in normalA)
+                {
+                    foreach (var normalB in wallNormals)
+                    {
+                        foreach (var lineB in normalB)
+                        {
+                            if (lineA != lineB)
+                                temp.Add(GetIntersection(lineA, lineB));
+                        }
+                    }
+                }
+            }
+
+            IEnumerable<System.Drawing.Point> distinctPoints = temp.Distinct();
+            List<Point> filteredPoints = new List<Point>();
+            foreach (var item in distinctPoints)
+            {
+                if (item.Y != int.MaxValue && item.Y != int.MinValue)
+                {
+                    filteredPoints.Add(item);
+                }
+            }
+            return filteredPoints;
+        }
+
+        public List<Point> GetIntersectInRoom(List<Line> boundingBox, List<Point> gridPoints)
+        {
+            List<Point> internalPoints = new List<Point>();
+            double roomMinX = boundingBox[0].X1;
+            double roomMinY = boundingBox[0].Y1;
+            double roomMaxX = boundingBox[0].X1;
+            double roomMaxY = boundingBox[0].Y1;
+            string temp = string.Empty;
+
+            foreach (var item in boundingBox)
+            {
+                if (item.X1 < roomMinX || item.X2 < roomMinX)
+                {
+                    roomMinX = item.X1 < item.X2 ? item.X1 : item.X2;
+                }
+
+                if (item.Y1 < roomMinY || item.Y2 < roomMinY)
+                {
+                    roomMinY = item.Y1 < item.Y2 ? item.Y1 : item.Y2;
+                }
+
+
+                if (item.X1 > roomMinX || item.X2 > roomMinX)
+                {
+                    roomMaxX = item.X1 > item.X2 ? item.X1 : item.X2;
+                }
+
+                if (item.Y1 > roomMaxY || item.Y2 > roomMaxY)
+                {
+                    roomMaxY = item.Y1 > item.Y2 ? item.Y1 : item.Y2;
+                }
+
+                temp = (roomMinX.ToString() + " * " + roomMinY.ToString() + "\n");
+            }           
+
+            foreach (var item in gridPoints)
+            {
+                if (item.X > roomMinX && item.X < roomMaxX &&
+                    item.Y > roomMinY && item.Y < roomMaxY)
+                {
+                    internalPoints.Add(item);
+                }
+            }
+            return internalPoints;
         }
     }
 }

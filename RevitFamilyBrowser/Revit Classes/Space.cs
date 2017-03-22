@@ -21,6 +21,10 @@ namespace RevitFamilyBrowser.Revit_Classes
         List<System.Windows.Shapes.Line> BoundingBox;
         List<List<System.Windows.Shapes.Line>> wallNormals = new List<List<System.Windows.Shapes.Line>>();
 
+        ConversionPoint roomMin;
+        ConversionPoint roomMax;
+
+
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             UIApplication uiapp = commandData.Application;
@@ -70,8 +74,8 @@ namespace RevitFamilyBrowser.Revit_Classes
                 }
 
                 BoundingBoxXYZ box = newRoom.get_BoundingBox(view);
-                ConversionPoint roomMin = new ConversionPoint(box.Min);
-                ConversionPoint roomMax = new ConversionPoint(box.Max);
+                roomMin = new ConversionPoint(box.Min);
+                roomMax = new ConversionPoint(box.Max);
                 RoomDimensions roomDimensions = new RoomDimensions();
 
                 int CanvasSize = (int)grid.canvas.Width;
@@ -156,35 +160,14 @@ namespace RevitFamilyBrowser.Revit_Classes
                     grid.canvas.Children.Add(coord.BuildBoundedLine(BoundingBox, item));
                 }
 
+                List<System.Drawing.Point> gridPoints = coord.GetGridPoints(listPerpendiculars, wallNormals);
                 //--------------------------------------------------------------------------------------------------------------
-                if (listPerpendiculars.Count > 0)
-                {
-                    wallNormals.Add(listPerpendiculars);
-                    MessageBox.Show("Walls with perpendiculars = " + wallNormals.Count.ToString());
-                }
-
-                List<System.Drawing.Point> nolmalsIntersectionPoints = new List<System.Drawing.Point>();
-
-                foreach (var normalA in wallNormals)
-                {
-                    foreach (var lineA in normalA)
-                    {
-                        foreach (var normalB in wallNormals)
-                        {
-                            foreach (var lineB in normalB)
-                            {
-                                if (lineA != lineB)
-                                    nolmalsIntersectionPoints.Add(coord.GetIntersection(lineA, lineB));                                
-                            }
-                        }
-                    }
-                }
-
-                IEnumerable<System.Drawing.Point> distinctPoints = nolmalsIntersectionPoints.Distinct();
+                List<System.Drawing.Point> temp = new List<System.Drawing.Point>();
+                temp = coord.GetIntersectInRoom(BoundingBox, gridPoints);
 
                 string test = string.Empty;
                 int count = 0;
-                foreach (var item in distinctPoints)
+                foreach (var item in temp)
                 {
                     System.Windows.Shapes.Line intersect = new System.Windows.Shapes.Line();
                     intersect.X1 = 0;
@@ -193,11 +176,9 @@ namespace RevitFamilyBrowser.Revit_Classes
                     intersect.Y2 = item.Y;
                     count++;
                     test += count.ToString() + ". X=" + item.X.ToString() + " Y=" + item.Y.ToString() + "\n";
-                    grid.canvas.Children.Add(intersect);
+                    intersect.Stroke = Brushes.Red;
+                    grid.canvas.Children.Add(intersect);                   
                 }
-
-                MessageBox.Show("Total intersection = " + distinctPoints.Count());
-                MessageBox.Show("Coordinates " + "\n" + test.ToString());
                 //-----------------------------------------------------------------------------------------------------------------------
             }
 
