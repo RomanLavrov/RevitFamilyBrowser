@@ -16,14 +16,14 @@ namespace RevitFamilyBrowser.Revit_Classes
     [Transaction(TransactionMode.Manual)]
     public class Space : IExternalCommand
     {
+        public List<System.Drawing.Point> InsertCoord { get; set; }
         int derrivationX = 0;
         int derrivationY = 0;
+        int Scale = 0;
+        int CanvasSize = 0;
         List<System.Windows.Shapes.Line> BoundingBox;
         List<List<System.Windows.Shapes.Line>> wallNormals = new List<List<System.Windows.Shapes.Line>>();
-
-        ConversionPoint roomMin;
-        ConversionPoint roomMax;
-
+        List<System.Drawing.Point> gridPoints = new List<System.Drawing.Point>();
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
@@ -32,7 +32,10 @@ namespace RevitFamilyBrowser.Revit_Classes
             Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
-            GridSetup grid = new GridSetup();
+            GridInstallEvent handler = new GridInstallEvent();
+            ExternalEvent exEvent = ExternalEvent.Create(handler);
+
+            GridSetup grid = new GridSetup(exEvent, handler);
             Window window = new Window();
             window.Width = 1280;
             window.Height = 720;
@@ -54,7 +57,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                     }
                 }
             }
-
+            
             using (var transaction = new Transaction(doc, "Family Symbol Collecting"))
             {
                 transaction.Start();
@@ -72,14 +75,16 @@ namespace RevitFamilyBrowser.Revit_Classes
                         return Result.Cancelled;
                     }
                 }
+                ConversionPoint roomMin;
+                ConversionPoint roomMax;
 
                 BoundingBoxXYZ box = newRoom.get_BoundingBox(view);
                 roomMin = new ConversionPoint(box.Min);
                 roomMax = new ConversionPoint(box.Max);
                 RoomDimensions roomDimensions = new RoomDimensions();
 
-                int CanvasSize = (int)grid.canvas.Width;
-                int Scale = roomDimensions.GetScale(roomMin, roomMax, CanvasSize);
+                CanvasSize = (int)grid.canvas.Width;
+                Scale = roomDimensions.GetScale(roomMin, roomMax, CanvasSize);
 
                 System.Windows.Shapes.Line centerRoom = new System.Windows.Shapes.Line();
                 centerRoom.X1 = 0;
@@ -147,6 +152,7 @@ namespace RevitFamilyBrowser.Revit_Classes
 
                 ProcessCoordinates coord = new ProcessCoordinates();
                 List<System.Drawing.Point> listPointsOnWall;
+                gridPoints.Clear();
                 if (grid.radioEqual.IsChecked == true)
                 {
                     listPointsOnWall = coord.SplitLine(line, Convert.ToInt32(grid.textBoxHorizontal.Text));
@@ -159,8 +165,17 @@ namespace RevitFamilyBrowser.Revit_Classes
                 {
                     grid.canvas.Children.Add(coord.BuildBoundedLine(BoundingBox, item));
                 }
-
-                List<System.Drawing.Point> gridPoints = coord.GetGridPoints(listPerpendiculars, wallNormals);
+                Properties.Settings.Default.InstallPoints = string.Empty;
+                gridPoints = coord.GetGridPoints(listPerpendiculars, wallNormals);
+                grid.textBoxQuantity.Text = "Items: " + gridPoints.Count.ToString();
+                foreach (var item in gridPoints)
+                {
+                    double x = ((((item.X-0.5)* Scale)/304.8) - derrivationX*Scale/304.8);
+                    double y = (((-(item.Y-0.5)* Scale)/304.8) + derrivationY*Scale/304.8);
+                    Properties.Settings.Default.InstallPoints += x + "*" + y + "\n";
+                }
+                MessageBox.Show(Properties.Settings.Default.InstallPoints);
+               
                 //--------------------------------------------------------------------------------------------------------------
                 List<System.Drawing.Point> temp = new List<System.Drawing.Point>();
                 temp = coord.GetIntersectInRoom(BoundingBox, gridPoints);
@@ -175,12 +190,13 @@ namespace RevitFamilyBrowser.Revit_Classes
                     intersect.X2 = item.X;
                     intersect.Y2 = item.Y;
                     count++;
-                    test += count.ToString() + ". X=" + item.X.ToString() + " Y=" + item.Y.ToString() + "\n";
+                    //test += count.ToString() + ". X=" + item.X.ToString() + " Y=" + item.Y.ToString() + "\n";
                     intersect.Stroke = Brushes.Red;
-                    grid.canvas.Children.Add(intersect);                   
+                    
+                    grid.canvas.Children.Add(intersect);
                 }
                 //-----------------------------------------------------------------------------------------------------------------------
-            }
+            }           
 
             void buttonReset_Click(object sender, RoutedEventArgs e)
             {
@@ -192,6 +208,11 @@ namespace RevitFamilyBrowser.Revit_Classes
                 }
             }
             return Result.Succeeded;
+        }
+
+        public string FuncTest()
+        {
+            return gridPoints.Count.ToString();
         }
     }
 }

@@ -40,10 +40,13 @@ namespace RevitFamilyBrowser
 
             PushButtonData btnFolder = new PushButtonData("OpenFolder", "Verzeichnis\nöffnen", path, "RevitFamilyBrowser.Revit_Classes.FolderSelect");   //Verzeichnis  öffnen        
             btnFolder.LargeImage = GetImage(Resources.OpenFolder.GetHbitmap());
-            RibbonItem ri2 = G17.AddItem(btnFolder);
+            RibbonItem ri2 = G17.AddItem(btnFolder);           
 
             PushButtonData btnSpace = new PushButtonData("Space", "Space", path, "RevitFamilyBrowser.Revit_Classes.Space");
-            RibbonItem ri3 = G17.AddItem(btnSpace);           
+            RibbonItem ri3 = G17.AddItem(btnSpace); 
+            
+            PushButtonData btnTest = new PushButtonData("Test", "Test", path, "RevitFamilyBrowser.Revit_Classes.Test");   //Test            
+            RibbonItem ri4 = G17.AddItem(btnTest);
 
             a.ControlledApplication.DocumentChanged += OnDocChanged;
             a.ControlledApplication.DocumentOpened += OnDocOpened;

@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:RevitFamilyBrowser.WPF_Classes"
              mc:Ignorable="d" Width="915" Height="725">
     <Grid>
+        <Button x:Name="Test" Width=" 70" Height="30" HorizontalAlignment="Left" Margin="73,347,0,348" Click="Test_Click"/>
         <Canvas x:Name="canvas" 
                 HorizontalAlignment="Left" 
                 Height="600" Margin="275,40,0,0" 
@@ -31,13 +32,23 @@
             <TextBox x:Name="textBoxHorizontal" 
                      FontSize="16" HorizontalAlignment="Left" 
                      Height="30" Margin="86,84,0,0" 
-                     TextWrapping="Wrap" Text="0" 
+                     TextWrapping="Wrap" Text="1" 
                      VerticalAlignment="Top" 
                      Width="62" 
                      BorderBrush="DarkSlateBlue"
                      HorizontalContentAlignment="Center" 
                      VerticalContentAlignment="Center" />
 
+            <TextBox x:Name="textBoxSymbol"
+                     FontSize="16" HorizontalAlignment="Left"
+                     VerticalAlignment="Center"
+                     Height="30" Margin="275,5,0,690"
+                     Width="600"
+                     Background="SteelBlue"
+                     Foreground="White"
+                     BorderBrush="DarkSlateBlue"
+                     >
+            </TextBox>
             <Button x:Name="buttonAddHorizontal" 
                     FontSize="16" 
                     Content="+" 
@@ -100,8 +111,22 @@
                  TextWrapping="Wrap" 
                  Text="TextBox" 
                  VerticalAlignment="Top" 
-                 Width="120" 
-                             
+                 Width="120"                              
+                 Background="SteelBlue"
+                 Foreground="White"
+                 FontSize="16"
+                 BorderBrush="DarkSlateBlue"
+                 HorizontalContentAlignment="Center"
+                 VerticalContentAlignment="Center"/>
+
+        <TextBox x:Name="textBoxQuantity" 
+                 HorizontalAlignment="Left" 
+                 Height="30" 
+                 Margin="745,124,0,0" 
+                 TextWrapping="Wrap" 
+                 Text="TextBox" 
+                 VerticalAlignment="Top" 
+                 Width="120"                              
                  Background="SteelBlue"
                  Foreground="White"
                  FontSize="16"

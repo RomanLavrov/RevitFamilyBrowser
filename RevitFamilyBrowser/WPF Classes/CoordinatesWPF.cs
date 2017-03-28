@@ -13,12 +13,12 @@ namespace RevitFamilyBrowser.WPF_Classes
 {
     public class ProcessCoordinates
     {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Xstart { get; set; }
-        public int Ystart { get; set; }
-        public int Xend { get; set; }
-        public int Yend { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Xstart { get; set; }
+        public double Ystart { get; set; }
+        public double Xend { get; set; }
+        public double Yend { get; set; }
 
         //-----Return Line length
         public double GetLength(Line line)
@@ -30,6 +30,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
             return (line.Y2 - line.Y1) / (line.X2 - line.X1);
         }
+
         public Point GetCenter(Line line)
         {
             Point point = new Point();
@@ -50,7 +51,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             result.Add(-c);
             return result;
         }
-
+        //public Autodesk.Revit.DB.Point GetRevitIntersection(Autodesk.Revit.DB.Line box, Autodesk.Revit.DB.Line wall )
         //-----Get two lines and return intersection point
         public Point GetIntersection(Line box, Line wall)
         {
@@ -69,14 +70,14 @@ namespace RevitFamilyBrowser.WPF_Classes
             Point intersection = new Point();
 
             {
-                double x = (int)(c1 * b2 - c2 * b1) / (a2 * b1 - a1 * b2);
+                double x = (c1 * b2 - c2 * b1) / (a2 * b1 - a1 * b2);
                 double y = 0;
                 if (b1 == 0)
                 {
                     y = (int)(-c2 - a2 * x) / b2;
                 }
                 else if (b2 == 0)
-                    y = (int)(-c1 - a1 * x) / b1;
+                    y = (-c1 - a1 * x) / b1;
 
                 else
                     y = (-c2 - (a2 * x)) / b2;
@@ -84,8 +85,6 @@ namespace RevitFamilyBrowser.WPF_Classes
                 intersection.X = (int)x;
                 intersection.Y = (int)y;
             }
-
-
             return intersection;
         }
 
@@ -233,6 +232,17 @@ namespace RevitFamilyBrowser.WPF_Classes
             return points;
         }
 
+        public List<Point> revitInstallPoints (List<Point> wpfPoints, int Scale, int derX, int derY)
+        {
+            List<Point> revitPoints = new List<Point>();
+            foreach (var wpfPoint in wpfPoints)
+            {
+                Point point = new Point();
+                point.X = wpfPoint.X * Scale - derX;
+                point.Y = -wpfPoint.Y * Scale - derY;
+            }
+            return revitPoints;
+        }
         //-----Create 4 lines in given scale and central position around selected room
         public List<Line> GetBoundingBox(ConversionPoint min, ConversionPoint max, int Scale, int derX, int derY)
         {
@@ -320,7 +330,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             if (listPerpendiculars.Count > 0)
             {
                 wallNormals.Add(listPerpendiculars);
-               // System.Windows.MessageBox.Show("Walls with perpendiculars = " + wallNormals.Count.ToString());
+                // System.Windows.MessageBox.Show("Walls with perpendiculars = " + wallNormals.Count.ToString());
             }
             List<System.Drawing.Point> temp = new List<System.Drawing.Point>();
 
@@ -363,28 +373,17 @@ namespace RevitFamilyBrowser.WPF_Classes
             foreach (var item in boundingBox)
             {
                 if (item.X1 < roomMinX || item.X2 < roomMinX)
-                {
                     roomMinX = item.X1 < item.X2 ? item.X1 : item.X2;
-                }
 
                 if (item.Y1 < roomMinY || item.Y2 < roomMinY)
-                {
                     roomMinY = item.Y1 < item.Y2 ? item.Y1 : item.Y2;
-                }
-
 
                 if (item.X1 > roomMinX || item.X2 > roomMinX)
-                {
                     roomMaxX = item.X1 > item.X2 ? item.X1 : item.X2;
-                }
 
                 if (item.Y1 > roomMaxY || item.Y2 > roomMaxY)
-                {
                     roomMaxY = item.Y1 > item.Y2 ? item.Y1 : item.Y2;
-                }
-
-                temp = (roomMinX.ToString() + " * " + roomMinY.ToString() + "\n");
-            }           
+            }
 
             foreach (var item in gridPoints)
             {

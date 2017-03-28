@@ -17,9 +17,7 @@ namespace RevitFamilyBrowser.WPF_Classes
     //This class transform Revit coordinates into WPF canvas coordinates
 
     class RoomDimensions
-    {
-        public int MyProperty { get; set; }
-
+    {       
         public void GetBoundingBox(Room newRoom, View view)
         {
             BoundingBoxXYZ box = newRoom.get_BoundingBox(view);

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Autodesk.Revit.UI;
+using RevitFamilyBrowser.Revit_Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,10 +22,16 @@ namespace RevitFamilyBrowser.WPF_Classes
     /// </summary>
     public partial class GridSetup : UserControl
     {
-        public GridSetup()
+        private ExternalEvent m_ExEvent;
+        private GridInstallEvent m_Handler;
+
+        public GridSetup(ExternalEvent exEvent, GridInstallEvent handler)
         {
             InitializeComponent();
             radioEqual.IsChecked = true;
+            m_ExEvent = exEvent;
+            m_Handler = handler;
+            textBoxSymbol.Text = Properties.Settings.Default.FamilySymbol;
         }
 
         private void buttonAddHorizontal_Click(object sender, RoutedEventArgs e)
@@ -43,6 +51,12 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         private void buttonReset_Click(object sender, RoutedEventArgs e)
         {
+            //Properties.Settings.Default.InstallPoints = string.Empty;
+        }
+
+        private void Test_Click(object sender, RoutedEventArgs e)
+        {
+            m_ExEvent.Raise();
         }
     }
 }
