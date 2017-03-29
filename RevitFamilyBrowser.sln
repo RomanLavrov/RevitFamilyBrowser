@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RevitFamilyBrowser", "RevitFamilyBrowser\RevitFamilyBrowser.csproj", "{495FE08A-59CF-4E46-9B1E-5B0AF12F0C8F}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "FamilyBrowserSetup", "FamilyBrowserSetup\FamilyBrowserSetup.vdproj", "{166BEB63-F00A-47CA-A0F3-A0E6F4AF9D34}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,8 @@ Global
 		{495FE08A-59CF-4E46-9B1E-5B0AF12F0C8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{495FE08A-59CF-4E46-9B1E-5B0AF12F0C8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{495FE08A-59CF-4E46-9B1E-5B0AF12F0C8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{166BEB63-F00A-47CA-A0F3-A0E6F4AF9D34}.Debug|Any CPU.ActiveCfg = Debug
+		{166BEB63-F00A-47CA-A0F3-A0E6F4AF9D34}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

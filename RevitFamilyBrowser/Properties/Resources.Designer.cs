@@ -71,6 +71,16 @@ namespace RevitFamilyBrowser.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Ookii_Dialogs_Wpf {
+            get {
+                object obj = ResourceManager.GetObject("Ookii_Dialogs_Wpf", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap OpenFolder {

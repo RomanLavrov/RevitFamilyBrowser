@@ -11,6 +11,8 @@ using System.Windows;
 using System.Drawing;
 using Autodesk.Revit.DB.Events;
 using System.Diagnostics;
+using Ookii.Dialogs.Wpf;
+
 
 namespace RevitFamilyBrowser.Revit_Classes
 {
@@ -27,13 +29,15 @@ namespace RevitFamilyBrowser.Revit_Classes
             UIDocument uidoc = uiapp.ActiveUIDocument;
             Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
             Document doc = uidoc.Document;
-                      
-            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+
+            Ookii.Dialogs.Wpf.VistaFolderBrowserDialog fbd = new VistaFolderBrowserDialog();
+           // System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
             fbd.SelectedPath = Properties.Settings.Default.RootFolder;
             List<string> Directories = new List<string>();
-            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (fbd.ShowDialog() == true)
+           // if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                Properties.Settings.Default.RootFolder = fbd.SelectedPath;
+                Properties.Settings.Default.RootFolder = fbd.SelectedPath;                
                 Properties.Settings.Default.Save();
                 Directories = Directory.GetDirectories(fbd.SelectedPath).ToList();
             }

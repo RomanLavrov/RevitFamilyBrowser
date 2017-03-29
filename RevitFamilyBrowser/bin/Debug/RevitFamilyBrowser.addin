@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Command">
+    <Text>Command RevitFamilyBrowser</Text>
+    <Description>Some description for RevitFamilyBrowser</Description>
+    <Assembly>RevitFamilyBrowser.dll</Assembly>
+    <FullClassName>RevitFamilyBrowser.Command</FullClassName>
+    <ClientId>1e94a621-9531-4f64-aadb-fda10bb7e9f1</ClientId>
+    <VendorId>Global 17 East Ltd.</VendorId>
+    <VendorDescription>Global 17 East Ltd.</VendorDescription>
+  </AddIn>
+  <AddIn Type="Application">
+    <Name>Application RevitFamilyBrowser</Name>
+    <Assembly>RevitFamilyBrowser.dll</Assembly>
+    <FullClassName>RevitFamilyBrowser.App</FullClassName>
+    <ClientId>d0eabade-1b1f-4fe8-98f3-5b48db503d94</ClientId>
+    <VendorId>Global 17 East Ltd.</VendorId>
+    <VendorDescription>Global 17 East Ltd.</VendorDescription>
+  </AddIn>
+</RevitAddIns>
