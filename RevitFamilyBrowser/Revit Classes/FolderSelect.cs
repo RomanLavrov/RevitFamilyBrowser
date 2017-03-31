@@ -31,13 +31,13 @@ namespace RevitFamilyBrowser.Revit_Classes
             Document doc = uidoc.Document;
 
             Ookii.Dialogs.Wpf.VistaFolderBrowserDialog fbd = new VistaFolderBrowserDialog();
-           // System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+            //System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
             fbd.SelectedPath = Properties.Settings.Default.RootFolder;
             List<string> Directories = new List<string>();
             if (fbd.ShowDialog() == true)
-           // if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            //if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                Properties.Settings.Default.RootFolder = fbd.SelectedPath;                
+                Properties.Settings.Default.RootFolder = fbd.SelectedPath;
                 Properties.Settings.Default.Save();
                 Directories = Directory.GetDirectories(fbd.SelectedPath).ToList();
             }
@@ -108,12 +108,13 @@ namespace RevitFamilyBrowser.Revit_Classes
                     Family family = null;
                     FamilySymbol symbol = null;
 
+
                     if (!doc.LoadFamily(item, out family))
                     {
                         // TaskDialog.Show("Load failed", "Unable to load " + item);
                         continue;
                     }
-                    
+
                     ISet<ElementId> familySymbolId = family.GetFamilySymbolIds();
                     foreach (ElementId id in familySymbolId)
                     {
@@ -126,7 +127,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                         //------Eencode image to jpeg for test display purposes:------
                         JpegBitmapEncoder encoder = new JpegBitmapEncoder();
                         encoder.Frames.Add(BitmapFrame.Create(ConvertBitmapToBitmapSource(image)));
-                        encoder.QualityLevel = 100;
+                        encoder.QualityLevel = 20;
 
                         //------------Create temporary folder for images--------
                         string TempImgFolder = System.IO.Path.GetTempPath() + "FamilyBrowser\\";
@@ -134,12 +135,10 @@ namespace RevitFamilyBrowser.Revit_Classes
                         {
                             System.IO.Directory.CreateDirectory(TempImgFolder);
                         }
-
-                        string filename = TempImgFolder + symbol.Name + ".bmp";                      
+                        string filename = TempImgFolder + symbol.Name + ".bmp";
                         FileStream file = new FileStream(filename, FileMode.Create, FileAccess.Write);
                         encoder.Save(file);
                         file.Close();
-                       
                     }
                 }
                 transaction.RollBack();
@@ -155,7 +154,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                 IntPtr.Zero,
                 Int32Rect.Empty,
                 BitmapSizeOptions.FromEmptyOptions());
-        }  
+        }
     }
 }
 

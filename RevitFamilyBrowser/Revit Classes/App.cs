@@ -25,7 +25,7 @@ namespace RevitFamilyBrowser
         {
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
         }
-       // public static App thisApp = null;
+
         public Result OnStartup(UIControlledApplication a)
         {
             a.CreateRibbonTab("Familien Browser"); //Familien Browser Families Browser
@@ -47,12 +47,10 @@ namespace RevitFamilyBrowser
             btnFolder.LargeImage = GetImage(Resources.OpenFolder.GetHbitmap());
             RibbonItem ri2 = G17.AddItem(btnFolder);           
 
-            //PushButtonData btnSpace = new PushButtonData("Space", "Space", path, "RevitFamilyBrowser.Revit_Classes.Space");
-            //RibbonItem ri3 = G17.AddItem(btnSpace);            
-
-            a.ControlledApplication.DocumentChanged += OnDocChanged;
+            PushButtonData btnSpace = new PushButtonData("Space", "Space", path, "RevitFamilyBrowser.Revit_Classes.Space");
+            RibbonItem ri3 = G17.AddItem(btnSpace);           
+           
             a.ControlledApplication.DocumentOpened += OnDocOpened;
-            a.ControlledApplication.FamilyLoadedIntoDocument += OnFamilyLoad;
             a.ControlledApplication.DocumentSaved += OnDocSaved;
             a.ViewActivated += OnViewActivated;
 
@@ -63,7 +61,7 @@ namespace RevitFamilyBrowser
             return Result.Succeeded;
         }
 
-        System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             string dllName = args.Name.Contains(',') ? args.Name.Substring(0, args.Name.IndexOf(',')) : args.Name.Replace(".dll", "");
 
@@ -89,11 +87,10 @@ namespace RevitFamilyBrowser
                 }
                 catch (Exception) { }
             }
-            a.ControlledApplication.DocumentChanged -= OnDocChanged;
+
             a.ControlledApplication.DocumentOpened -= OnDocOpened;
-            a.ControlledApplication.FamilyLoadedIntoDocument -= OnFamilyLoad;
             a.ControlledApplication.DocumentSaved -= OnDocSaved;
-            a.ViewActivated -= OnViewActivated;
+            //a.ViewActivated -= OnViewActivated;
 
             Properties.Settings.Default.CollectedData = string.Empty;
             Properties.Settings.Default.FamilyPath = string.Empty;
@@ -101,7 +98,7 @@ namespace RevitFamilyBrowser
 
             return Result.Succeeded;
         }
-
+       
         private void OnViewActivated(object sender, ViewActivatedEventArgs e)
         {
             CreateImages(e.Document);
@@ -114,19 +111,9 @@ namespace RevitFamilyBrowser
             CollectFamilyData(e.Document);
         }
 
+       
+
         private void OnDocSaved(object sender, DocumentSavedEventArgs e)
-        {
-            CreateImages(e.Document);
-            CollectFamilyData(e.Document);
-        }
-
-        private void OnDocChanged(object sender, DocumentChangedEventArgs e)
-        {            
-            CreateImages(e.GetDocument());
-            CollectFamilyData(e.GetDocument());
-        }
-
-        private void OnFamilyLoad(object sender, FamilyLoadedIntoDocumentEventArgs e)
         {
             CreateImages(e.Document);
             CollectFamilyData(e.Document);
@@ -193,6 +180,7 @@ namespace RevitFamilyBrowser
                     encoder.Save(file);
                     file.Close();
                 }
+                //TODO
                 catch (Exception){}               
             }          
         }
@@ -215,25 +203,6 @@ namespace RevitFamilyBrowser
                 IntPtr.Zero,
                 Int32Rect.Empty,
                 BitmapSizeOptions.FromEmptyOptions());
-        }
-
-        static byte[] StreamToBytes(Stream input)
-        {
-            var capacity = input.CanSeek ? (int)input.Length : 0;
-            using (var output = new MemoryStream(capacity))
-            {
-                int readLength;
-                var buffer = new byte[4096];
-
-                do
-                {
-                    readLength = input.Read(buffer, 0, buffer.Length);
-                    output.Write(buffer, 0, readLength);
-                }
-                while (readLength != 0);
-
-                return output.ToArray();
-            }
         }
     }
 }
