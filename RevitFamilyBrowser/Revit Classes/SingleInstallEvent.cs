@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace RevitFamilyBrowser.Revit_Classes
 {
-    public class MyEvent : IExternalEventHandler
+    public class SingleInstallEvent : IExternalEventHandler
     {
         public void Execute(UIApplication uiapp)
         {

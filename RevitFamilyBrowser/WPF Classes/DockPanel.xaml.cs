@@ -17,13 +17,13 @@ namespace RevitFamilyBrowser.WPF_Classes
     public partial class DockPanel : UserControl, IDockablePaneProvider
     {
         private ExternalEvent m_ExEvent;
-        private MyEvent m_Handler;
+        private SingleInstallEvent m_Handler;
 
         private string temp = string.Empty;
         private string collectedData = string.Empty;
         private int ImageListLength = 0;
 
-        public DockPanel(ExternalEvent exEvent, MyEvent handler)
+        public DockPanel(ExternalEvent exEvent, SingleInstallEvent handler)
         {
             InitializeComponent();
             m_ExEvent = exEvent;

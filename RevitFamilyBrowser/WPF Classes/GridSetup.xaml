@@ -6,7 +6,18 @@
              xmlns:local="clr-namespace:RevitFamilyBrowser.WPF_Classes"
              mc:Ignorable="d" Width="915" Height="725">
     <Grid>
-        <Button x:Name="Test" Width=" 70" Height="30" HorizontalAlignment="Left" Margin="73,347,0,348" Click="Test_Click"/>
+        <Button x:Name="buttonInsert" 
+                Content="Insert" 
+                Width="120" 
+                Height="30" 
+                HorizontalAlignment="Left" 
+                Margin="56,347,0,348" 
+                Click="ButtonInsertClick"
+                FontSize="16" 
+                Background="SteelBlue"
+                BorderBrush="DarkSlateBlue"
+                Foreground="White"/>
+
         <Canvas x:Name="canvas" 
                 HorizontalAlignment="Left" 
                 Height="600" Margin="275,40,0,0" 
@@ -76,8 +87,8 @@
                     />
 
             <Button x:Name="buttonReset" 
-                    FontSize="16" 
                     Content="Reset grid" 
+                    FontSize="16" 
                     Width="Auto" 
                     Height="Auto" 
                     Margin="57,200,738,495" 

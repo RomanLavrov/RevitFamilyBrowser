@@ -54,9 +54,10 @@ namespace RevitFamilyBrowser.WPF_Classes
             //Properties.Settings.Default.InstallPoints = string.Empty;
         }
 
-        private void Test_Click(object sender, RoutedEventArgs e)
+        private void ButtonInsertClick(object sender, RoutedEventArgs e)
         {
             m_ExEvent.Raise();
+            this.textBoxSymbol.Text = string.Empty;
         }
     }
 }

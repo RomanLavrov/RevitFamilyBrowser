@@ -63,14 +63,10 @@ namespace RevitFamilyBrowser.Revit_Classes
                         XYZ point = new XYZ(item.X, item.Y, 0);
                         Level level = view.GenLevel;
                         Element host = level as Element;
-                        
-                        
                         doc.Create.NewFamilyInstance(point, symbol, host, StructuralType.NonStructural);
-                        //uidoc.PostRequestForElementTypePlacement(symbol);
                         transact.Commit();
                     }
                 }
-                //uidoc.PostRequestForElementTypePlacement(symbol);
             }
         }
 

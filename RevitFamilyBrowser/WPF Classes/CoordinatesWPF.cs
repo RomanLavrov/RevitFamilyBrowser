@@ -11,7 +11,7 @@ using System.Windows.Shapes;
 
 namespace RevitFamilyBrowser.WPF_Classes
 {
-    public class ProcessCoordinates
+    public class WpfCoordinates
     {
         public double X { get; set; }
         public double Y { get; set; }
@@ -232,17 +232,17 @@ namespace RevitFamilyBrowser.WPF_Classes
             return points;
         }
 
-        public List<Point> revitInstallPoints (List<Point> wpfPoints, int Scale, int derX, int derY)
-        {
-            List<Point> revitPoints = new List<Point>();
-            foreach (var wpfPoint in wpfPoints)
-            {
-                Point point = new Point();
-                point.X = wpfPoint.X * Scale - derX;
-                point.Y = -wpfPoint.Y * Scale - derY;
-            }
-            return revitPoints;
-        }
+        //public List<Point> revitInstallPoints (List<Point> wpfPoints, int Scale, int derX, int derY)
+        //{
+        //    List<Point> revitPoints = new List<Point>();
+        //    foreach (var wpfPoint in wpfPoints)
+        //    {
+        //        Point point = new Point();
+        //        point.X = wpfPoint.X * Scale - derX;
+        //        point.Y = -wpfPoint.Y * Scale - derY;
+        //    }
+        //    return revitPoints;
+        //}
         //-----Create 4 lines in given scale and central position around selected room
         public List<Line> GetBoundingBox(ConversionPoint min, ConversionPoint max, int Scale, int derX, int derY)
         {

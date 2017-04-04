@@ -84,7 +84,7 @@
     <Compile Include="Revit Classes\ConversionPoint.cs" />
     <Compile Include="Revit Classes\FolderSelect.cs" />
     <Compile Include="Revit Classes\GridInstallEvent.cs" />
-    <Compile Include="Revit Classes\MyEvent.cs" />
+    <Compile Include="Revit Classes\SingleInstallEvent.cs" />
     <Compile Include="Revit Classes\ShowPanel.cs" />
     <Compile Include="Revit Classes\Space.cs" />
     <Compile Include="WPF Classes\CoordinatesWPF.cs" />

@@ -32,7 +32,7 @@ namespace RevitFamilyBrowser
             RibbonPanel G17 = a.CreateRibbonPanel("Familien Browser", "Familien Browser");
             string path = Assembly.GetExecutingAssembly().Location;
             
-            MyEvent handler = new MyEvent();
+            SingleInstallEvent handler = new SingleInstallEvent();
             ExternalEvent exEvent = ExternalEvent.Create(handler);
 
             DockPanel dockPanel = new DockPanel(exEvent, handler);
@@ -89,7 +89,7 @@ namespace RevitFamilyBrowser
             }
 
             a.ControlledApplication.DocumentOpened -= OnDocOpened;
-            a.ControlledApplication.FamilyLoadedIntoDocument -= OnFamilyLoad;
+            //a.ControlledApplication.FamilyLoadedIntoDocument -= OnFamilyLoad;
             a.ControlledApplication.DocumentSaved -= OnDocSaved;
             a.ViewActivated -= OnViewActivated;
 

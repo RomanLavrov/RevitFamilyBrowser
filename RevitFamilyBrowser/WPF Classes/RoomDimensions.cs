@@ -21,7 +21,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         public void GetBoundingBox(Room newRoom, View view)
         {
             BoundingBoxXYZ box = newRoom.get_BoundingBox(view);
-            ProcessCoordinates center = new ProcessCoordinates();
+            WpfCoordinates center = new WpfCoordinates();
 
             center.X = (int)(box.Min.X - box.Max.X) / 2;
             center.Y = (int)(box.Min.Y - box.Max.Y) / 2;
@@ -99,7 +99,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             sideD.X1 = max.X; sideD.Y1 = min.Y;
             sideD.X2 = min.X; sideD.Y2 = min.Y;
             sides.Add(sideD);
-            ProcessCoordinates coord = new ProcessCoordinates();
+            WpfCoordinates coord = new WpfCoordinates();
 
             foreach (var item in sides)
             {
