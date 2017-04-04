@@ -87,11 +87,10 @@ namespace RevitFamilyBrowser.Revit_Classes
 
         private List<string> GetFamilyName(List<string> FamilyPath)
         {
-            int index = 0;
             List<string> FamiliesName = new List<string>();
             foreach (var item in FamilyPath)
             {
-                index = item.LastIndexOf('\\') + 1;
+                int index = item.LastIndexOf('\\') + 1;
                 FamiliesName.Add(item.Substring(index));
             }
             return FamiliesName;

@@ -61,7 +61,7 @@ namespace RevitFamilyBrowser
             return Result.Succeeded;
         }
 
-        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             string dllName = args.Name.Contains(',') ? args.Name.Substring(0, args.Name.IndexOf(',')) : args.Name.Replace(".dll", "");
 
@@ -89,8 +89,9 @@ namespace RevitFamilyBrowser
             }
 
             a.ControlledApplication.DocumentOpened -= OnDocOpened;
+            a.ControlledApplication.FamilyLoadedIntoDocument -= OnFamilyLoad;
             a.ControlledApplication.DocumentSaved -= OnDocSaved;
-            //a.ViewActivated -= OnViewActivated;
+            a.ViewActivated -= OnViewActivated;
 
             Properties.Settings.Default.CollectedData = string.Empty;
             Properties.Settings.Default.FamilyPath = string.Empty;
@@ -203,6 +204,25 @@ namespace RevitFamilyBrowser
                 IntPtr.Zero,
                 Int32Rect.Empty,
                 BitmapSizeOptions.FromEmptyOptions());
+        }
+
+        static byte[] StreamToBytes(Stream input)
+        {
+            var capacity = input.CanSeek ? (int)input.Length : 0;
+            using (var output = new MemoryStream(capacity))
+            {
+                int readLength;
+                var buffer = new byte[4096];
+
+                do
+                {
+                    readLength = input.Read(buffer, 0, buffer.Length);
+                    output.Write(buffer, 0, readLength);
+                }
+                while (readLength != 0);
+
+                return output.ToArray();
+            }
         }
     }
 }
