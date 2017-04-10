@@ -1,0 +1,87 @@
+﻿<UserControl
+    x:Class="RevitFamilyBrowser.Settings.SettingsControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:RevitFamilyBrowser.Settings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="150"
+    d:DesignWidth="600"
+    mc:Ignorable="d">
+    <Grid>
+        <Button
+            Width="120"
+            Height="30"
+            Margin="460,15,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            Background="SteelBlue"
+            BorderBrush="DarkSlateBlue"
+            Click="Button_Click"
+            Content="Select"
+            FontSize="16"
+            Foreground="White" />
+        <TextBox
+            Name="TextBoxFamily"
+            Width="432"
+            Height="30"
+            Margin="18,15,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            VerticalContentAlignment="Center"
+            Text="Select initial folder with Revit family files:"
+            TextWrapping="Wrap" />
+        <TextBox
+            Name="TextBoxSettings"
+            Width="432"
+            Height="30"
+            Margin="18,60,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            VerticalContentAlignment="Center"
+            Text="Select path to store your settings:"
+            TextWrapping="Wrap" />
+        <Button
+            Name="buttonSaveIni"
+            Width="120"
+            Height="30"
+            Margin="460,60,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            Background="SteelBlue"
+            BorderBrush="DarkSlateBlue"
+            Click="buttonSaveIni_Click"
+            Content="Select"
+            FontSize="16"
+            Foreground="White" />
+        <Button
+            Name="ButtonOk"
+            Width="120"
+            Margin="146,105,334,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Background="SteelBlue"
+            BorderBrush="DarkSlateBlue"
+            Click="ButtonOk_Click"
+            Content="OK"
+            FontSize="16"
+            Foreground="White" />
+        <Button
+            Name="ButtonCancel"
+            Width="120"
+            Margin="330,105,0,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Background="SteelBlue"
+            BorderBrush="DarkSlateBlue"
+            Click="ButtonCancel_Click"
+            Content="Cancel"
+            FontSize="16"
+            Foreground="White" />
+
+    </Grid>
+</UserControl>

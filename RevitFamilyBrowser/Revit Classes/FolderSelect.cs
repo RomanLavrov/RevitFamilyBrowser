@@ -12,6 +12,7 @@ using System.Drawing;
 using Autodesk.Revit.DB.Events;
 using System.Diagnostics;
 using Ookii.Dialogs.Wpf;
+using TaskDialog = Autodesk.Revit.UI.TaskDialog;
 
 
 namespace RevitFamilyBrowser.Revit_Classes
@@ -31,20 +32,27 @@ namespace RevitFamilyBrowser.Revit_Classes
             Document doc = uidoc.Document;
 
             Ookii.Dialogs.Wpf.VistaFolderBrowserDialog fbd = new VistaFolderBrowserDialog();
-            //System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-            fbd.SelectedPath = Properties.Settings.Default.RootFolder;
-            List<string> Directories = new List<string>();
+            if (Properties.Settings.Default.RootFolder == File.ReadAllText(Properties.Settings.Default.SettingPath))
+                fbd.SelectedPath = File.ReadAllText(Properties.Settings.Default.SettingPath);
+            else
+                fbd.SelectedPath = Properties.Settings.Default.RootFolder;
+            //List<string> Directories = new List<string>();
             if (fbd.ShowDialog() == true)
-            //if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                if (fbd.SelectedPath.Contains("ROCHE") && app.VersionNumber != "2015")
+                {
+                    Autodesk.Revit.UI.TaskDialog.Show("Warning", "Please select other family path.");
+                    fbd.ShowDialog();
+                }
+                //Directories = Directory.GetDirectories(fbd.SelectedPath).ToList();
                 Properties.Settings.Default.RootFolder = fbd.SelectedPath;
                 Properties.Settings.Default.Save();
-                Directories = Directory.GetDirectories(fbd.SelectedPath).ToList();
             }
             else
             {
                 return Result.Cancelled;
             }
+           
             FamilyPath = GetFamilyPath(fbd.SelectedPath);
             FamilyName = GetFamilyName(FamilyPath);
             Properties.Settings.Default.SymbolList = string.Empty;

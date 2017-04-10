@@ -6,10 +6,12 @@ using Autodesk.Revit.UI.Selection;
 using RevitFamilyBrowser.WPF_Classes;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using Brushes = System.Windows.Media.Brushes;
 using Line = System.Windows.Shapes.Line;
 
 namespace RevitFamilyBrowser.Revit_Classes
@@ -24,9 +26,13 @@ namespace RevitFamilyBrowser.Revit_Classes
         int CanvasSize = 0;
         private List<Line> revitWalls;
         private List<Line> wpfWalls;
-        List<System.Windows.Shapes.Line> BoundingBox;
-        List<List<System.Windows.Shapes.Line>> wallNormals = new List<List<System.Windows.Shapes.Line>>();
+        List<Line> BoundingBox;
+
+        List<Line> revitWallNormals = new List<Line>();
+        List<List<Line>> wallNormals = new List<List<Line>>();
+
         List<System.Drawing.Point> gridPoints = new List<System.Drawing.Point>();
+        List<System.Drawing.PointF> rvtGridPoints = new List<PointF>();
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
@@ -129,6 +135,7 @@ namespace RevitFamilyBrowser.Revit_Classes
             {
                 Line line = (Line)sender;
                 line.Stroke = Brushes.Red;
+
                 int wallIndex = 0;
                 foreach (var item in wpfWalls)
                 {
@@ -163,9 +170,25 @@ namespace RevitFamilyBrowser.Revit_Classes
                 {
                     double x = ((((item.X - 0.5) * Scale) / 304.8) - derrivationX * Scale / 304.8);
                     double y = (((-(item.Y - 0.5) * Scale) / 304.8) + derrivationY * Scale / 304.8);
-                    Properties.Settings.Default.InstallPoints += x + "*" + y + "\n";
+                    //Properties.Settings.Default.InstallPoints += x + "*" + y + "\n";
                 }
                 //MessageBox.Show(Properties.Settings.Default.InstallPoints);
+                //----------------------------------------Revit coordinates--------------------------------------------------------
+                CoordinatesRevit rvt = new CoordinatesRevit();
+                Line rvtWall = revitWalls[wallIndex];
+                List<System.Drawing.PointF> rvtPointsOnWall = rvt.GetSplitPoints(rvtWall, Convert.ToInt32(grid.textBoxHorizontal.Text));
+
+                List<System.Windows.Shapes.Line> rvtListPerpendiculars =
+                    rvt.GetPerpendiculars(rvtWall, rvtPointsOnWall);
+                //TaskDialog.Show("Perpendiculars number", rvtListPerpendiculars.Count.ToString());
+                rvtGridPoints = rvt.GetGridPointsRvt(revitWallNormals, rvtListPerpendiculars);
+                TaskDialog.Show("Revitpoint", rvtGridPoints.Count.ToString());
+                foreach (var item in rvtGridPoints)
+                {
+                    TaskDialog.Show("Revitpoint", rvtGridPoints.Count.ToString());
+                    Properties.Settings.Default.InstallPoints += item.X + "*" + item.Y + "\n";
+                }
+
 
                 //------------------------------------Draw Lines to intersection points in wpf window------------------------------------------------------------------------
                 //List<System.Drawing.Point> temp = new List<System.Drawing.Point>();

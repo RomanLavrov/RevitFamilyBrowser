@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\FamilyBrowserSetup"
+    "\\FamilyBrowserSetup",
+    "\\RevitFamilyBrowser",
+    "\\RevitFamilyBrowser\\Revit Classes"
   ],
-  "SelectedNode": "\\README.md",
+  "SelectedNode": "\\RevitFamilyBrowser\\Revit Classes\\FolderSelect.cs",
   "PreviewInSolutionExplorer": true
 }

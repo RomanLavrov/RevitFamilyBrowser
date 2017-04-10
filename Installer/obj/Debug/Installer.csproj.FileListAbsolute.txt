@@ -12,3 +12,4 @@ C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\Installer
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\Installer\bin\Debug\RevitFamilyBrowser.pdb
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\Installer\bin\Debug\RevitFamilyBrowser.dll.config
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\Installer\bin\Debug\RevitFamilyBrowser.addin
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\Installer\bin\Debug\Ookii.Dialogs.Wpf.dll

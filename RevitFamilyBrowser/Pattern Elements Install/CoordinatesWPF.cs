@@ -196,12 +196,11 @@ namespace RevitFamilyBrowser.WPF_Classes
                 Point point = new Point();
                 double top = i;
                 double bottom = (partNumber - i);
-                double proportion;
                 if ((partNumber - i) == 0)
                 {
                     bottom = 1;
                 }
-                proportion = top / bottom;
+                var proportion = top / bottom;
                 point.X = Convert.ToInt32((line.X1 + (line.X2 * proportion)) / (1 + proportion));
                 point.Y = Convert.ToInt32((line.Y1 + (line.Y2 * proportion)) / (1 + proportion));
                 points.Add(point);
@@ -219,12 +218,11 @@ namespace RevitFamilyBrowser.WPF_Classes
                 Point point = new Point();
                 double top = i;
                 double bottom = (partNumber - i);
-                double proportion;
                 if ((partNumber - i) == 0)
                 {
                     bottom = 1;
                 }
-                proportion = top / bottom;
+                var proportion = top / bottom;
                 point.X = Convert.ToInt32((line.X1 + (line.X2 * proportion)) / (1 + proportion));
                 point.Y = Convert.ToInt32((line.Y1 + (line.Y2 * proportion)) / (1 + proportion));
                 points.Add(point);
@@ -326,8 +324,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         public List<Point> GetGridPoints(List<Line> listPerpendiculars, List<List<Line>> wallNormals)
         {
-            List<Point> gridPoints = new List<Point>();
-            if (listPerpendiculars.Count > 0)
+            //if (listPerpendiculars.Count > 0)
             {
                 wallNormals.Add(listPerpendiculars);
                 // System.Windows.MessageBox.Show("Walls with perpendiculars = " + wallNormals.Count.ToString());
@@ -349,7 +346,7 @@ namespace RevitFamilyBrowser.WPF_Classes
                 }
             }
 
-            IEnumerable<System.Drawing.Point> distinctPoints = temp.Distinct();
+            IEnumerable<Point> distinctPoints = temp.Distinct();
             List<Point> filteredPoints = new List<Point>();
             foreach (var item in distinctPoints)
             {
