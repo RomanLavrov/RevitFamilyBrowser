@@ -53,11 +53,25 @@ namespace RevitFamilyBrowser.Settings
         {
             string path = TextBoxSettings.Text;
             string fileName = "FamilyBrowser.ini";
-            File.WriteAllText(path + fileName, DefaultFamilyPath+@"\");
-            Properties.Settings.Default.SettingPath = path + fileName;
-            Properties.Settings.Default.Save();
-
             var parentWindow = Window.GetWindow(this);
+            bool valid = true;
+
+            try
+            {
+                System.IO.Path.GetFullPath(path + fileName);
+            }
+            catch (Exception)
+            {
+                valid = false;
+                parentWindow.Close();
+            }
+            if (valid)
+            {
+                File.WriteAllText(path + fileName, DefaultFamilyPath + @"\");
+                Properties.Settings.Default.SettingPath = path + fileName;
+                Properties.Settings.Default.Save();
+            }
+
             parentWindow.Close();
         }
 

@@ -17,10 +17,10 @@ namespace RevitFamilyBrowser.Revit_Classes
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             SettingsControl settings = new SettingsControl();
-            TaskDialog.Show("Settings", "HiFirsSetting");
+          
             Window window = new Window
             {
-                Height = 150,
+                Height = 160,
                 Width = 600,
                 Title = "Familien Browser Settings",
                 WindowStartupLocation = WindowStartupLocation.CenterScreen,
@@ -29,7 +29,6 @@ namespace RevitFamilyBrowser.Revit_Classes
                 WindowStyle = WindowStyle.None,
                 Name = "Settings"
             };
-
           
             window.Show();
             return Result.Succeeded;

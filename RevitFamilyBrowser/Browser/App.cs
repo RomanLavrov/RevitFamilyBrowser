@@ -51,8 +51,8 @@ namespace RevitFamilyBrowser
             btnSettings.LargeImage = GetImage(Resources.settings.GetHbitmap());
             RibbonItem ri3 = G17.AddItem(btnSettings);
 
-            PushButtonData btnSpace = new PushButtonData("Space", "Space", path, "RevitFamilyBrowser.Revit_Classes.Space");
-            RibbonItem ri4 = G17.AddItem(btnSpace); 
+            //PushButtonData btnSpace = new PushButtonData("Space", "Space", path, "RevitFamilyBrowser.Revit_Classes.Space");
+            //RibbonItem ri4 = G17.AddItem(btnSpace); 
             
            
             a.ControlledApplication.DocumentOpened += OnDocOpened;
@@ -115,9 +115,7 @@ namespace RevitFamilyBrowser
             CreateImages(e.Document);
             CollectFamilyData(e.Document);
         }
-
-       
-
+        
         private void OnDocSaved(object sender, DocumentSavedEventArgs e)
         {
             CreateImages(e.Document);

@@ -79,25 +79,25 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Revit Classes\App.cs" />
-    <Compile Include="Revit Classes\Command.cs" />
+    <Compile Include="Browser\App.cs" />
+    <Compile Include="Browser\Command.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pattern Elements Install\ConversionPoint.cs" />
     <Compile Include="Pattern Elements Install\CoordinatesRevit.cs" />
-    <Compile Include="Revit Classes\FolderSelect.cs" />
+    <Compile Include="Browser\FolderSelect.cs" />
     <Compile Include="Pattern Elements Install\GridInstallEvent.cs" />
-    <Compile Include="Settings\Settings.cs" />
-    <Compile Include="Revit Classes\SingleInstallEvent.cs" />
-    <Compile Include="Revit Classes\ShowPanel.cs" />
+    <Compile Include="AppSettings\Settings.cs" />
+    <Compile Include="Browser\SingleInstallEvent.cs" />
+    <Compile Include="Browser\ShowPanel.cs" />
     <Compile Include="Pattern Elements Install\Space.cs" />
-    <Compile Include="Settings\SettingsControl.xaml.cs">
+    <Compile Include="AppSettings\SettingsControl.xaml.cs">
       <DependentUpon>SettingsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pattern Elements Install\CoordinatesWPF.cs" />
-    <Compile Include="WPF Classes\DockPanel.xaml.cs">
+    <Compile Include="Browser\DockPanel.xaml.cs">
       <DependentUpon>DockPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WPF Classes\FamilyData.cs" />
+    <Compile Include="Browser\FamilyData.cs" />
     <Compile Include="Pattern Elements Install\GridSetup.xaml.cs">
       <DependentUpon>GridSetup.xaml</DependentUpon>
     </Compile>
@@ -115,17 +115,16 @@
     <None Include="bin\Debug\Ookii.Dialogs.Wpf.dll" />
     <None Include="Resources\Ookii.Dialogs.Wpf.dll" />
     <Content Include="images\settings.png" />
-    <None Include="Resources\settings.png" />
     <Content Include="RevitFamilyBrowser.addin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Settings\SettingsControl.xaml">
+    <Page Include="AppSettings\SettingsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WPF Classes\DockPanel.xaml">
+    <Page Include="Browser\DockPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
