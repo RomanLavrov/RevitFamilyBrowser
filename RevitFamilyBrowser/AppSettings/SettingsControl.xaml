@@ -9,79 +9,110 @@
     d:DesignWidth="600"
     mc:Ignorable="d">
     <Grid>
-        <Button
-            Width="120"
-            Height="30"
-            Margin="460,15,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center"
-            Background="SteelBlue"
-            BorderBrush="DarkSlateBlue"
-            Click="Button_Click"
-            Content="Select"
-            FontSize="16"
-            Foreground="White" />
-        <TextBox
-            Name="TextBoxFamily"
-            Width="432"
-            Height="30"
-            Margin="18,15,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            VerticalContentAlignment="Center"
-            Text="Select initial folder with Revit family files:"
-            TextWrapping="Wrap" />
-        <TextBox
-            Name="TextBoxSettings"
-            Width="432"
-            Height="30"
-            Margin="18,60,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            VerticalContentAlignment="Center"
-            Text="Select path to store your settings:"
-            TextWrapping="Wrap" />
-        <Button
-            Name="buttonSaveIni"
-            Width="120"
-            Height="30"
-            Margin="460,60,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center"
-            Background="SteelBlue"
-            BorderBrush="DarkSlateBlue"
-            Click="buttonSaveIni_Click"
-            Content="Select"
-            FontSize="16"
-            Foreground="White" />
-        <Button
-            Name="ButtonOk"
-            Width="120"
-            Margin="146,105,334,0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            Background="SteelBlue"
-            BorderBrush="DarkSlateBlue"
-            Click="ButtonOk_Click"
-            Content="OK"
-            FontSize="16"
-            Foreground="White" />
-        <Button
-            Name="ButtonCancel"
-            Width="120"
-            Margin="330,105,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Background="SteelBlue"
-            BorderBrush="DarkSlateBlue"
-            Click="ButtonCancel_Click"
-            Content="Cancel"
-            FontSize="16"
-            Foreground="White" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.2*" />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition Height="0.1*" />
+        </Grid.RowDefinitions>
+        <Grid
+            Grid.Row="1"
+            Width="560"
+            HorizontalAlignment="Center">
+            <Button
+                Grid.Row="1"
+                Width="120"
+                Height="30"
+                Margin="0,0,0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Background="SteelBlue"
+                BorderBrush="DarkSlateBlue"
+                Click="Button_Click"
+                Content="Select"
+                FontSize="16"
+                Foreground="White" />
+            <TextBox
+                Name="TextBoxFamily"
+                Grid.Row="1"
+                Width="432"
+                Height="30"
+                Margin="0,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                Text=" Select initial folder with Revit family files:"
+                TextWrapping="Wrap" />
+        </Grid>
+        <Grid
+            Grid.Row="2"
+            Width="560"
+            HorizontalAlignment="Center">
+            <TextBox
+                x:Name="TextBoxSettings"
+                Width="432"
+                Height="30"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                Text=" Select path to store your settings:"
+                TextWrapping="Wrap" />
 
+            <Button
+                Name="buttonSaveIni"
+                Grid.Row="2"
+                Width="120"
+                Height="30"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Background="SteelBlue"
+                BorderBrush="DarkSlateBlue"
+                Click="buttonSaveIni_Click"
+                Content="Select"
+                FontSize="16"
+                Foreground="White" />
+        </Grid>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+            <Button
+                Name="ButtonOk"
+                Grid.Column="1"
+                Width="120"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="SteelBlue"
+                BorderBrush="DarkSlateBlue"
+                Click="ButtonOk_Click"
+                Content="OK"
+                FontSize="16"
+                Foreground="White" />
+
+            <Button
+                Name="ButtonCancel"
+                Grid.Column="3"
+                Width="120"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="SteelBlue"
+                BorderBrush="DarkSlateBlue"
+                Click="ButtonCancel_Click"
+                Content="Cancel"
+                FontSize="16"
+                Foreground="White" />
+
+        </Grid>
     </Grid>
 </UserControl>
+
+

@@ -26,8 +26,9 @@ namespace RevitFamilyBrowser.Revit_Classes
                 WindowStartupLocation = WindowStartupLocation.CenterScreen,
                 Content = settings,
                 Background = System.Windows.Media.Brushes.WhiteSmoke,
-                WindowStyle = WindowStyle.None,
-                Name = "Settings"
+                WindowStyle = WindowStyle.ToolWindow,
+                Name = "Settings",
+                ResizeMode = ResizeMode.NoResize
             };
           
             window.Show();

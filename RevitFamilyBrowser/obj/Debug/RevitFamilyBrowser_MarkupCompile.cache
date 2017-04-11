@@ -16,5 +16,5 @@ DEBUG;TRACE
 14-171411119
 AppSettings\SettingsControl.xaml;Browser\DockPanel.xaml;Pattern Elements Install\GridSetup.xaml;
 
-False
+True
 

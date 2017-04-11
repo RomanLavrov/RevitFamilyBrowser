@@ -51,27 +51,36 @@ namespace RevitFamilyBrowser.Settings
 
         private void ButtonOk_Click(object sender, RoutedEventArgs e)
         {
-            string path = TextBoxSettings.Text;
+            string pathIni = TextBoxSettings.Text;
             string fileName = "FamilyBrowser.ini";
             var parentWindow = Window.GetWindow(this);
             bool valid = true;
 
             try
             {
-                System.IO.Path.GetFullPath(path + fileName);
+                System.IO.Path.GetFullPath(pathIni + fileName);
             }
             catch (Exception)
             {
                 valid = false;
                 parentWindow.Close();
             }
-            if (valid)
+
+            try
             {
-                File.WriteAllText(path + fileName, DefaultFamilyPath + @"\");
-                Properties.Settings.Default.SettingPath = path + fileName;
-                Properties.Settings.Default.Save();
+                System.IO.Path.GetFullPath(DefaultFamilyPath);
+            }
+            catch (Exception)
+            {
+                DefaultFamilyPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             }
 
+            if (valid)
+            {
+                File.WriteAllText(pathIni + fileName, DefaultFamilyPath + @"\");
+                Properties.Settings.Default.SettingPath = pathIni + fileName;
+                Properties.Settings.Default.Save();
+            }
             parentWindow.Close();
         }
 
