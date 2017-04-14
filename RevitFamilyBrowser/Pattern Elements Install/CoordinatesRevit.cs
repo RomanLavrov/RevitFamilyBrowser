@@ -23,10 +23,12 @@ namespace RevitFamilyBrowser.Revit_Classes
 
             return null;
         }
+
         public double GetSlope(Line line)
         {
             return (line.Y2 - line.Y1) / (line.X2 - line.X1);
         }
+
         public List<double> GetLineEquation(Line line)
         {
             List<double> result = new List<double>();
@@ -36,6 +38,7 @@ namespace RevitFamilyBrowser.Revit_Classes
             result.Add(a);
             result.Add(b);
             result.Add(-c);
+            //MessageBox.Show($"{a}x + {b}y + {c}");
             return result;
         }
 
@@ -90,6 +93,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                 var proportion = top / bottom;
                 point.X = (float)((line.X1 + (line.X2 * proportion)) / (1 + proportion));
                 point.Y = (float)((line.Y1 + (line.Y2 * proportion)) / (1 + proportion));
+                //MessageBox.Show($"Split point X={point.X}; Y={point.Y}");
                 splitPoints.Add(point);
             }
             return splitPoints;
@@ -97,47 +101,86 @@ namespace RevitFamilyBrowser.Revit_Classes
 
         public List<Line> GetPerpendiculars(Line baseWall, List<PointF> points)
         {
-            List<Line> lines = new List<Line>();
-            double slope = -1 / GetSlope(baseWall);
-
-            foreach (PointF point in points)
+            List<Line> perpList = new List<Line>();
+            if (GetSlope(baseWall).CompareTo(0) == 0)
             {
-                PointF target = new PointF();
-                target.X = 0;
-                target.Y = (float)(point.Y - (slope * point.X));
+                Console.WriteLine("Line Parallel to axis X");
+                foreach (PointF point in points)
+                {
+                    PointF target = new PointF();
+                    target.X = point.X;
+                    target.Y = 0;
 
-                Line perpendicular = new Line();
-                perpendicular.X1 = target.X;
-                perpendicular.Y1 = !float.IsInfinity(target.Y) ? target.Y : point.Y;
-                perpendicular.X2 = point.X;
-                perpendicular.Y2 = point.Y;
-                lines.Add(perpendicular);
+                    Line perpendicular = new Line();
+                    perpendicular.X1 = target.X;
+                    perpendicular.Y1 = target.Y;
+                    perpendicular.X2 = point.X;
+                    perpendicular.Y2 = point.Y;
+                    perpList.Add(perpendicular);
+                    // Console.WriteLine("Perpendicular Start({0}, {1}); End({2}, {3})", perpendicular.X1, perpendicular.Y1, perpendicular.X2, perpendicular.Y2);
+                }
             }
-            return lines;
+
+            else if (double.IsInfinity(GetSlope(baseWall)))
+            {
+                Console.WriteLine("Line Parallel to axis Y");
+                foreach (PointF point in points)
+                {
+                    PointF target = new PointF();
+                    target.X = 0;
+                    target.Y = point.Y;
+
+                    Line perpendicular = new Line();
+                    perpendicular.X1 = target.X;
+                    perpendicular.Y1 = target.Y;
+                    perpendicular.X2 = point.X;
+                    perpendicular.Y2 = point.Y;
+                    perpList.Add(perpendicular);
+                    //Console.WriteLine("Perpendicular Start({0}, {1}); End({2}, {3})", perpendicular.X1, perpendicular.Y1, perpendicular.X2, perpendicular.Y2);
+                }
+            }
+
+            else
+            {
+                Console.WriteLine("Normal line");
+                double slope = -1 / GetSlope(baseWall);
+                foreach (PointF point in points)
+                {
+                    PointF target = new PointF();
+                    target.X = 0;
+                    target.Y = (float)(point.Y - (slope * point.X));
+
+                    Line perpendicular = new Line();
+                    perpendicular.X1 = target.X;
+                    perpendicular.Y1 = target.Y;
+                    perpendicular.X2 = point.X;
+                    perpendicular.Y2 = point.Y;
+                    perpList.Add(perpendicular);
+                    Console.WriteLine("Perpendicular Start({0}, {1}); End({2}, {3})", perpendicular.X1, perpendicular.Y1, perpendicular.X2, perpendicular.Y2);
+                }
+            }
+            return perpList;
         }
 
         public List<PointF> GetGridPointsRvt(List<Line> perpendicularsList, List<Line> perpendiculars)
         {
             List<PointF> target = new List<PointF>();
             perpendicularsList.AddRange(perpendiculars);
-            Console.WriteLine(perpendicularsList.Count);
+            //MessageBox.Show(perpendicularsList.Count.ToString());
             foreach (var lineA in perpendicularsList)
             {
                 foreach (var lineB in perpendicularsList)
                 {
-                    if (lineA.Equals(lineB))
-                        ;//Console.WriteLine("SameLine");
-                    else
-                    {
+                    //MessageBox.Show(String.Format("Start x={0}; y={1};\n End x={2}; y={3}\n", lineB.X1, lineB.Y1, lineB.X2, lineB.Y2));
+                    if (!lineA.Equals(lineB))
                         target.Add(GetIntersection(lineA, lineB));
-                    }
                 }
             }
             IEnumerable<PointF> distinctPoints = target.Distinct();
             List<PointF> result = new List<PointF>();
             foreach (var point in distinctPoints.ToList())
             {
-                if (!float.IsInfinity(point.X) && !float.IsInfinity(point.Y))
+                if (!float.IsInfinity(point.X) && !float.IsInfinity(point.Y) && !float.IsNaN(point.X) && !float.IsNaN(point.Y))
                 {
                     result.Add(point);
                 }

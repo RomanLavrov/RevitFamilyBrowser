@@ -162,7 +162,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                     grid.canvas.Children.Add(wpfCoord.BuildBoundedLine(BoundingBox, item));
                 }
 
-                Properties.Settings.Default.InstallPoints = string.Empty;
+                //Properties.Settings.Default.InstallPoints = string.Empty;
 
                 gridPoints = wpfCoord.GetGridPoints(listPerpendiculars, wallNormals);
                 grid.textBoxQuantity.Text = "Items: " + gridPoints.Count.ToString();
@@ -170,25 +170,23 @@ namespace RevitFamilyBrowser.Revit_Classes
                 {
                     double x = ((((item.X - 0.5) * Scale) / 304.8) - derrivationX * Scale / 304.8);
                     double y = (((-(item.Y - 0.5) * Scale) / 304.8) + derrivationY * Scale / 304.8);
-                    //Properties.Settings.Default.InstallPoints += x + "*" + y + "\n";
                 }
-                //MessageBox.Show(Properties.Settings.Default.InstallPoints);
+                
                 //----------------------------------------Revit coordinates--------------------------------------------------------
                 CoordinatesRevit rvt = new CoordinatesRevit();
                 Line rvtWall = revitWalls[wallIndex];
                 List<System.Drawing.PointF> rvtPointsOnWall = rvt.GetSplitPoints(rvtWall, Convert.ToInt32(grid.textBoxHorizontal.Text));
 
+                //MessageBox.Show($"Wall coors\nX1={rvtWall.X1}, Y1={rvtWall.Y1}\nX2={rvtWall.X2} Y2={rvtWall.Y2}");
                 List<System.Windows.Shapes.Line> rvtListPerpendiculars =
                     rvt.GetPerpendiculars(rvtWall, rvtPointsOnWall);
-                //TaskDialog.Show("Perpendiculars number", rvtListPerpendiculars.Count.ToString());
+
                 rvtGridPoints = rvt.GetGridPointsRvt(revitWallNormals, rvtListPerpendiculars);
-                TaskDialog.Show("Revitpoint", rvtGridPoints.Count.ToString());
+                
                 foreach (var item in rvtGridPoints)
                 {
-                    TaskDialog.Show("Revitpoint", rvtGridPoints.Count.ToString());
-                    Properties.Settings.Default.InstallPoints += item.X + "*" + item.Y + "\n";
+                    Properties.Settings.Default.InstallPoints += (item.X)/(25.4*12) + "*" + (item.Y)/(25.4*12) + "\n";
                 }
-
 
                 //------------------------------------Draw Lines to intersection points in wpf window------------------------------------------------------------------------
                 //List<System.Drawing.Point> temp = new List<System.Drawing.Point>();

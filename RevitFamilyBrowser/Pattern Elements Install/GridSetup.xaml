@@ -1,149 +1,217 @@
-﻿<UserControl x:Class="RevitFamilyBrowser.WPF_Classes.GridSetup"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RevitFamilyBrowser.WPF_Classes"
-             mc:Ignorable="d" Width="915" Height="725">
+﻿<UserControl
+    x:Class="RevitFamilyBrowser.WPF_Classes.GridSetup"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:RevitFamilyBrowser.WPF_Classes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="915"
+    Height="700"
+    mc:Ignorable="d">
     <Grid>
-        <Button x:Name="buttonInsert" 
-                Content="Insert" 
-                Width="120" 
-                Height="30" 
-                HorizontalAlignment="Left" 
-                Margin="56,347,0,348" 
-                Click="ButtonInsertClick"
-                FontSize="16" 
-                Background="SteelBlue"
-                BorderBrush="DarkSlateBlue"
-                Foreground="White"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=" 1*" />
+            <ColumnDefinition Width="4*" />
+            <ColumnDefinition Width=" 1*" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.5*" />
+                <RowDefinition Height="7*" />
+                <RowDefinition Height="0.5*" />
 
-        <Canvas x:Name="canvas" 
-                HorizontalAlignment="Left" 
-                Height="600" Margin="275,40,0,0" 
-                VerticalAlignment="Top" 
-                Width="600" 
+            </Grid.RowDefinitions>
+            <Canvas
+                x:Name="canvas"
+                Grid.Row="1"
+                Width="600"
+                Height="600"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
                 Background="White">
 
-            <Canvas.BitmapEffect>
-                <DropShadowBitmapEffect Color="DarkGray" />
-            </Canvas.BitmapEffect>
-        </Canvas>
-
-        <Grid Height="725" VerticalAlignment="Bottom">
-
-            <Label x:Name="labelHorizontal" 
-                   Content="Set Axes Number" 
-                   HorizontalAlignment="Left" 
-                   VerticalAlignment="Top" 
-                   Height="32" Width="133" 
-                   FontSize="16" 
-                   Margin="50,52,0,0"/>
-
-            <TextBox x:Name="textBoxHorizontal" 
-                     FontSize="16" HorizontalAlignment="Left" 
-                     Height="30" Margin="86,84,0,0" 
-                     TextWrapping="Wrap" Text="1" 
-                     VerticalAlignment="Top" 
-                     Width="62" 
-                     BorderBrush="DarkSlateBlue"
-                     HorizontalContentAlignment="Center" 
-                     VerticalContentAlignment="Center" />
-
-            <TextBox x:Name="textBoxSymbol"
-                     FontSize="16" HorizontalAlignment="Left"
-                     VerticalAlignment="Center"
-                     Height="30" Margin="275,5,0,690"
-                     Width="600"
-                     Background="SteelBlue"
-                     Foreground="White"
-                     BorderBrush="DarkSlateBlue"
-                     >
-            </TextBox>
-            <Button x:Name="buttonAddHorizontal" 
-                    FontSize="16" 
-                    Content="+" 
-                    HorizontalAlignment="Left" 
-                    Margin="147,84,0,0" 
-                    VerticalAlignment="Top" 
-                    VerticalContentAlignment="Center"
-                    Width="30" Height="30" 
-                    Background="SteelBlue"
-                    BorderBrush="DarkSlateBlue"
-                    Foreground="White"
-                    Click="buttonAddHorizontal_Click"/>
-
-            <Button x:Name="buttonRemoveHorizontal"  
-                    FontSize="16" Content="-" 
-                    HorizontalAlignment="Left" 
-                    Margin="57,84,0,0" 
-                    VerticalAlignment="Top" 
-                    Width="30" Height="30" 
-                    Background="SteelBlue"
-                    BorderBrush="DarkSlateBlue"
-                    Foreground="White"
-                    VerticalContentAlignment="Center"
-                    Click="buttonRemoveHorizontal_Click"
-                    />
-
-            <Button x:Name="buttonReset" 
-                    Content="Reset grid" 
-                    FontSize="16" 
-                    Width="Auto" 
-                    Height="Auto" 
-                    Margin="57,200,738,495" 
-                    Click="buttonReset_Click" 
-                    Background="SteelBlue"
-                    BorderBrush="DarkSlateBlue"
-                    Foreground="White"/>
-
-
-            <RadioButton GroupName ="SplitOption" 
-                         x:Name="radioEqual" 
-                         Content="Equal" 
-                          FontSize="16" 
-                         HorizontalAlignment="Left" 
-                         VerticalAlignment="Top" 
-                         Margin="57,146,0,0" VerticalContentAlignment="Center"/>
-
-            <RadioButton GroupName ="SplitOption" 
-                         x:Name="radioProportoinal" 
-                         Content="Proportional" 
-                         FontSize="16" 
-                         HorizontalAlignment="Left" 
-                         VerticalAlignment="Top" 
-                         Margin="57,166,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-
+                <Canvas.BitmapEffect>
+                    <DropShadowBitmapEffect Color="DarkGray" />
+                </Canvas.BitmapEffect>
+            </Canvas>
         </Grid>
-        <TextBox x:Name="textBox" 
-                 HorizontalAlignment="Left" 
-                 Height="30" 
-                 Margin="745,80,0,0" 
-                 TextWrapping="Wrap" 
-                 Text="TextBox" 
-                 VerticalAlignment="Top" 
-                 Width="120"                              
-                 Background="SteelBlue"
-                 Foreground="White"
-                 FontSize="16"
-                 BorderBrush="DarkSlateBlue"
-                 HorizontalContentAlignment="Center"
-                 VerticalContentAlignment="Center"/>
+        <Grid
+            Grid.Column="0"
+            Height="700"
+            VerticalAlignment="Bottom">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.5*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="3*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1" HorizontalAlignment="Center">
+                <Grid
+                    Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    Background="Aqua">
 
-        <TextBox x:Name="textBoxQuantity" 
-                 HorizontalAlignment="Left" 
-                 Height="30" 
-                 Margin="745,124,0,0" 
-                 TextWrapping="Wrap" 
-                 Text="TextBox" 
-                 VerticalAlignment="Top" 
-                 Width="120"                              
-                 Background="SteelBlue"
-                 Foreground="White"
-                 FontSize="16"
-                 BorderBrush="DarkSlateBlue"
-                 HorizontalContentAlignment="Center"
-                 VerticalContentAlignment="Center"/>
+                    <Label
+                        x:Name="labelHorizontal"
+                        Width="133"
+                        Height="32"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        Content="Set Axes Number"
+                        FontSize="16" />
+
+                    <TextBox
+                        x:Name="textBoxHorizontal"
+                        Width="73"
+                        Height="30"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        BorderBrush="DarkSlateBlue"
+                        FontSize="16"
+                        Text="1"
+                        TextWrapping="Wrap" />
+
+                    <Button
+                        x:Name="buttonAddHorizontal"
+                        Width="30"
+                        Height="30"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Background="SteelBlue"
+                        BorderBrush="DarkSlateBlue"
+                        Click="buttonAddHorizontal_Click"
+                        Content="+"
+                        FontSize="16"
+                        Foreground="White" />
+
+                    <Button
+                        x:Name="buttonRemoveHorizontal"
+                        Width="30"
+                        Height="30"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Background="SteelBlue"
+                        BorderBrush="DarkSlateBlue"
+                        Click="buttonRemoveHorizontal_Click"
+                        Content="-"
+                        FontSize="16"
+                        Foreground="White" />
+
+                </Grid>
+
+
+
+
+            </Grid>
+
+            <RadioButton
+                x:Name="radioEqual"
+                Grid.Row="2"
+                Margin="20,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
+                Content="Equal"
+                FontSize="16"
+                GroupName="SplitOption" />
+
+            <RadioButton
+                x:Name="radioProportoinal"
+                Grid.Row="2"
+                Margin="20,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Content="Proportional"
+                FontSize="16"
+                GroupName="SplitOption" />
+
+            <Button
+                x:Name="buttonReset"
+                Grid.Row="3"
+                Width="120"
+                Height="30"
+                Margin="0,3,0,2"
+                Background="SteelBlue"
+                BorderBrush="DarkSlateBlue"
+                Click="buttonReset_Click"
+                Content="Reset grid"
+                FontSize="16"
+                Foreground="White" />
+
+
+            <Button
+                x:Name="buttonInsert"
+                Grid.Row="4"
+                Width="120"
+                Height="30"
+                HorizontalAlignment="Center"
+                Background="SteelBlue"
+                BorderBrush="DarkSlateBlue"
+                Click="ButtonInsertClick"
+                Content="Insert"
+                FontSize="16"
+                Foreground="White" />
+
+            <TextBox
+                x:Name="textBoxSymbol"
+                Grid.Row="5"
+                Width="877"
+                Height="30"
+                Margin="8,31,-733,32"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="SteelBlue"
+                BorderBrush="DarkSlateBlue"
+                FontSize="16"
+                Foreground="White" />
+        </Grid>
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="7*" />
+                <RowDefinition Height="7*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <TextBox
+                x:Name="textBox"
+                Grid.Row="1"
+                Width="120"
+                Height="30"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Background="SteelBlue"
+                BorderBrush="DarkSlateBlue"
+                FontSize="16"
+                Foreground="White"
+                TextWrapping="Wrap" />
+
+            <TextBox
+                x:Name="textBoxQuantity"
+                Grid.Row="2"
+                Width="120"
+                Height="30"
+                VerticalAlignment="Top"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                Background="SteelBlue"
+                BorderBrush="DarkSlateBlue"
+                FontSize="16"
+                Foreground="White"
+                TextWrapping="Wrap" />
+        </Grid>
+
+
+
 
 
     </Grid>

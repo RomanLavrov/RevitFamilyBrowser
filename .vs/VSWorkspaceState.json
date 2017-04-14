@@ -3,8 +3,8 @@
     "",
     "\\FamilyBrowserSetup",
     "\\RevitFamilyBrowser",
-    "\\RevitFamilyBrowser\\Revit Classes"
+    "\\RevitFamilyBrowser\\Pattern Elements Install"
   ],
-  "SelectedNode": "\\RevitFamilyBrowser\\Revit Classes\\FolderSelect.cs",
+  "SelectedNode": "\\RevitFamilyBrowser\\Pattern Elements Install\\GridSetup.xaml.cs",
   "PreviewInSolutionExplorer": true
 }

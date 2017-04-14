@@ -79,7 +79,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Browser\App.cs" />
+    <Compile Include="App.cs" />
     <Compile Include="Browser\Command.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pattern Elements Install\ConversionPoint.cs" />

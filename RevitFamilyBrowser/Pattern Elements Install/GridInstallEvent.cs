@@ -1,5 +1,4 @@
-﻿using Autodesk.Revit.ApplicationServices;
-using Autodesk.Revit.Attributes;
+﻿using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Structure;
 using Autodesk.Revit.UI;
@@ -8,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using Application = Autodesk.Revit.ApplicationServices.Application;
 
 namespace RevitFamilyBrowser.Revit_Classes
 {
@@ -25,7 +26,33 @@ namespace RevitFamilyBrowser.Revit_Classes
             string FamilySymbol = Properties.Settings.Default.FamilySymbol;
             string FamilyName = Properties.Settings.Default.FamilyName;
             var insertionPoints = GetInsertionPoints();
-            
+
+            if (string.IsNullOrEmpty(FamilyPath))
+            {
+                MessageBox.Show("Elemnt from history");
+                FamilySymbol historySymbol = null;
+                Family historyFamily = new FilteredElementCollector(doc).OfClass(typeof(Family)).FirstOrDefault(e=>e.Name.Equals(FamilyName)) as Family;
+                ISet<ElementId> historyFamilySymbolId = historyFamily.GetFamilySymbolIds();
+                foreach (ElementId id in historyFamilySymbolId)
+                {
+                    if (historyFamily.Document.GetElement(id).Name == FamilySymbol && FamilySymbol != null)
+                        historySymbol = historyFamily.Document.GetElement(id) as FamilySymbol;
+                }
+
+                foreach (var item in insertionPoints)
+                {
+                    using (var transact = new Transaction(doc, "Insert Symbol"))
+                    {
+                        transact.Start();
+                        XYZ point = new XYZ(item.X, item.Y, 0);
+                        Level level = view.GenLevel;
+                        Element host = level as Element;
+                        doc.Create.NewFamilyInstance(point, historySymbol, host, StructuralType.NonStructural);
+                        transact.Commit();
+                    }
+                }
+            }
+            else
             {
                 FilteredElementCollector collector = new FilteredElementCollector(doc);
                 collector.OfCategory(BuiltInCategory.OST_ElectricalFixtures);
@@ -99,14 +126,10 @@ namespace RevitFamilyBrowser.Revit_Classes
             foreach (var item in buffer)
             {
                 int separator = item.IndexOf('*');
-                //Point installPoint = new .Point();
-                //installPoint. = int.Parse(item.Substring(0, separator));
-                //installPoint.Y = int.Parse(item.Substring(separator + 1));
                 XYZ installPoint = new XYZ(Convert.ToDouble(item.Substring(0, separator)), Convert.ToDouble(item.Substring(separator + 1)), 0);
                 count++;
                 Properties.Settings.Default.InstallPoints = string.Empty;
                 insertionPoints.Add(installPoint);
-                // TaskDialog.Show("Buffer", count + ". X = " + installPoint.X.ToString() + "; Y = " + installPoint.Y.ToString());
             }
             return insertionPoints;
         }
