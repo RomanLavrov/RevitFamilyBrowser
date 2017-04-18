@@ -1,35 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Shapes;
-using Autodesk.Revit.UI;
 
-namespace RevitFamilyBrowser.Revit_Classes
+namespace RevitFamilyBrowser.Pattern_Elements_Install
 {
     class CoordinatesRevit
     {
-        public List<PointF> GetInsertionPoints(Line wall, int parts)
-        {
-            List<Line> walls = new List<Line>();
-
-            List<List<Line>> perpList = new List<List<Line>>();
-            List<PointF> splitPoints = GetSplitPoints(wall, parts);
-            List<Line> perpendiculars = GetPerpendiculars(wall, splitPoints);
-            perpList.Add(perpendiculars);
-
-            return null;
-        }
-
-        public double GetSlope(Line line)
+        private double GetSlope(Line line)
         {
             return (line.Y2 - line.Y1) / (line.X2 - line.X1);
         }
 
-        public List<double> GetLineEquation(Line line)
+        private List<double> GetLineEquation(Line line)
         {
             List<double> result = new List<double>();
             double a = (line.Y2 - line.Y1);
@@ -42,7 +25,7 @@ namespace RevitFamilyBrowser.Revit_Classes
             return result;
         }
 
-        public PointF GetIntersection(Line line1, Line line2)
+        private PointF GetIntersection(Line line1, Line line2)
         {
             PointF intersection = new PointF();
 
@@ -86,9 +69,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                 double top = i;
                 double bottom = (partNumber - i);
                 if (partNumber - i == 0)
-                {
                     bottom = 1;
-                }
 
                 var proportion = top / bottom;
                 point.X = (float)((line.X1 + (line.X2 * proportion)) / (1 + proportion));
@@ -102,62 +83,35 @@ namespace RevitFamilyBrowser.Revit_Classes
         public List<Line> GetPerpendiculars(Line baseWall, List<PointF> points)
         {
             List<Line> perpList = new List<Line>();
-            if (GetSlope(baseWall).CompareTo(0) == 0)
+
+            for (var index = 0; index < points.Count; index++)
             {
-                Console.WriteLine("Line Parallel to axis X");
-                foreach (PointF point in points)
+                PointF point = points[index];
+                PointF target = new PointF();
+
+                if (GetSlope(baseWall).CompareTo(0) == 0)
                 {
-                    PointF target = new PointF();
                     target.X = point.X;
                     target.Y = 0;
-
-                    Line perpendicular = new Line();
-                    perpendicular.X1 = target.X;
-                    perpendicular.Y1 = target.Y;
-                    perpendicular.X2 = point.X;
-                    perpendicular.Y2 = point.Y;
-                    perpList.Add(perpendicular);
-                    // Console.WriteLine("Perpendicular Start({0}, {1}); End({2}, {3})", perpendicular.X1, perpendicular.Y1, perpendicular.X2, perpendicular.Y2);
                 }
-            }
-
-            else if (double.IsInfinity(GetSlope(baseWall)))
-            {
-                Console.WriteLine("Line Parallel to axis Y");
-                foreach (PointF point in points)
+                else if (double.IsInfinity(GetSlope(baseWall)))
                 {
-                    PointF target = new PointF();
                     target.X = 0;
                     target.Y = point.Y;
-
-                    Line perpendicular = new Line();
-                    perpendicular.X1 = target.X;
-                    perpendicular.Y1 = target.Y;
-                    perpendicular.X2 = point.X;
-                    perpendicular.Y2 = point.Y;
-                    perpList.Add(perpendicular);
-                    //Console.WriteLine("Perpendicular Start({0}, {1}); End({2}, {3})", perpendicular.X1, perpendicular.Y1, perpendicular.X2, perpendicular.Y2);
                 }
-            }
-
-            else
-            {
-                Console.WriteLine("Normal line");
-                double slope = -1 / GetSlope(baseWall);
-                foreach (PointF point in points)
+                else
                 {
-                    PointF target = new PointF();
+                    double slope = -1 / GetSlope(baseWall);
                     target.X = 0;
-                    target.Y = (float)(point.Y - (slope * point.X));
-
-                    Line perpendicular = new Line();
-                    perpendicular.X1 = target.X;
-                    perpendicular.Y1 = target.Y;
-                    perpendicular.X2 = point.X;
-                    perpendicular.Y2 = point.Y;
-                    perpList.Add(perpendicular);
-                    Console.WriteLine("Perpendicular Start({0}, {1}); End({2}, {3})", perpendicular.X1, perpendicular.Y1, perpendicular.X2, perpendicular.Y2);
+                    target.Y = (float) (point.Y - (slope * point.X));
                 }
+
+                Line perpendicular = new Line();
+                perpendicular.X1 = target.X;
+                perpendicular.Y1 = target.Y;
+                perpendicular.X2 = point.X;
+                perpendicular.Y2 = point.Y;
+                perpList.Add(perpendicular);
             }
             return perpList;
         }
@@ -187,57 +141,5 @@ namespace RevitFamilyBrowser.Revit_Classes
             }
             return result;
         }
-
-        //public Line OrtoNormalization(Line perpend)
-        //{
-        //    Line normal = new Line();
-        //    double xA = 0;
-        //    double xB = 0;
-        //    double yA = 0;
-        //    double yB = 0;
-
-        //    if (perpend.X1 != double.MaxValue || perpend.X1 != double.MinValue)
-        //    {
-        //        xA = perpend.X1;
-        //    }
-        //    if (perpend.Y1 != double.MaxValue || perpend.Y1 != double.MinValue)
-        //    {
-        //        yA = perpend.Y1;
-        //    }
-        //    if (perpend.X2 != double.MaxValue || perpend.X2 != double.MinValue)
-        //    {
-        //        xB = perpend.X2;
-        //    }
-        //    if (perpend.Y2 != double.MaxValue || perpend.Y2 != double.MinValue)
-        //    {
-        //        yB = perpend.Y2;
-        //    }
-
-        //    if ((xA == double.MaxValue || xA == double.MinValue) && yA == 0)
-        //    {
-        //        yA = 0; xA = xB;
-        //    }
-
-        //    if ((xB == double.MaxValue || xB == double.MinValue) && yB == 0)
-        //    {
-        //        xB = 0; yB = yA;
-        //    }
-
-        //    if ((yA == double.MaxValue || yA == double.MinValue) && xA == 0)
-        //    {
-        //        yA = 0; xA = xB;
-        //    }
-
-        //    if ((yB == double.MaxValue || yB == double.MinValue) && xB == 0)
-        //    {
-        //        yB = 0; xB = xA;
-        //    }
-        //    normal.X1 = xA;
-        //    normal.X2 = xB;
-        //    normal.Y1 = yA;
-        //    normal.Y2 = yB;
-
-        //    return normal;
-        //}
     }
 }

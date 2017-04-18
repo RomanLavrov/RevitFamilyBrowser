@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Drawing;
+using System.Linq;
 
 namespace RevitFamilyBrowser.WPF_Classes
 {
@@ -31,7 +32,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 1 );
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 1);
             dispatcherTimer.Start();
 
             CreateEmptyFamilyImage();
@@ -48,10 +49,11 @@ namespace RevitFamilyBrowser.WPF_Classes
             data.InitialState.DockPosition = DockPosition.Left;
         }
 
-        //public static implicit operator Window(DockPanel v)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            GenerateGrid();
+            GenerateHistoryGrid();
+        }
 
         public void GenerateHistoryGrid()
         {
@@ -94,6 +96,9 @@ namespace RevitFamilyBrowser.WPF_Classes
                     }
                 }
 
+                collectionData = new ObservableCollection<FamilyData>(collectionData.Reverse());
+
+
                 foreach (var symbol in collectionData)
                 {
                     if (symbol.img == new Uri(di.ToString()))
@@ -106,6 +111,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
                 ListCollectionView collectionProject = new ListCollectionView(collectionData);
                 collectionProject.GroupDescriptions.Add(new PropertyGroupDescription("FamilyName"));
+
                 dataGridHistory.ItemsSource = collectionProject;
             }
         }
@@ -116,7 +122,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
             if (temp != Properties.Settings.Default.SymbolList)
             {
-               // MessageBox.Show("History Upgraded");
+                // MessageBox.Show("History Upgraded");
                 temp = Properties.Settings.Default.SymbolList;
                 string category = Properties.Settings.Default.RootFolder;
                 label_CategoryName.Content = " " + category.Substring(category.LastIndexOf("\\") + 1);
@@ -140,8 +146,8 @@ namespace RevitFamilyBrowser.WPF_Classes
                     {
                         if (imageName.Contains(instance.Name.TrimEnd()))
                         {
-                            instance.img = new Uri(imageName);                            
-                        }                             
+                            instance.img = new Uri(imageName);
+                        }
                     }
                     fi.Add(instance);
                 }
@@ -150,37 +156,45 @@ namespace RevitFamilyBrowser.WPF_Classes
                 ListCollectionView collection = new ListCollectionView(fi);
                 collection.GroupDescriptions.Add(new PropertyGroupDescription("FamilyName"));
                 dataGrid.ItemsSource = collection;
-            }            
+            }
         }
 
         private void dataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            
+            var instance = dataGrid.SelectedItem as FamilyData;
+            Properties.Settings.Default.FamilyPath = instance.FullName;
+            Properties.Settings.Default.FamilySymbol = instance.Name;
             m_ExEvent.Raise();
+           // MessageBox.Show("RaiseEvent");
+        }
+
+        private void dataGridHistory_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var instance = dataGridHistory.SelectedItem as FamilyData;
+            Properties.Settings.Default.FamilyPath = string.Empty;
+            Properties.Settings.Default.FamilySymbol = instance.Name;
+            m_ExEvent.Raise();
+          //  MessageBox.Show("RaiseEvent");
+        }
+
+        private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
             var instance = dataGrid.SelectedItem as FamilyData;
             Properties.Settings.Default.FamilyPath = instance.FullName;
             Properties.Settings.Default.FamilySymbol = instance.Name;
         }
 
-        private void drag_DragEnter(object sender, DragEventArgs e)
+        private void dataGridHistory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            m_ExEvent.Raise();
+            var instance = dataGridHistory.SelectedItem as FamilyData;
+            if (instance != null)
+            {
+                Properties.Settings.Default.FamilyPath = string.Empty;
+                Properties.Settings.Default.FamilySymbol = instance.Name;
+            }
         }
 
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
-        {
-            GenerateGrid();
-            GenerateHistoryGrid();
-        }
-
-        private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
-        private void dataGrid_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-
-        }     
         private void CreateEmptyFamilyImage()
         {
             string TempImgFolder = System.IO.Path.GetTempPath() + "FamilyBrowser\\";
@@ -193,13 +207,38 @@ namespace RevitFamilyBrowser.WPF_Classes
             File.WriteAllBytes(di.ToString(), (byte[])converter.ConvertTo(Properties.Resources.RevitLogo, typeof(byte[])));
         }
 
-        private void Expander_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void dataGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            m_ExEvent.Raise();
-            var instance = dataGridHistory.SelectedItem as FamilyData;          
+            var instance = dataGrid.SelectedItem as FamilyData;
+            Properties.Settings.Default.FamilyPath = instance.FullName;
+            Properties.Settings.Default.FamilySymbol = instance.Name;
+            Properties.Settings.Default.FamilyName = instance.FamilyName;
+            DragDrop.DoDragDrop(dataGrid, instance, DragDropEffects.Copy);
+        }
+
+        private void dataGridHistory_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var instance = dataGridHistory.SelectedItem as FamilyData;
             Properties.Settings.Default.FamilyPath = string.Empty;
             Properties.Settings.Default.FamilySymbol = instance.Name;
             Properties.Settings.Default.FamilyName = instance.FamilyName;
+            DragDrop.DoDragDrop(dataGridHistory, instance, DragDropEffects.Copy);
+        }
+
+        private void dataGridHistory_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (!(string.IsNullOrEmpty(Properties.Settings.Default.FamilyPath) &&
+                  string.IsNullOrEmpty(Properties.Settings.Default.FamilySymbol) &&
+                  string.IsNullOrEmpty(Properties.Settings.Default.FamilyName)))
+                m_ExEvent.Raise();
+        }
+
+        private void dataGrid_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (!(string.IsNullOrEmpty(Properties.Settings.Default.FamilyPath) &&
+                string.IsNullOrEmpty(Properties.Settings.Default.FamilySymbol) &&
+                string.IsNullOrEmpty(Properties.Settings.Default.FamilyName)))
+                m_ExEvent.Raise();
         }
     }
 }

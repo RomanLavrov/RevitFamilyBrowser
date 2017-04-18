@@ -11,6 +11,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using RevitFamilyBrowser.Pattern_Elements_Install;
 using Brushes = System.Windows.Media.Brushes;
 using Line = System.Windows.Shapes.Line;
 

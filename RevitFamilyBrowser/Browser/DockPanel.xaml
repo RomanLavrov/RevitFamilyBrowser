@@ -1,37 +1,56 @@
-﻿<UserControl x:Class="RevitFamilyBrowser.WPF_Classes.DockPanel"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RevitFamilyBrowser.WPF_Classes"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" Background="WhiteSmoke">
+﻿<UserControl
+    x:Class="RevitFamilyBrowser.WPF_Classes.DockPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:RevitFamilyBrowser.WPF_Classes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    Background="WhiteSmoke"
+    mc:Ignorable="d">
 
     <UserControl.Resources>
         <Style x:Key="FamilyHeaderStyle" TargetType="{x:Type GroupItem}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type GroupItem}">
-                       
-                            <Expander x:Name="Expander" 
-                                  IsExpanded="True" 
-                                  Background="White" 
-                                  Foreground="Black" 
-                                  BorderBrush="LightGray" MouseDoubleClick="Expander_MouseDoubleClick">                            
-                                <Expander.Header>
-                                    <Border BorderBrush="Gainsboro" BorderThickness="1">
-                                        <StackPanel Orientation ="Horizontal" Background="WhiteSmoke" Width="500" >
-                                            <TextBlock Width="5" Background="White"/>
-                                            <Image Grid.Row="0" Grid.Column="0" Source="{Binding Items[0].img}" Height="50" Width ="50" MaxWidth="80"/>
-                                            <TextBlock Width="5" Background="White"/>
-                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Name}" Margin="5,0,0,0" Width="500" 
-                                                   HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                    </Border>
-                                </Expander.Header>                          
-                            <ItemsPresenter/>
+
+                        <Expander
+                            x:Name="Expander"
+                            Background="White"
+                            BorderBrush="LightGray"
+                            Foreground="Black"
+                            IsExpanded="True">
+                            <Expander.Header>
+                                <Border BorderBrush="Gainsboro" BorderThickness="1">
+                                    <StackPanel
+                                        Width="500"
+                                        Background="WhiteSmoke"
+                                        Orientation="Horizontal">
+                                        <TextBlock Width="5" Background="White" />
+                                        <Image
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Width="50"
+                                            Height="50"
+                                            MaxWidth="80"
+                                            Source="{Binding Items[0].img}" />
+                                        <TextBlock Width="5" Background="White" />
+                                        <TextBlock
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            Width="500"
+                                            Margin="5,0,0,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Name}" />
+                                    </StackPanel>
+                                </Border>
+                            </Expander.Header>
+                            <ItemsPresenter />
                         </Expander>
-                      
+
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -39,30 +58,44 @@
     </UserControl.Resources>
 
     <Grid>
-        <TabControl x:Name="tabControl"  Margin="0,0,0,0" >
+        <TabControl x:Name="tabControl" Margin="0,0,0,0">
             <TabItem Header="New Elements">
                 <Grid Background="WhiteSmoke">
 
-                    <Label x:Name="label" Content="Category: " HorizontalAlignment="Left" VerticalAlignment="Top" Width="60"/>
-                    <Label x:Name="label_CategoryName" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="220" Margin="80,0,0,0" />
-                    <DataGrid   x:Name="dataGrid"                                
-                                MouseDoubleClick="dataGrid_MouseDoubleClick" 
-                                IsReadOnly="True" DragEnter="drag_DragEnter" 
-                                AutoGenerateColumns="False"
-                                Margin="0, 25, 0, 0"
-                                VerticalGridLinesBrush="White"
-                                HorizontalGridLinesBrush="WhiteSmoke"
-                                BorderThickness="0"
-                                EnableRowVirtualization="false" 
-                                EnableColumnVirtualization="false" 
-                                HeadersVisibility="Column" SelectionChanged="dataGrid_SelectionChanged" 
-                                PreviewMouseDoubleClick="dataGrid_PreviewMouseDoubleClick">
+                    <Label
+                        x:Name="label"
+                        Width="60"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Content="Category: " />
+                    <Label
+                        x:Name="label_CategoryName"
+                        Width="220"
+                        Margin="80,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Content="" />
+                    <DataGrid
+                        x:Name="dataGrid"
+                        Margin="0,25,0,0"
+                        AutoGenerateColumns="False"
+                        BorderThickness="0"
+                        EnableColumnVirtualization="false"
+                        EnableRowVirtualization="false"
+                        HeadersVisibility="Column"
+                        HorizontalGridLinesBrush="WhiteSmoke"
+                        IsReadOnly="True"
+                        MouseDoubleClick="dataGrid_MouseDoubleClick"
+                        MouseDown="dataGrid_MouseDown"
+                        MouseLeave="dataGrid_MouseLeave"
+                        SelectionChanged="dataGrid_SelectionChanged"
+                        VerticalGridLinesBrush="White">
 
                         <DataGrid.GroupStyle>
                             <GroupStyle ContainerStyle="{StaticResource FamilyHeaderStyle}">
                                 <GroupStyle.Panel>
                                     <ItemsPanelTemplate>
-                                        <DataGridRowsPresenter/>
+                                        <DataGridRowsPresenter />
                                     </ItemsPanelTemplate>
                                 </GroupStyle.Panel>
                             </GroupStyle>
@@ -70,19 +103,22 @@
 
                         <DataGrid.Columns>
 
-                            <DataGridTemplateColumn Header="Image" Width="85"  >
+                            <DataGridTemplateColumn Width="85" Header="Image">
                                 <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate >
+                                    <DataTemplate>
                                         <!--<Image Source="{Binding img}" Width ="80" MaxWidth="80"/>-->
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*">
+                            <DataGridTextColumn
+                                Width="*"
+                                Binding="{Binding Name}"
+                                Header="Name">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="FrameworkElement.VerticalAlignment" Value="Center" />
-                                        <Setter Property="FrameworkElement.Margin" Value="10, 0, 10, 0"/>
+                                        <Setter Property="FrameworkElement.Margin" Value="10, 0, 10, 0" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
@@ -103,22 +139,27 @@
             </TabItem>
             <TabItem Header="Elements in project">
                 <Grid Background="WhiteSmoke">
-                    <DataGrid   x:Name="dataGridHistory"                                                                
-                                IsReadOnly="True" DragEnter="drag_DragEnter" 
-                                AutoGenerateColumns="false"
-                                Margin="0, 25, 0, 0"
-                                VerticalGridLinesBrush="White"
-                                HorizontalGridLinesBrush="WhiteSmoke"
-                                BorderThickness="0"
-                                EnableRowVirtualization="false" 
-                                EnableColumnVirtualization="false" 
-                                HeadersVisibility="Column" >
+                    <DataGrid
+                        x:Name="dataGridHistory"
+                        Margin="0,25,0,0"
+                        AutoGenerateColumns="false"
+                        BorderThickness="0"
+                        EnableColumnVirtualization="false"
+                        EnableRowVirtualization="false"
+                        HeadersVisibility="Column"
+                        HorizontalGridLinesBrush="WhiteSmoke"
+                        IsReadOnly="True"
+                        MouseDoubleClick="dataGridHistory_MouseDoubleClick"
+                        MouseDown="dataGridHistory_MouseDown"
+                        MouseLeave="dataGridHistory_MouseLeave"
+                        SelectionChanged="dataGridHistory_SelectionChanged"
+                        VerticalGridLinesBrush="White">
 
                         <DataGrid.GroupStyle>
                             <GroupStyle ContainerStyle="{StaticResource FamilyHeaderStyle}">
                                 <GroupStyle.Panel>
                                     <ItemsPanelTemplate>
-                                        <DataGridRowsPresenter/>
+                                        <DataGridRowsPresenter />
                                     </ItemsPanelTemplate>
                                 </GroupStyle.Panel>
                             </GroupStyle>
@@ -126,19 +167,22 @@
 
                         <DataGrid.Columns>
 
-                            <DataGridTemplateColumn Header="Image" Width="85"  >
+                            <DataGridTemplateColumn Width="85" Header="Image">
                                 <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate >
+                                    <DataTemplate>
                                         <!--<Image Source="{Binding img}" Width ="80" MaxWidth="80"/>-->
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*">
+                            <DataGridTextColumn
+                                Width="*"
+                                Binding="{Binding Name}"
+                                Header="Name">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="FrameworkElement.VerticalAlignment" Value="Center" />
-                                        <Setter Property="FrameworkElement.Margin" Value="10, 0, 10, 0"/>
+                                        <Setter Property="FrameworkElement.Margin" Value="10, 0, 10, 0" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>

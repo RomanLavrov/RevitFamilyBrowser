@@ -26,8 +26,8 @@ namespace RevitFamilyBrowser.Revit_Classes
                 Family historyFamily = new FilteredElementCollector(doc).OfClass(typeof(Family))
                         .FirstOrDefault(e => e.Name.Equals(FamilyName)) as Family;
 
-                ISet<ElementId> HISTORYfamilySymbolId = historyFamily.GetFamilySymbolIds();
-                foreach (ElementId id in HISTORYfamilySymbolId)
+                ISet<ElementId> historyFamilySymbolId = historyFamily.GetFamilySymbolIds();
+                foreach (ElementId id in historyFamilySymbolId)
                 {
                     // Get name from buffer to compare
                     if (historyFamily.Document.GetElement(id).Name == FamilySymbol && FamilySymbol != null)
