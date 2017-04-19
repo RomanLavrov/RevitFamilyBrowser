@@ -87,6 +87,7 @@
                         IsReadOnly="True"
                         MouseDoubleClick="dataGrid_MouseDoubleClick"
                         MouseDown="dataGrid_MouseDown"
+                        MouseEnter="dataGrid_MouseEnter"
                         MouseLeave="dataGrid_MouseLeave"
                         SelectionChanged="dataGrid_SelectionChanged"
                         VerticalGridLinesBrush="White">
@@ -151,6 +152,7 @@
                         IsReadOnly="True"
                         MouseDoubleClick="dataGridHistory_MouseDoubleClick"
                         MouseDown="dataGridHistory_MouseDown"
+                        MouseEnter="dataGridHistory_MouseEnter"
                         MouseLeave="dataGridHistory_MouseLeave"
                         SelectionChanged="dataGridHistory_SelectionChanged"
                         VerticalGridLinesBrush="White">

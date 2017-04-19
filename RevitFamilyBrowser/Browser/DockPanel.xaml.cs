@@ -24,6 +24,10 @@ namespace RevitFamilyBrowser.WPF_Classes
         private string collectedData = string.Empty;
         private int ImageListLength = 0;
 
+        private string tempFamilyPath = string.Empty;
+        private string tempFamilySymbol = string.Empty;
+        private string tempFamilyName = string.Empty;
+
         public DockPanel(ExternalEvent exEvent, SingleInstallEvent handler)
         {
             InitializeComponent();
@@ -161,12 +165,12 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         private void dataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            
+
             var instance = dataGrid.SelectedItem as FamilyData;
             Properties.Settings.Default.FamilyPath = instance.FullName;
             Properties.Settings.Default.FamilySymbol = instance.Name;
             m_ExEvent.Raise();
-           // MessageBox.Show("RaiseEvent");
+            // MessageBox.Show("RaiseEvent");
         }
 
         private void dataGridHistory_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -175,7 +179,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             Properties.Settings.Default.FamilyPath = string.Empty;
             Properties.Settings.Default.FamilySymbol = instance.Name;
             m_ExEvent.Raise();
-          //  MessageBox.Show("RaiseEvent");
+            //  MessageBox.Show("RaiseEvent");
         }
 
         private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -210,35 +214,52 @@ namespace RevitFamilyBrowser.WPF_Classes
         private void dataGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var instance = dataGrid.SelectedItem as FamilyData;
-            Properties.Settings.Default.FamilyPath = instance.FullName;
-            Properties.Settings.Default.FamilySymbol = instance.Name;
-            Properties.Settings.Default.FamilyName = instance.FamilyName;
-            DragDrop.DoDragDrop(dataGrid, instance, DragDropEffects.Copy);
+            if (instance != null)
+            {
+                Properties.Settings.Default.FamilyPath = instance.FullName;
+                Properties.Settings.Default.FamilySymbol = instance.Name;
+                Properties.Settings.Default.FamilyName = instance.FamilyName;
+                DragDrop.DoDragDrop(dataGrid, instance, DragDropEffects.Copy);
+            }
         }
 
         private void dataGridHistory_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var instance = dataGridHistory.SelectedItem as FamilyData;
-            Properties.Settings.Default.FamilyPath = string.Empty;
-            Properties.Settings.Default.FamilySymbol = instance.Name;
-            Properties.Settings.Default.FamilyName = instance.FamilyName;
+            tempFamilyPath = Properties.Settings.Default.FamilyPath = string.Empty;
+            tempFamilySymbol = Properties.Settings.Default.FamilySymbol = instance.Name;
+            tempFamilyName = Properties.Settings.Default.FamilyName = instance.FamilyName;
             DragDrop.DoDragDrop(dataGridHistory, instance, DragDropEffects.Copy);
         }
 
         private void dataGridHistory_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (!(string.IsNullOrEmpty(Properties.Settings.Default.FamilyPath) &&
-                  string.IsNullOrEmpty(Properties.Settings.Default.FamilySymbol) &&
-                  string.IsNullOrEmpty(Properties.Settings.Default.FamilyName)))
+            if (!(string.IsNullOrEmpty(tempFamilyPath) &&
+                  string.IsNullOrEmpty(tempFamilySymbol) &&
+                  string.IsNullOrEmpty(tempFamilyName)))
                 m_ExEvent.Raise();
         }
 
         private void dataGrid_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (!(string.IsNullOrEmpty(Properties.Settings.Default.FamilyPath) &&
-                string.IsNullOrEmpty(Properties.Settings.Default.FamilySymbol) &&
-                string.IsNullOrEmpty(Properties.Settings.Default.FamilyName)))
+            if (!(string.IsNullOrEmpty(tempFamilyPath) &&
+                string.IsNullOrEmpty(tempFamilySymbol) &&
+                string.IsNullOrEmpty(tempFamilyName)))
                 m_ExEvent.Raise();
+        }
+
+        private void dataGrid_MouseEnter(object sender, MouseEventArgs e)
+        {
+            tempFamilyPath = string.Empty;
+            tempFamilySymbol = string.Empty;
+            tempFamilyName = string.Empty;
+        }
+
+        private void dataGridHistory_MouseEnter(object sender, MouseEventArgs e)
+        {
+            tempFamilyPath = string.Empty;
+            tempFamilySymbol = string.Empty;
+            tempFamilyName = string.Empty;
         }
     }
 }
