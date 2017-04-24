@@ -29,7 +29,7 @@ namespace RevitFamilyBrowser.Revit_Classes
 
             if (string.IsNullOrEmpty(FamilyPath))
             {
-                MessageBox.Show("Elemnt from history");
+                //MessageBox.Show("Elemnt from history");
                 FamilySymbol historySymbol = null;
                 Family historyFamily = new FilteredElementCollector(doc).OfClass(typeof(Family)).FirstOrDefault(e=>e.Name.Equals(FamilyName)) as Family;
                 ISet<ElementId> historyFamilySymbolId = historyFamily.GetFamilySymbolIds();
@@ -99,7 +99,7 @@ namespace RevitFamilyBrowser.Revit_Classes
 
         public string GetName()
         {
-            throw new NotImplementedException();
+            return "GridInstall Event";
         }
 
         private Element FindFamilyByName(Document doc, Type targetType, string familyPath)

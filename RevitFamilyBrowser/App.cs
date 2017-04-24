@@ -31,7 +31,7 @@ namespace RevitFamilyBrowser
             a.CreateRibbonTab("Familien Browser"); //Familien Browser Families Browser
             RibbonPanel G17 = a.CreateRibbonPanel("Familien Browser", "Familien Browser");
             string path = Assembly.GetExecutingAssembly().Location;
-            
+
             SingleInstallEvent handler = new SingleInstallEvent();
             ExternalEvent exEvent = ExternalEvent.Create(handler);
 
@@ -52,9 +52,9 @@ namespace RevitFamilyBrowser
             RibbonItem ri3 = G17.AddItem(btnSettings);
 
             PushButtonData btnSpace = new PushButtonData("Space", "Space", path, "RevitFamilyBrowser.Revit_Classes.Space");
-            RibbonItem ri4 = G17.AddItem(btnSpace); 
-            
-           
+            RibbonItem ri4 = G17.AddItem(btnSpace);
+
+
             a.ControlledApplication.DocumentOpened += OnDocOpened;
             a.ControlledApplication.DocumentSaved += OnDocSaved;
             a.ViewActivated += OnViewActivated;
@@ -103,19 +103,19 @@ namespace RevitFamilyBrowser
             Properties.Settings.Default.SymbolList = string.Empty;
             return Result.Succeeded;
         }
-       
+
         private void OnViewActivated(object sender, ViewActivatedEventArgs e)
         {
             CreateImages(e.Document);
-            CollectFamilyData(e.Document);          
+            CollectFamilyData(e.Document);
         }
 
         private void OnDocOpened(object sender, DocumentOpenedEventArgs e)
-        {          
+        {
             CreateImages(e.Document);
             CollectFamilyData(e.Document);
         }
-        
+
         private void OnDocSaved(object sender, DocumentSavedEventArgs e)
         {
             CreateImages(e.Document);
@@ -132,7 +132,7 @@ namespace RevitFamilyBrowser
             foreach (var item in families)
             {
                 if (!(item.Name.Contains("Standart") ||
-                    item.Name.Contains("Mullion")))
+                      item.Name.Contains("Mullion")))
                 {
                     Family family = item as Family;
                     FamilySymbol symbol;
@@ -153,7 +153,7 @@ namespace RevitFamilyBrowser
 
         public void CreateImages(Autodesk.Revit.DB.Document doc)
         {
-           // TaskDialog.Show("Create Image", "Process Images");
+            // TaskDialog.Show("Create Image", "Process Images");
             FilteredElementCollector collector;
             collector = new FilteredElementCollector(doc).OfClass(typeof(FamilyInstance));
             int Instances = 0;
@@ -184,8 +184,8 @@ namespace RevitFamilyBrowser
                     file.Close();
                 }
                 //TODO
-                catch (Exception){}               
-            }          
+                catch (Exception) { }
+            }
         }
 
         private BitmapSource GetImage(IntPtr bm)
@@ -201,11 +201,11 @@ namespace RevitFamilyBrowser
         static BitmapSource ConvertBitmapToBitmapSource(Bitmap bmp)
         {
             return System.Windows.Interop.Imaging
-              .CreateBitmapSourceFromHBitmap(
-                bmp.GetHbitmap(),
-                IntPtr.Zero,
-                Int32Rect.Empty,
-                BitmapSizeOptions.FromEmptyOptions());
+                .CreateBitmapSourceFromHBitmap(
+                    bmp.GetHbitmap(),
+                    IntPtr.Zero,
+                    Int32Rect.Empty,
+                    BitmapSizeOptions.FromEmptyOptions());
         }
 
         static byte[] StreamToBytes(Stream input)

@@ -2,6 +2,7 @@ C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFami
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\bin\Debug\RevitFamilyBrowser.dll.config
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\bin\Debug\RevitFamilyBrowser.dll
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\bin\Debug\RevitFamilyBrowser.pdb
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\RevitFamilyBrowser.csprojResolveAssemblyReference.cache
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\AppSettings\SettingsControl.g.cs
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\Browser\DockPanel.g.cs
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\Pattern Elements Install\GridSetup.g.cs

@@ -52,7 +52,7 @@ namespace RevitFamilyBrowser.Revit_Classes
             {
                 return Result.Cancelled;
             }
-           
+
             FamilyPath = GetFamilyPath(fbd.SelectedPath);
             FamilyName = GetFamilyName(FamilyPath);
             Properties.Settings.Default.SymbolList = string.Empty;
@@ -156,11 +156,11 @@ namespace RevitFamilyBrowser.Revit_Classes
         static BitmapSource ConvertBitmapToBitmapSource(Bitmap bmp)
         {
             return System.Windows.Interop.Imaging
-              .CreateBitmapSourceFromHBitmap(
-                bmp.GetHbitmap(),
-                IntPtr.Zero,
-                Int32Rect.Empty,
-                BitmapSizeOptions.FromEmptyOptions());
+                .CreateBitmapSourceFromHBitmap(
+                    bmp.GetHbitmap(),
+                    IntPtr.Zero,
+                    Int32Rect.Empty,
+                    BitmapSizeOptions.FromEmptyOptions());
         }
     }
 }

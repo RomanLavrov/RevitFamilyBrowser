@@ -1,19 +1,20 @@
-﻿using Autodesk.Revit.Attributes;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.DB.Architecture;
-using Autodesk.Revit.UI;
-using Autodesk.Revit.UI.Selection;
-using RevitFamilyBrowser.WPF_Classes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using RevitFamilyBrowser.Pattern_Elements_Install;
+using Autodesk.Revit.Attributes;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Architecture;
+using Autodesk.Revit.UI;
+using Autodesk.Revit.UI.Selection;
+using RevitFamilyBrowser.Revit_Classes;
+using RevitFamilyBrowser.WPF_Classes;
 using Brushes = System.Windows.Media.Brushes;
 using Line = System.Windows.Shapes.Line;
+using RevitFamilyBrowser.Pattern_Elements_Install;
 
 namespace RevitFamilyBrowser.Revit_Classes
 {
@@ -47,8 +48,9 @@ namespace RevitFamilyBrowser.Revit_Classes
 
             GridSetup grid = new GridSetup(exEvent, handler);
             Window window = new Window();
-            window.Width = 1280;
-            window.Height = 720;
+            window.Width = grid.Width;
+            window.Height = grid.Height;
+            window.ResizeMode = ResizeMode.NoResize;
             window.Content = grid;
             window.Background = System.Windows.Media.Brushes.WhiteSmoke;
             window.Topmost = true;
@@ -98,7 +100,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                 centerRoom.Y1 = 0;
                 centerRoom.X2 = roomMin.X / Scale + (roomMax.X / Scale - roomMin.X / Scale) / 2;
                 centerRoom.Y2 = roomMin.Y / Scale + (roomMax.Y / Scale - roomMin.Y / Scale) / 2;
-                centerRoom.Stroke = System.Windows.Media.Brushes.Red;
+                //centerRoom.Stroke = System.Windows.Media.Brushes.Red;
                 // grid.canvas.Children.Add(centerRoom); 
                 derrivationX = (int)(CanvasSize / 2 - centerRoom.X2);
                 derrivationY = (int)(CanvasSize / 2 + centerRoom.Y2);
@@ -179,9 +181,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                 List<System.Drawing.PointF> rvtPointsOnWall = rvt.GetSplitPoints(rvtWall, Convert.ToInt32(grid.textBoxHorizontal.Text));
 
                 //MessageBox.Show($"Wall coors\nX1={rvtWall.X1}, Y1={rvtWall.Y1}\nX2={rvtWall.X2} Y2={rvtWall.Y2}");
-                List<System.Windows.Shapes.Line> rvtListPerpendiculars =
-                    rvt.GetPerpendiculars(rvtWall, rvtPointsOnWall);
-
+                List<System.Windows.Shapes.Line> rvtListPerpendiculars = rvt.GetPerpendiculars(rvtWall, rvtPointsOnWall);
                 rvtGridPoints = rvt.GetGridPointsRvt(revitWallNormals, rvtListPerpendiculars);
                 
                 foreach (var item in rvtGridPoints)

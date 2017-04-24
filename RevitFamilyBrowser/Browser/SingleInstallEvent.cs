@@ -1,9 +1,8 @@
-﻿using Autodesk.Revit.ApplicationServices;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 
 namespace RevitFamilyBrowser.Revit_Classes
 {
@@ -12,7 +11,7 @@ namespace RevitFamilyBrowser.Revit_Classes
         public void Execute(UIApplication uiapp)
         {
             UIDocument uidoc = uiapp.ActiveUIDocument;
-            Application app = uiapp.Application;
+            Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
             string FamilyPath = Properties.Settings.Default.FamilyPath;
@@ -68,6 +67,8 @@ namespace RevitFamilyBrowser.Revit_Classes
                 }
                 uidoc.PostRequestForElementTypePlacement(symbol);
             }
+            //Tools.CollectFamilyData(doc);
+            //Tools.CreateImages(doc);
         }
 
         private Element FindFamilyByName(Document doc, Type targetType, string familyPath)

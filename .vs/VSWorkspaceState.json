@@ -3,8 +3,9 @@
     "",
     "\\FamilyBrowserSetup",
     "\\RevitFamilyBrowser",
+    "\\RevitFamilyBrowser\\Browser",
     "\\RevitFamilyBrowser\\Pattern Elements Install"
   ],
-  "SelectedNode": "\\RevitFamilyBrowser\\Pattern Elements Install\\GridSetup.xaml.cs",
+  "SelectedNode": "\\RevitFamilyBrowser\\Pattern Elements Install\\Space.cs",
   "PreviewInSolutionExplorer": true
 }

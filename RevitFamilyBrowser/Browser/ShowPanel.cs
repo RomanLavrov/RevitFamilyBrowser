@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autodesk.Revit.UI;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using Autodesk.Revit.UI.Events;
 using Autodesk.Revit.ApplicationServices;
-using Autodesk.Revit.DB.Events;
 
 namespace RevitFamilyBrowser.Revit_Classes
 {
@@ -18,8 +14,8 @@ namespace RevitFamilyBrowser.Revit_Classes
         {
             DockablePaneId dpid = new DockablePaneId(new Guid("FA0C04E6-F9E7-413A-9D33-CFE32622E7B8"));
             DockablePane dp = commandData.Application.GetDockablePane(dpid);
-            dp.Show();           
+            dp.Show();
             return Result.Succeeded;
-        }      
+        }
     }
 }

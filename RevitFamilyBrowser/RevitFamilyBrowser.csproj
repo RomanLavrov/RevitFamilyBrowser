@@ -101,6 +101,7 @@
       <DependentUpon>GridSetup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pattern Elements Install\RoomDimensions.cs" />
+    <Compile Include="Tools.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

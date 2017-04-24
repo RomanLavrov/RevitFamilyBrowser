@@ -43,7 +43,6 @@ namespace RevitFamilyBrowser.Settings
             VistaFolderBrowserDialog ofd = new VistaFolderBrowserDialog();
             if (ofd.ShowDialog() == true)
             {
-                string path = ofd.SelectedPath;
                 string fileName = "FamilyBrowser.ini";
                 TextBoxSettings.Text = ofd.SelectedPath + fileName;
             }

@@ -10,33 +10,78 @@
     mc:Ignorable="d">
     <Grid Name="GridWindow">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="7*" />
+            <ColumnDefinition Width="14*" />
+            <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="0.5*" />
-                <RowDefinition Height="7*" />
-                <RowDefinition Height="0.5*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="14*" />
+                <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-
         </Grid>
+
         <Grid
             Name="GridLeft"
             Grid.Column="0"
             Height="700"
             VerticalAlignment="Bottom">
             <Grid.RowDefinitions>
-                <RowDefinition Height="0.5*" />
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="3*" />
-                <RowDefinition Height="1*" />
+                <RowDefinition Height="6*" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="6*" />
             </Grid.RowDefinitions>
-            <Grid Grid.Row="1" HorizontalAlignment="Center">
-                <Grid HorizontalAlignment="Center" Background="Aqua">
+
+            <Image
+                Name="ImageSymbol"
+                Grid.Row="0"
+                Grid.Column="0"
+                Width="120"
+                Height="120"
+                VerticalAlignment="Top" />
+
+            <TextBox
+                Name="TextBoxSymbol"
+                Grid.Row="0"
+                Grid.Column="0"
+                Width="300"
+                Height="30"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Left"
+                VerticalContentAlignment="Center"
+                Background="SteelBlue"
+                BorderBrush="DarkSlateBlue"
+                FontSize="16"
+                Foreground="White" />
+
+            <TextBox
+                Name="TextBoxFamily"
+                Grid.Row="0"
+                Grid.Column="0"
+                Width="300"
+                Height="30"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                HorizontalContentAlignment="Left"
+                VerticalContentAlignment="Center"
+                Background="SteelBlue"
+                BorderBrush="DarkSlateBlue"
+                FontSize="16" />
+
+            <Grid Name="GridConrols" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid
+                    Name="GridCounterControls"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    Background="DodgerBlue">
 
                     <Label
                         x:Name="labelHorizontal"
@@ -59,6 +104,8 @@
                         FontSize="16"
                         Text="1"
                         TextWrapping="Wrap" />
+
+
 
                     <Button
                         x:Name="buttonAddHorizontal"
@@ -88,43 +135,42 @@
                         FontSize="16"
                         Foreground="White" />
                 </Grid>
+
+                <Label
+                    Name="LabelSpliMethod"
+                    Grid.Column="0"
+                    Margin="20,0,0,0"
+                    Content="Split method"
+                    FontSize="16" />
+
+                <RadioButton
+                    Name="radioEqual"
+                    Grid.Row="0"
+                    Margin="20,0,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Content="Equal"
+                    FontSize="16"
+                    GroupName="SplitOption" />
+
+                <RadioButton
+                    Name="radioProportoinal"
+                    Grid.Row="0"
+                    Margin="20,0,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Content="Proportional"
+                    FontSize="16"
+                    GroupName="SplitOption" />
+
             </Grid>
 
-            <RadioButton
-                Name="radioEqual"
-                Grid.Row="2"
-                Margin="20,0,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                VerticalContentAlignment="Center"
-                Content="Equal"
-                FontSize="16"
-                GroupName="SplitOption" />
 
-            <RadioButton
-                Name="radioProportoinal"
-                Grid.Row="2"
-                Margin="20,0,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                HorizontalContentAlignment="Center"
-                VerticalContentAlignment="Center"
-                Content="Proportional"
-                FontSize="16"
-                GroupName="SplitOption" />
 
-            <TextBox
-                Name="textBoxSymbol"
-                Grid.Row="5"
-                Grid.Column="0"
-                Width="200"
-                Height="30"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Background="SteelBlue"
-                BorderBrush="DarkSlateBlue"
-                FontSize="16"
-                Foreground="White" />
+
         </Grid>
 
         <Grid
@@ -236,6 +282,7 @@
                     Height="30"
                     Background="SteelBlue"
                     BorderBrush="DarkSlateBlue"
+                    Click="Cancel_Click"
                     Content="Cancel"
                     FontSize="16"
                     Foreground="White">
