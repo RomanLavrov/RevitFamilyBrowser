@@ -168,46 +168,35 @@ namespace RevitFamilyBrowser.WPF_Classes
                 Properties.Settings.Default.FamilyPath = instance.FullName;
                 Properties.Settings.Default.FamilySymbol = instance.Name;
                 m_ExEvent.Raise();
-                // MessageBox.Show("RaiseEvent");
             }
         }
 
         private void dataGridHistory_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (dataGrid.Items.Count > 0)
-            {
-                var instance = dataGridHistory.SelectedItem as FamilyData;
-                Properties.Settings.Default.FamilyPath = string.Empty;
-                Properties.Settings.Default.FamilySymbol = instance.Name;
-                m_ExEvent.Raise();
-                //  MessageBox.Show("RaiseEvent");
-            }
+            if (dataGridHistory.Items.Count <= 0) return;
+            var instance = dataGridHistory.SelectedItem as FamilyData;
+            Properties.Settings.Default.FamilyPath = string.Empty;
+            Properties.Settings.Default.FamilySymbol = instance.Name;
+            m_ExEvent.Raise();
+            
         }
 
         private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (dataGrid.Items.Count > 0)
-            {
-                var instance = dataGrid.SelectedItem as FamilyData;
-                Properties.Settings.Default.FamilyPath = instance.FullName;
-                Properties.Settings.Default.FamilySymbol = instance.Name;
-            }
-            else
-                MessageBox.Show("Select Item from Menu");
-
+            if (dataGrid.Items.Count <= 0) return;
+            var instance = dataGrid.SelectedItem as FamilyData;
+            tempFamilyPath = Properties.Settings.Default.FamilyPath = instance.FullName;
+            tempFamilySymbol = Properties.Settings.Default.FamilySymbol = instance.Name;
+            tempFamilyName = Properties.Settings.Default.FamilyName = instance.FamilyName;
         }
 
         private void dataGridHistory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (dataGrid.Items.Count > 0)
-            {
-                var instance = dataGridHistory.SelectedItem as FamilyData;
-                Properties.Settings.Default.FamilyPath = string.Empty;
-                Properties.Settings.Default.FamilySymbol = instance.Name;
-            }
-            else
-                MessageBox.Show("Select Item from Menu");
-
+            if (dataGridHistory.Items.Count <= 0) return;
+            var instance = dataGridHistory.SelectedItem as FamilyData;
+            tempFamilyPath = Properties.Settings.Default.FamilyPath = string.Empty;
+            tempFamilySymbol = Properties.Settings.Default.FamilySymbol = instance.Name;
+            tempFamilyName = Properties.Settings.Default.FamilyName = instance.FamilyName;
         }
 
         private void CreateEmptyFamilyImage()
@@ -224,26 +213,22 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         private void dataGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (dataGrid.Items.Count > 0)
-            {
-                var instance = dataGrid.SelectedItem as FamilyData;
-                tempFamilyPath = Properties.Settings.Default.FamilyPath = instance.FullName;
-                tempFamilySymbol = Properties.Settings.Default.FamilySymbol = instance.Name;
-                tempFamilyName = Properties.Settings.Default.FamilyName = instance.FamilyName;
-                DragDrop.DoDragDrop(dataGrid, instance, DragDropEffects.Copy);
-            }
+            if (dataGrid.Items.Count <= 0) return;
+            var instance = dataGrid.SelectedItem as FamilyData;
+            tempFamilyPath = Properties.Settings.Default.FamilyPath = instance.FullName;
+            tempFamilySymbol = Properties.Settings.Default.FamilySymbol = instance.Name;
+            tempFamilyName = Properties.Settings.Default.FamilyName = instance.FamilyName;
+            DragDrop.DoDragDrop(dataGrid, instance, DragDropEffects.Copy);
         }
 
         private void dataGridHistory_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (dataGrid.Items.Count > 0)
-            {
-                var instance = dataGridHistory.SelectedItem as FamilyData;
-                tempFamilyPath = Properties.Settings.Default.FamilyPath = string.Empty;
-                tempFamilySymbol = Properties.Settings.Default.FamilySymbol = instance.Name;
-                tempFamilyName = Properties.Settings.Default.FamilyName = instance.FamilyName;
-                DragDrop.DoDragDrop(dataGridHistory, instance, DragDropEffects.Copy);
-            }
+            if (dataGridHistory.Items.Count <= 0) return;
+            var instance = dataGridHistory.SelectedItem as FamilyData;
+            tempFamilyPath = Properties.Settings.Default.FamilyPath = string.Empty;
+            tempFamilySymbol = Properties.Settings.Default.FamilySymbol = instance.Name;
+            tempFamilyName = Properties.Settings.Default.FamilyName = instance.FamilyName;
+            DragDrop.DoDragDrop(dataGridHistory, instance, DragDropEffects.Copy);
         }
 
         private void dataGridHistory_MouseLeave(object sender, MouseEventArgs e)
@@ -259,7 +244,6 @@ namespace RevitFamilyBrowser.WPF_Classes
             if (!(string.IsNullOrEmpty(tempFamilyPath) &&
                 string.IsNullOrEmpty(tempFamilySymbol) &&
                 string.IsNullOrEmpty(tempFamilyName)))
-                //MessageBox.Show(tempFamilyPath+"/n" + tempFamilySymbol + "/n" + tempFamilyName);
                 m_ExEvent.Raise();
         }
 
@@ -271,6 +255,20 @@ namespace RevitFamilyBrowser.WPF_Classes
         }
 
         private void dataGridHistory_MouseEnter(object sender, MouseEventArgs e)
+        {
+            tempFamilyPath = string.Empty;
+            tempFamilySymbol = string.Empty;
+            tempFamilyName = string.Empty;
+        }
+
+        private void dataGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            tempFamilyPath = string.Empty;
+            tempFamilySymbol = string.Empty;
+            tempFamilyName = string.Empty;
+        }
+
+        private void dataGridHistory_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             tempFamilyPath = string.Empty;
             tempFamilySymbol = string.Empty;

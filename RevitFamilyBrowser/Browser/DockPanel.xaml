@@ -89,6 +89,7 @@
                         MouseDown="dataGrid_MouseDown"
                         MouseEnter="dataGrid_MouseEnter"
                         MouseLeave="dataGrid_MouseLeave"
+                        MouseLeftButtonUp="dataGrid_MouseLeftButtonUp"
                         SelectionChanged="dataGrid_SelectionChanged"
                         VerticalGridLinesBrush="White">
 
@@ -154,6 +155,7 @@
                         MouseDown="dataGridHistory_MouseDown"
                         MouseEnter="dataGridHistory_MouseEnter"
                         MouseLeave="dataGridHistory_MouseLeave"
+                        MouseLeftButtonUp="dataGridHistory_MouseLeftButtonUp"
                         SelectionChanged="dataGridHistory_SelectionChanged"
                         VerticalGridLinesBrush="White">
 

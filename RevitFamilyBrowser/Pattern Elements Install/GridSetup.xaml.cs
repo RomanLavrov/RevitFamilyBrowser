@@ -18,9 +18,9 @@ using System.Windows.Shapes;
 
 namespace RevitFamilyBrowser.WPF_Classes
 {
-    /// <summary>
-    /// Interaction logic for Grid.xaml
-    /// </summary>
+    /// Class Dispalys Room perimeter and allow interactions with its elements
+    /// Selecting wall on canvas buld prpendiculars and detects intersection point to instal Revit elemnts
+    /// 
     public partial class GridSetup : UserControl
     {
         private ExternalEvent m_ExEvent;
@@ -29,11 +29,13 @@ namespace RevitFamilyBrowser.WPF_Classes
         public GridSetup(ExternalEvent exEvent, GridInstallEvent handler)
         {
             InitializeComponent();
-            radioEqual.IsChecked = true;
             m_ExEvent = exEvent;
             m_Handler = handler;
-            TextBoxSymbol.Text = Properties.Settings.Default.FamilySymbol;
-            TextBoxFamily.Text = Properties.Settings.Default.FamilyName;
+
+            radioEqual.IsChecked = true;
+
+            TextBoxSymbol.Text = " Type: " + Properties.Settings.Default.FamilySymbol;
+            TextBoxFamily.Text = " Family: " + Properties.Settings.Default.FamilyName;
             ImageSymbol.Source = new BitmapImage(new Uri(GetImage()));
         }
 
@@ -52,40 +54,53 @@ namespace RevitFamilyBrowser.WPF_Classes
             textBoxHorizontal.Text = temp.ToString();
         }      
 
-        private void buttonReset_Click(object sender, RoutedEventArgs e)
+        public void buttonReset_Click(object sender, RoutedEventArgs e)
         {
-            //Properties.Settings.Default.InstallPoints = string.Empty;
+            List<System.Windows.Shapes.Line> lines = canvas.Children.OfType<System.Windows.Shapes.Line>().Where(r => Equals(r.Stroke, Brushes.SteelBlue)).ToList();
+            textBoxQuantity.Text = "No Items";
+            foreach (var item in lines)
+            {
+                canvas.Children.Remove(item);
+            }
         }
 
-        private void ButtonInsertClick(object sender, RoutedEventArgs e)
+        public void ButtonInsertClick(object sender, RoutedEventArgs e)
         {
             m_ExEvent.Raise();
             this.TextBoxSymbol.Text = string.Empty;
             var parentWindow = Window.GetWindow(this);
-            if (parentWindow != null) parentWindow.Close();
+            parentWindow?.Close();
+            TextBoxFamily.Text = string.Empty;
+            TextBoxSymbol.Text = string.Empty;
+            //Properties.Settings.Default.FamilyPath = string.Empty;
+            //Properties.Settings.Default.FamilyName = string.Empty;
+            //Properties.Settings.Default.FamilySymbol = string.Empty;
+            //Properties.Settings.Default.Save();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             var parentWindow = Window.GetWindow(this);
-            if (parentWindow != null) parentWindow.Close();
+            parentWindow?.Close();
+
+            TextBoxFamily.Text = string.Empty;
+            TextBoxSymbol.Text = string.Empty;
+
+            Properties.Settings.Default.FamilyPath = string.Empty;
+            Properties.Settings.Default.FamilyName = string.Empty;
+            Properties.Settings.Default.FamilySymbol = string.Empty;
+            Properties.Settings.Default.Save();
         }
 
         private string GetImage()
         {
-            MessageBox.Show(Properties.Settings.Default.FamilyName);
             string[] ImageList = Directory.GetFiles(System.IO.Path.GetTempPath() + "FamilyBrowser\\");
-            MessageBox.Show(ImageList.Length.ToString());
             string imageUri = imageUri = (System.IO.Path.GetTempPath() + "FamilyBrowser\\RevitLogo.png").ToString();
             foreach (var imageName in ImageList)
             {
                 if (imageName.Contains(Properties.Settings.Default.FamilySymbol))
-                {
-                    MessageBox.Show("Found");
                     imageUri = imageName;
-                }
             }
-            MessageBox.Show(imageUri);
             return imageUri;
         }
     }

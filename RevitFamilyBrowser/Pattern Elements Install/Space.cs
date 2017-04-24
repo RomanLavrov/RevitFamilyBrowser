@@ -49,7 +49,7 @@ namespace RevitFamilyBrowser.Revit_Classes
             GridSetup grid = new GridSetup(exEvent, handler);
             Window window = new Window();
             window.Width = grid.Width;
-            window.Height = grid.Height;
+            window.Height = grid.Height+50;
             window.ResizeMode = ResizeMode.NoResize;
             window.Content = grid;
             window.Background = System.Windows.Media.Brushes.WhiteSmoke;
@@ -108,9 +108,16 @@ namespace RevitFamilyBrowser.Revit_Classes
                 WpfCoordinates bBox = new WpfCoordinates();
                 BoundingBox = bBox.GetBoundingBox(roomMin, roomMax, Scale, derrivationX, derrivationY);
 
-                window.Show();
-                grid.textBox.Text = "Scale 1: " + Scale.ToString();
-                grid.buttonReset.Click += buttonReset_Click;
+                if (!string.IsNullOrEmpty(Properties.Settings.Default.FamilyName) &&
+                    !string.IsNullOrEmpty(Properties.Settings.Default.FamilySymbol))
+                {
+                    window.Show();
+                }
+                else
+                    MessageBox.Show("Select  symbol from browser");
+               
+                grid.TextBoxScale.Text = "Scale 1: " + Scale.ToString();
+                grid.buttonReset.Click += grid.buttonReset_Click;
 
                 revitWalls = roomDimensions.GetWalls(newRoom);
                 wpfWalls = GetWpfWalls(revitWalls, derrivationX, derrivationY, Scale);
@@ -165,10 +172,8 @@ namespace RevitFamilyBrowser.Revit_Classes
                     grid.canvas.Children.Add(wpfCoord.BuildBoundedLine(BoundingBox, item));
                 }
 
-                //Properties.Settings.Default.InstallPoints = string.Empty;
-
                 gridPoints = wpfCoord.GetGridPoints(listPerpendiculars, wallNormals);
-                grid.textBoxQuantity.Text = "Items: " + gridPoints.Count.ToString();
+                grid.textBoxQuantity.Text = "Items: " + gridPoints.Count;
                 foreach (var item in gridPoints)
                 {
                     double x = ((((item.X - 0.5) * Scale) / 304.8) - derrivationX * Scale / 304.8);
@@ -189,7 +194,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                     Properties.Settings.Default.InstallPoints += (item.X)/(25.4*12) + "*" + (item.Y)/(25.4*12) + "\n";
                 }
 
-                //------------------------------------Draw Lines to intersection points in wpf window------------------------------------------------------------------------
+                //------------------------------------Draw Lines to intersection points in wpf window---------------------------------
                 //List<System.Drawing.Point> temp = new List<System.Drawing.Point>();
                 //temp = coord.GetIntersectInRoom(BoundingBox, gridPoints);
 
@@ -218,7 +223,7 @@ namespace RevitFamilyBrowser.Revit_Classes
 
             void line_MouseLeave(object sender, MouseEventArgs e)
             {
-                if (((System.Windows.Shapes.Line)sender).Stroke != Brushes.Red)
+                if (!Equals(((System.Windows.Shapes.Line)sender).Stroke, Brushes.Red))
                 {
                     ((System.Windows.Shapes.Line)sender).Stroke = Brushes.Black;
                 }
@@ -230,15 +235,15 @@ namespace RevitFamilyBrowser.Revit_Classes
                 ((System.Windows.Shapes.Line)sender).Stroke = System.Windows.Media.Brushes.Red;
             }
 
-            void buttonReset_Click(object sender, RoutedEventArgs e)
-            {
-                List<System.Windows.Shapes.Line> lines = grid.canvas.Children.OfType<System.Windows.Shapes.Line>().Where(r => r.Stroke == Brushes.SteelBlue).ToList();
-
-                foreach (var item in lines)
-                {
-                    grid.canvas.Children.Remove(item);
-                }
-            }
+            //void buttonReset_Click(object sender, RoutedEventArgs e)
+            //{
+            //    List<System.Windows.Shapes.Line> lines = grid.canvas.Children.OfType<System.Windows.Shapes.Line>().Where(r => Equals(r.Stroke, Brushes.SteelBlue)).ToList();
+            //    grid.textBoxQuantity.Text = "No Items";
+            //    foreach (var item in lines)
+            //    {
+            //        grid.canvas.Children.Remove(item);
+            //    }
+            //}
 
             void Draw(List<Line> wpfWalls)
             {

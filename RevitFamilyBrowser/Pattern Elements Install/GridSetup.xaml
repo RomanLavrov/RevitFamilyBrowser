@@ -10,7 +10,7 @@
     mc:Ignorable="d">
     <Grid Name="GridWindow">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="7*" />
+            <ColumnDefinition Width="8*" />
             <ColumnDefinition Width="14*" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
@@ -29,24 +29,30 @@
             Height="700"
             VerticalAlignment="Bottom">
             <Grid.RowDefinitions>
-                <RowDefinition Height="6*" />
                 <RowDefinition Height="2*" />
                 <RowDefinition Height="6*" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="5*" />
+                <RowDefinition Height="16*" />
             </Grid.RowDefinitions>
+
 
             <Image
                 Name="ImageSymbol"
-                Grid.Row="0"
-                Grid.Column="0"
+                Grid.Row="1"
                 Width="120"
                 Height="120"
+                HorizontalAlignment="Stretch"
                 VerticalAlignment="Top" />
+
 
             <TextBox
                 Name="TextBoxSymbol"
-                Grid.Row="0"
+                Grid.Row="2"
                 Grid.Column="0"
-                Width="300"
+                Width="340"
                 Height="30"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
@@ -54,24 +60,24 @@
                 VerticalContentAlignment="Center"
                 Background="SteelBlue"
                 BorderBrush="DarkSlateBlue"
-                FontSize="16"
+                FontSize="14"
                 Foreground="White" />
 
             <TextBox
                 Name="TextBoxFamily"
-                Grid.Row="0"
-                Grid.Column="0"
-                Width="300"
+                Grid.Row="3"
+                Width="340"
                 Height="30"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
+                VerticalAlignment="Center"
                 HorizontalContentAlignment="Left"
                 VerticalContentAlignment="Center"
                 Background="SteelBlue"
                 BorderBrush="DarkSlateBlue"
-                FontSize="16" />
+                FontSize="14"
+                Foreground="White" />
 
-            <Grid Name="GridConrols" Grid.Row="1">
+            <Grid Name="GridConrols" Grid.Row="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />
@@ -80,8 +86,7 @@
                 <Grid
                     Name="GridCounterControls"
                     Grid.Column="1"
-                    HorizontalAlignment="Center"
-                    Background="DodgerBlue">
+                    HorizontalAlignment="Center">
 
                     <Label
                         x:Name="labelHorizontal"
@@ -140,6 +145,7 @@
                     Name="LabelSpliMethod"
                     Grid.Column="0"
                     Margin="20,0,0,0"
+                    VerticalAlignment="Top"
                     Content="Split method"
                     FontSize="16" />
 
@@ -167,10 +173,6 @@
                     GroupName="SplitOption" />
 
             </Grid>
-
-
-
-
         </Grid>
 
         <Grid
@@ -188,11 +190,13 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
                 <TextBox
-                    Name="textBox"
-                    Grid.Column="0"
+                    Name="TextBoxScale"
+                    Grid.Column="2"
                     Width="120"
                     Height="30"
                     HorizontalAlignment="Center"
@@ -207,7 +211,7 @@
 
                 <TextBox
                     Name="textBoxQuantity"
-                    Grid.Column="1"
+                    Grid.Column="3"
                     Width="120"
                     Height="30"
                     VerticalAlignment="Center"
@@ -217,6 +221,7 @@
                     BorderBrush="DarkSlateBlue"
                     FontSize="16"
                     Foreground="White"
+                    Text="No Items"
                     TextWrapping="Wrap" />
             </Grid>
 
@@ -245,7 +250,7 @@
 
                 <Button
                     Name="buttonReset"
-                    Grid.Column="0"
+                    Grid.Column="1"
                     Width="120"
                     Height="30"
                     Background="SteelBlue"
@@ -261,7 +266,7 @@
 
                 <Button
                     Name="buttonInsert"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     Width="120"
                     Height="30"
                     Background="SteelBlue"
@@ -277,7 +282,7 @@
 
                 <Button
                     Name="Cancel"
-                    Grid.Column="2"
+                    Grid.Column="3"
                     Width="120"
                     Height="30"
                     Background="SteelBlue"

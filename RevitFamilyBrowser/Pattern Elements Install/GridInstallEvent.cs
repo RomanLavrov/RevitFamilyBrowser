@@ -29,7 +29,7 @@ namespace RevitFamilyBrowser.Revit_Classes
 
             if (string.IsNullOrEmpty(FamilyPath))
             {
-                //MessageBox.Show("Elemnt from history");
+                MessageBox.Show("Element from history");
                 FamilySymbol historySymbol = null;
                 Family historyFamily = new FilteredElementCollector(doc).OfClass(typeof(Family)).FirstOrDefault(e=>e.Name.Equals(FamilyName)) as Family;
                 ISet<ElementId> historyFamilySymbolId = historyFamily.GetFamilySymbolIds();
@@ -54,6 +54,7 @@ namespace RevitFamilyBrowser.Revit_Classes
             }
             else
             {
+                MessageBox.Show("New Element");
                 FilteredElementCollector collector = new FilteredElementCollector(doc);
                 collector.OfCategory(BuiltInCategory.OST_ElectricalFixtures);
                 collector.OfClass(typeof(Family));
