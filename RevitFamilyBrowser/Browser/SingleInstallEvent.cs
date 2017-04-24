@@ -67,8 +67,8 @@ namespace RevitFamilyBrowser.Revit_Classes
                 }
                 uidoc.PostRequestForElementTypePlacement(symbol);
             }
-            //Tools.CollectFamilyData(doc);
-            //Tools.CreateImages(doc);
+            Tools.CollectFamilyData(doc);
+            Tools.CreateImages(doc);
         }
 
         private Element FindFamilyByName(Document doc, Type targetType, string familyPath)
