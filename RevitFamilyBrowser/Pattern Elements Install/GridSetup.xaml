@@ -173,6 +173,15 @@
                     GroupName="SplitOption" />
 
             </Grid>
+
+            <ComboBox
+                Name="comboBoxHeight"
+                Grid.Row="6"
+                Width="340"
+                Height="30"
+                Background="SteelBlue"
+                FontSize="16"
+                Foreground="White" />
         </Grid>
 
         <Grid

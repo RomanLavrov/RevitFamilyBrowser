@@ -79,7 +79,14 @@ namespace RevitFamilyBrowser.Revit_Classes
                     try
                     {
                         var point = selection.PickPoint("Point to create a room");
+                        if (view.GenLevel == null)
+                        {
+                            TaskDialog.Show("3D View", "Please switch to level view.");
+                            return Result.Cancelled;
+                        }
+                            
                         newRoom = doc.Create.NewRoom(view.GenLevel, new UV(point.X, point.Y));
+                        
                     }
                     catch (Autodesk.Revit.Exceptions.OperationCanceledException)
                     {
@@ -115,7 +122,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                 }
                 else
                     MessageBox.Show("Select  symbol from browser");
-               
+
                 grid.TextBoxScale.Text = "Scale 1: " + Scale.ToString();
                 grid.buttonReset.Click += grid.buttonReset_Click;
 

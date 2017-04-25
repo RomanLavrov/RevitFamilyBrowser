@@ -67,11 +67,11 @@ namespace RevitFamilyBrowser.WPF_Classes
         public void ButtonInsertClick(object sender, RoutedEventArgs e)
         {
             m_ExEvent.Raise();
-            this.TextBoxSymbol.Text = string.Empty;
+            //this.TextBoxSymbol.Text = string.Empty;
             var parentWindow = Window.GetWindow(this);
             parentWindow?.Close();
-            TextBoxFamily.Text = string.Empty;
-            TextBoxSymbol.Text = string.Empty;
+           // TextBoxFamily.Text = string.Empty;
+           // TextBoxSymbol.Text = string.Empty;
             //Properties.Settings.Default.FamilyPath = string.Empty;
             //Properties.Settings.Default.FamilyName = string.Empty;
             //Properties.Settings.Default.FamilySymbol = string.Empty;

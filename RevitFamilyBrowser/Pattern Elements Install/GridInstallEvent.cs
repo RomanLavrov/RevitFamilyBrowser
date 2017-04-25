@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Application = Autodesk.Revit.ApplicationServices.Application;
+using ArgumentException = Autodesk.Revit.Exceptions.ArgumentException;
 
 namespace RevitFamilyBrowser.Revit_Classes
 {
@@ -29,9 +30,8 @@ namespace RevitFamilyBrowser.Revit_Classes
 
             if (string.IsNullOrEmpty(FamilyPath))
             {
-                MessageBox.Show("Element from history");
                 FamilySymbol historySymbol = null;
-                Family historyFamily = new FilteredElementCollector(doc).OfClass(typeof(Family)).FirstOrDefault(e=>e.Name.Equals(FamilyName)) as Family;
+                Family historyFamily = new FilteredElementCollector(doc).OfClass(typeof(Family)).FirstOrDefault(e => e.Name.Equals(FamilyName)) as Family;
                 ISet<ElementId> historyFamilySymbolId = historyFamily.GetFamilySymbolIds();
                 foreach (ElementId id in historyFamilySymbolId)
                 {
@@ -47,6 +47,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                         XYZ point = new XYZ(item.X, item.Y, 0);
                         Level level = view.GenLevel;
                         Element host = level as Element;
+                        historySymbol.Activate();
                         doc.Create.NewFamilyInstance(point, historySymbol, host, StructuralType.NonStructural);
                         transact.Commit();
                     }
@@ -54,7 +55,7 @@ namespace RevitFamilyBrowser.Revit_Classes
             }
             else
             {
-                MessageBox.Show("New Element");
+
                 FilteredElementCollector collector = new FilteredElementCollector(doc);
                 collector.OfCategory(BuiltInCategory.OST_ElectricalFixtures);
                 collector.OfClass(typeof(Family));
@@ -67,10 +68,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                     using (var trans = new Transaction(doc, "Load Family"))
                     {
                         trans.Start();
-                        if (!doc.LoadFamily(FamilyPath, out family))
-                        {
-                            TaskDialog.Show("Loading", "Unable to load " + FamilyPath);
-                        }
+                        doc.LoadFamily(FamilyPath, out family);
                         trans.Commit();
                     }
                 }
@@ -78,7 +76,6 @@ namespace RevitFamilyBrowser.Revit_Classes
                 ISet<ElementId> familySymbolId = family.GetFamilySymbolIds();
                 foreach (ElementId id in familySymbolId)
                 {
-                    // Get name from buffer to compare
                     if (family.Document.GetElement(id).Name == FamilySymbol && FamilySymbol != null)
                         symbol = family.Document.GetElement(id) as FamilySymbol;
                 }
@@ -91,6 +88,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                         XYZ point = new XYZ(item.X, item.Y, 0);
                         Level level = view.GenLevel;
                         Element host = level as Element;
+                        symbol.Activate();
                         doc.Create.NewFamilyInstance(point, symbol, host, StructuralType.NonStructural);
                         transact.Commit();
                     }
@@ -110,9 +108,8 @@ namespace RevitFamilyBrowser.Revit_Classes
                 int indexSlash = familyPath.LastIndexOf("\\") + 1;
                 string FamilyName = familyPath.Substring(indexSlash);
                 string targetName = FamilyName.Substring(0, FamilyName.Length - 4);
-                return
-                    new FilteredElementCollector(doc).OfClass(targetType)
-                        .FirstOrDefault(e => e.Name.Equals(targetName));
+                return new FilteredElementCollector(doc).OfClass(targetType)
+                    .FirstOrDefault(e => e.Name.Equals(targetName));
             }
             TaskDialog.Show("FamilyPath Error", "Directory can't be found ");
             return null;

@@ -162,62 +162,70 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         private void dataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (dataGrid.Items.Count > 0)
-            {
-                var instance = dataGrid.SelectedItem as FamilyData;
-                Properties.Settings.Default.FamilyPath = instance.FullName;
-                Properties.Settings.Default.FamilySymbol = instance.Name;
-                m_ExEvent.Raise();
-            }
+            if (dataGrid.Items.Count <= 0) return;
+
+            var instance = dataGrid.SelectedItem as FamilyData;
+            Properties.Settings.Default.FamilyPath = instance.FullName;
+            Properties.Settings.Default.FamilySymbol = instance.Name;
+
+            Properties.Settings.Default.FamilyPath = instance.FullName;
+            Properties.Settings.Default.FamilySymbol = instance.Name;
+            Properties.Settings.Default.FamilyName = instance.FamilyName;
+            MessageBox.Show("FullName" + instance.FullName + "\n" + "Family Symbol" + instance.Name + "\n" + "FamiluName" + instance.FamilyName);
+            //m_ExEvent.Raise();
         }
 
         private void dataGridHistory_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (dataGridHistory.Items.Count <= 0) return;
+
             var instance = dataGridHistory.SelectedItem as FamilyData;
             Properties.Settings.Default.FamilyPath = string.Empty;
             Properties.Settings.Default.FamilySymbol = instance.Name;
-            m_ExEvent.Raise();
-            
+
+            Properties.Settings.Default.FamilyPath = string.Empty;
+            Properties.Settings.Default.FamilySymbol = instance.Name;
+            Properties.Settings.Default.FamilyName = instance.FamilyName;
+            MessageBox.Show("FullName" + instance.FullName + "\n" + "Family Symbol" + instance.Name + "\n" + "FamiluName" + instance.FamilyName);
+
+            //m_ExEvent.Raise();
         }
 
         private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (dataGrid.Items.Count <= 0) return;
             var instance = dataGrid.SelectedItem as FamilyData;
-            tempFamilyPath = Properties.Settings.Default.FamilyPath = instance.FullName;
-            tempFamilySymbol = Properties.Settings.Default.FamilySymbol = instance.Name;
-            tempFamilyName = Properties.Settings.Default.FamilyName = instance.FamilyName;
+
+            Properties.Settings.Default.FamilyPath = instance.FullName;
+            Properties.Settings.Default.FamilySymbol = instance.Name;
+            Properties.Settings.Default.FamilyName = instance.FamilyName;
+            Properties.Settings.Default.Save();
         }
 
         private void dataGridHistory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (dataGridHistory.Items.Count <= 0) return;
             var instance = dataGridHistory.SelectedItem as FamilyData;
-            tempFamilyPath = Properties.Settings.Default.FamilyPath = string.Empty;
-            tempFamilySymbol = Properties.Settings.Default.FamilySymbol = instance.Name;
-            tempFamilyName = Properties.Settings.Default.FamilyName = instance.FamilyName;
-        }
 
-        private void CreateEmptyFamilyImage()
-        {
-            string TempImgFolder = System.IO.Path.GetTempPath() + "FamilyBrowser\\";
-            if (!System.IO.Directory.Exists(TempImgFolder))
-            {
-                System.IO.Directory.CreateDirectory(TempImgFolder);
-            }
-            ImageConverter converter = new ImageConverter();
-            DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\RevitLogo.png");
-            File.WriteAllBytes(di.ToString(), (byte[])converter.ConvertTo(Properties.Resources.RevitLogo, typeof(byte[])));
+            Properties.Settings.Default.FamilyPath = string.Empty;
+            Properties.Settings.Default.FamilySymbol = instance.Name;
+            Properties.Settings.Default.FamilyName = instance.FamilyName;
+            Properties.Settings.Default.Save();
         }
 
         private void dataGrid_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (dataGrid.Items.Count <= 0) return;
             var instance = dataGrid.SelectedItem as FamilyData;
-            tempFamilyPath = Properties.Settings.Default.FamilyPath = instance.FullName;
-            tempFamilySymbol = Properties.Settings.Default.FamilySymbol = instance.Name;
-            tempFamilyName = Properties.Settings.Default.FamilyName = instance.FamilyName;
+
+            Properties.Settings.Default.FamilyPath = instance.FullName;
+            Properties.Settings.Default.FamilySymbol = instance.Name;
+            Properties.Settings.Default.FamilyName = instance.FamilyName;
+
+            tempFamilyPath = instance.FullName;
+            tempFamilySymbol = instance.Name;
+            tempFamilyName = instance.FamilyName;
+
             DragDrop.DoDragDrop(dataGrid, instance, DragDropEffects.Copy);
         }
 
@@ -225,9 +233,14 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
             if (dataGridHistory.Items.Count <= 0) return;
             var instance = dataGridHistory.SelectedItem as FamilyData;
-            tempFamilyPath = Properties.Settings.Default.FamilyPath = string.Empty;
-            tempFamilySymbol = Properties.Settings.Default.FamilySymbol = instance.Name;
-            tempFamilyName = Properties.Settings.Default.FamilyName = instance.FamilyName;
+            Properties.Settings.Default.FamilyPath = string.Empty;
+            Properties.Settings.Default.FamilySymbol = instance.Name;
+            Properties.Settings.Default.FamilyName = instance.FamilyName;
+
+            tempFamilyPath = string.Empty;
+            tempFamilySymbol = instance.Name;
+            tempFamilyName = instance.FamilyName;
+
             DragDrop.DoDragDrop(dataGridHistory, instance, DragDropEffects.Copy);
         }
 
@@ -249,30 +262,42 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         private void dataGrid_MouseEnter(object sender, MouseEventArgs e)
         {
-            tempFamilyPath = string.Empty;
-            tempFamilySymbol = string.Empty;
-            tempFamilyName = string.Empty;
+            ClearTemp();
         }
 
         private void dataGridHistory_MouseEnter(object sender, MouseEventArgs e)
         {
-            tempFamilyPath = string.Empty;
-            tempFamilySymbol = string.Empty;
-            tempFamilyName = string.Empty;
+            ClearTemp();
         }
 
         private void dataGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            ClearTemp();
+        }
+
+        private void dataGridHistory_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            ClearTemp();
+        }
+
+        private void ClearTemp()
+        {
             tempFamilyPath = string.Empty;
             tempFamilySymbol = string.Empty;
             tempFamilyName = string.Empty;
         }
 
-        private void dataGridHistory_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void CreateEmptyFamilyImage()
         {
-            tempFamilyPath = string.Empty;
-            tempFamilySymbol = string.Empty;
-            tempFamilyName = string.Empty;
+            //TODO optimise creating
+            string TempImgFolder = System.IO.Path.GetTempPath() + "FamilyBrowser\\";
+            if (!System.IO.Directory.Exists(TempImgFolder))
+            {
+                System.IO.Directory.CreateDirectory(TempImgFolder);
+            }
+            ImageConverter converter = new ImageConverter();
+            DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\RevitLogo.png");
+            File.WriteAllBytes(di.ToString(), (byte[])converter.ConvertTo(Properties.Resources.RevitLogo, typeof(byte[])));
         }
     }
 }
