@@ -27,7 +27,6 @@ namespace RevitFamilyBrowser
         {
             FilteredElementCollector elementCollector = new FilteredElementCollector(doc).OfClass(typeof(Family));
             ElementWorksetFilter elementWorksetFilter = new ElementWorksetFilter(workset.Id, false);
-            ICollection<Element> worksetElemsfounds = elementCollector.WherePasses(elementWorksetFilter).ToElements();
             return elementCollector.WherePasses(elementWorksetFilter);
         }
         private static IList<Workset> GetAllWorksets(Document doc)
@@ -36,8 +35,8 @@ namespace RevitFamilyBrowser
             FilteredWorksetCollector collector = new FilteredWorksetCollector(doc);
             collector.OfKind(WorksetKind.FamilyWorkset);
             IList<Workset> worksets = collector.ToWorksets();
-            if (worksets.Count == 0)
-                TaskDialog.Show("Worksets", " No Worksets in project");
+            //if (worksets.Count == 0)
+            //    TaskDialog.Show("Worksets", " No Worksets in project");
             foreach (Workset workset in worksets)
             {
                 message += "Workset : " + workset.Name;

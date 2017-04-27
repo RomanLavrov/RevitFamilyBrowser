@@ -21,7 +21,7 @@
                             Background="White"
                             BorderBrush="LightGray"
                             Foreground="Black"
-                            IsExpanded="True">
+                            IsExpanded="False">
                             <Expander.Header>
                                 <Border BorderBrush="Gainsboro" BorderThickness="1">
                                     <StackPanel

@@ -15,56 +15,56 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_2696AB9A4003404EA2665E4682CEB7E5"
+        "MsmKey" = "8:_0621ADDC31AC4A8ABC8521AA0D9FAE69"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_79C83835DD8549D7869C5C3D1470872A"
+        "MsmKey" = "8:_10ACBFF66674431BA7E265089BE343A5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_A98DA6A4FA2243A18CE03C92FD862F87"
+        "MsmKey" = "8:_40978F8D0AB742BA8319534657A3D0D0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_ABD6FFE859F94FA89A9ADF5C742A39D7"
+        "MsmKey" = "8:_5BB09D94663F438DBB77DC6F9AA1254A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_D991F3EB180F4F37B06127FD28090DBE"
+        "MsmKey" = "8:_CF43B7ED871D439B831D1BA6E5FE4C6F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_F3FDCD5B18194495BB6E9FE706A44B32"
+        "MsmKey" = "8:_FFA744B6CC704333B71A99D268A479B7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D991F3EB180F4F37B06127FD28090DBE"
+        "OwnerKey" = "8:_0621ADDC31AC4A8ABC8521AA0D9FAE69"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2696AB9A4003404EA2665E4682CEB7E5"
+        "OwnerKey" = "8:_FFA744B6CC704333B71A99D268A479B7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F3FDCD5B18194495BB6E9FE706A44B32"
+        "OwnerKey" = "8:_40978F8D0AB742BA8319534657A3D0D0"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -85,6 +85,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -101,6 +117,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -130,14 +154,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2696AB9A4003404EA2665E4682CEB7E5"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_0621ADDC31AC4A8ABC8521AA0D9FAE69"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:RevitFamilyBrowser, Version=2017.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_2696AB9A4003404EA2665E4682CEB7E5"
+                    "_0621ADDC31AC4A8ABC8521AA0D9FAE69"
                     {
                     "Name" = "8:RevitFamilyBrowser.dll"
                     "Attributes" = "3:512"
@@ -161,7 +185,58 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_79C83835DD8549D7869C5C3D1470872A"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_10ACBFF66674431BA7E265089BE343A5"
+            {
+            "SourcePath" = "8:..\\..\\..\\..\\..\\AppData\\Roaming\\Autodesk\\Revit\\Addins\\2016\\RevitFamilyBrowser.addin"
+            "TargetName" = "8:RevitFamilyBrowser.addin"
+            "Tag" = "8:"
+            "Folder" = "8:_9231B537950E4EF9A31FEB9CF5BB615D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_40978F8D0AB742BA8319534657A3D0D0"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:RevitFamilyBrowser, Version=2017.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_40978F8D0AB742BA8319534657A3D0D0"
+                    {
+                    "Name" = "8:RevitFamilyBrowser.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\..\\..\\..\\..\\AppData\\Roaming\\Autodesk\\Revit\\Addins\\2016\\RevitFamilyBrowser.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B1A7D4EBAE054D6EB3504D0B6629CE6F"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5BB09D94663F438DBB77DC6F9AA1254A"
             {
             "SourcePath" = "8:..\\..\\..\\..\\..\\AppData\\Roaming\\Autodesk\\Revit\\Addins\\2016\\RevitFamilyBrowser.addin"
             "TargetName" = "8:RevitFamilyBrowser.addin"
@@ -181,27 +256,7 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A98DA6A4FA2243A18CE03C92FD862F87"
-            {
-            "SourcePath" = "8:..\\..\\..\\..\\..\\AppData\\Roaming\\Autodesk\\Revit\\Addins\\2016\\RevitFamilyBrowser.addin"
-            "TargetName" = "8:RevitFamilyBrowser.addin"
-            "Tag" = "8:"
-            "Folder" = "8:_9231B537950E4EF9A31FEB9CF5BB615D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_ABD6FFE859F94FA89A9ADF5C742A39D7"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CF43B7ED871D439B831D1BA6E5FE4C6F"
             {
             "SourcePath" = "8:..\\..\\..\\..\\..\\AppData\\Roaming\\Autodesk\\Revit\\Addins\\2016\\RevitFamilyBrowser.addin"
             "TargetName" = "8:RevitFamilyBrowser.addin"
@@ -221,14 +276,14 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D991F3EB180F4F37B06127FD28090DBE"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FFA744B6CC704333B71A99D268A479B7"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:RevitFamilyBrowser, Version=2017.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_D991F3EB180F4F37B06127FD28090DBE"
+                    "_FFA744B6CC704333B71A99D268A479B7"
                     {
                     "Name" = "8:RevitFamilyBrowser.dll"
                     "Attributes" = "3:512"
@@ -238,37 +293,6 @@
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_9231B537950E4EF9A31FEB9CF5BB615D"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F3FDCD5B18194495BB6E9FE706A44B32"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:RevitFamilyBrowser, Version=2017.0.0.0, Culture=neutral, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_F3FDCD5B18194495BB6E9FE706A44B32"
-                    {
-                    "Name" = "8:RevitFamilyBrowser.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\..\\..\\..\\..\\AppData\\Roaming\\Autodesk\\Revit\\Addins\\2016\\RevitFamilyBrowser.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_B1A7D4EBAE054D6EB3504D0B6629CE6F"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -406,7 +430,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:RFB_Setup"
         "ProductCode" = "8:{1A93588E-20B5-4927-96E9-FF9E9D14A826}"
-        "PackageCode" = "8:{CE88053E-CD20-4DCF-A9FA-04AA4A713128}"
+        "PackageCode" = "8:{F9B7FCA6-BC8A-45EB-86BF-04D6E200BE91}"
         "UpgradeCode" = "8:{C464CAF1-C81B-4266-9E7C-943702219FC6}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

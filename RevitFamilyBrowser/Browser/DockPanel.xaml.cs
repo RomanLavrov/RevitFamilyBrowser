@@ -38,7 +38,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 1);
             dispatcherTimer.Start();
-
+           
             CreateEmptyFamilyImage();
         }
 
