@@ -31,12 +31,26 @@ namespace RevitFamilyBrowser.Revit_Classes
             Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
+            //TODO hotfix
             Ookii.Dialogs.Wpf.VistaFolderBrowserDialog fbd = new VistaFolderBrowserDialog();
-            if (Properties.Settings.Default.RootFolder == File.ReadAllText(Properties.Settings.Default.SettingPath))
-                fbd.SelectedPath = File.ReadAllText(Properties.Settings.Default.SettingPath);
+            if (File.Exists(Properties.Settings.Default.DefaultSettingsPath))
+            {
+                if (Properties.Settings.Default.RootFolder == File.ReadAllText(Properties.Settings.Default.SettingPath))
+                    fbd.SelectedPath = File.ReadAllText(Properties.Settings.Default.SettingPath);
+                else
+                    fbd.SelectedPath = Properties.Settings.Default.RootFolder;
+                //List<string> Directories = new List<string>();
+            }
+
             else
-                fbd.SelectedPath = Properties.Settings.Default.RootFolder;
-            //List<string> Directories = new List<string>();
+            {
+                if (string.IsNullOrEmpty(Properties.Settings.Default.RootFolder))
+                    fbd.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                else
+                    fbd.SelectedPath = Properties.Settings.Default.RootFolder;
+            }
+           
+           
             if (fbd.ShowDialog() == true)
             {
                 if (fbd.SelectedPath.Contains("ROCHE") && app.VersionNumber != "2015")

@@ -30,8 +30,18 @@ namespace RevitFamilyBrowser.Revit_Classes
                 Name = "Settings",
                 ResizeMode = ResizeMode.NoResize
             };
-          
+
+            UIApplication uiapp = commandData.Application;
+            UIDocument uidoc = uiapp.ActiveUIDocument;
+            Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
+            Document doc = uidoc.Document;
+
+            
+
             window.Show();
+
+           
+
             return Result.Succeeded;
         }
 

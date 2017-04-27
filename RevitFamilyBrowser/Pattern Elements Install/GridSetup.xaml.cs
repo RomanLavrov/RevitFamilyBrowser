@@ -37,6 +37,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             TextBoxSymbol.Text = " Type: " + Properties.Settings.Default.FamilySymbol;
             TextBoxFamily.Text = " Family: " + Properties.Settings.Default.FamilyName;
             ImageSymbol.Source = new BitmapImage(new Uri(GetImage()));
+            comboBoxHeight.ItemsSource = Enum.GetValues(typeof(heights));
         }
 
         private void buttonAddHorizontal_Click(object sender, RoutedEventArgs e)
@@ -66,6 +67,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         public void ButtonInsertClick(object sender, RoutedEventArgs e)
         {
+            Properties.Settings.Default.Offset = int.Parse(comboBoxHeight.Text);
             m_ExEvent.Raise();
             //this.TextBoxSymbol.Text = string.Empty;
             var parentWindow = Window.GetWindow(this);
@@ -102,6 +104,24 @@ namespace RevitFamilyBrowser.WPF_Classes
                     imageUri = imageName;
             }
             return imageUri;
+        }
+
+        List<int> InstallHeight = new List<int>()
+        {
+            200,
+            850,
+            1100,
+            1300,
+            1500
+        };
+
+        enum heights
+        {
+            Socket = 200,
+            Cardreader = 850,
+            Lightswitch = 1100,
+            Thermostat = 1300,
+            FireAlarm = 1500
         }
     }
 }

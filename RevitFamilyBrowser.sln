@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26403.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RevitFamilyBrowser", "RevitFamilyBrowser\RevitFamilyBrowser.csproj", "{495FE08A-59CF-4E46-9B1E-5B0AF12F0C8F}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RFB_Setup", "RFB_Setup\RFB_Setup.vdproj", "{DAB6667F-D232-48FC-857D-C56821567915}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,8 @@ Global
 		{495FE08A-59CF-4E46-9B1E-5B0AF12F0C8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{495FE08A-59CF-4E46-9B1E-5B0AF12F0C8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{495FE08A-59CF-4E46-9B1E-5B0AF12F0C8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAB6667F-D232-48FC-857D-C56821567915}.Debug|Any CPU.ActiveCfg = Debug
+		{DAB6667F-D232-48FC-857D-C56821567915}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -35,7 +35,8 @@
                 <RowDefinition Height="2*" />
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="5*" />
-                <RowDefinition Height="16*" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="14*" />
             </Grid.RowDefinitions>
 
 
@@ -179,9 +180,11 @@
                 Grid.Row="6"
                 Width="340"
                 Height="30"
-                Background="SteelBlue"
+                Background="Black"
+                BorderBrush="DarkSlateBlue"
                 FontSize="16"
-                Foreground="White" />
+                Foreground="DarkSlateBlue"
+                IsEditable="True" />
         </Grid>
 
         <Grid

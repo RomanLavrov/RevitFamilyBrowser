@@ -118,5 +118,41 @@ namespace RevitFamilyBrowser.Properties {
                 this["SettingPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Offset {
+            get {
+                return ((int)(this["Offset"]));
+            }
+            set {
+                this["Offset"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultFamilyPth {
+            get {
+                return ((string)(this["DefaultFamilyPth"]));
+            }
+            set {
+                this["DefaultFamilyPth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultSettingsPath {
+            get {
+                return ((string)(this["DefaultSettingsPath"]));
+            }
+            set {
+                this["DefaultSettingsPath"] = value;
+            }
+        }
     }
 }

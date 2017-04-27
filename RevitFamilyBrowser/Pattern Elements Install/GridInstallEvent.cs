@@ -23,6 +23,7 @@ namespace RevitFamilyBrowser.Revit_Classes
             Document doc = uidoc.Document;
             View view = uidoc.ActiveView;
 
+            int Offset = Properties.Settings.Default.Offset;
             string FamilyPath = Properties.Settings.Default.FamilyPath;
             string FamilySymbol = Properties.Settings.Default.FamilySymbol;
             string FamilyName = Properties.Settings.Default.FamilyName;
@@ -44,7 +45,8 @@ namespace RevitFamilyBrowser.Revit_Classes
                     using (var transact = new Transaction(doc, "Insert Symbol"))
                     {
                         transact.Start();
-                        XYZ point = new XYZ(item.X, item.Y, 0);
+                      
+                        XYZ point = new XYZ(item.X, item.Y, Offset);
                         Level level = view.GenLevel;
                         Element host = level as Element;
                         historySymbol.Activate();
@@ -131,5 +133,7 @@ namespace RevitFamilyBrowser.Revit_Classes
             }
             return insertionPoints;
         }
+
+       
     }
 }
