@@ -5,9 +5,9 @@ using System.Windows.Shapes;
 
 namespace RevitFamilyBrowser.Pattern_Elements_Install
 {
-    class CoordinatesRevit
+    public class CoordinatesRevit
     {
-        private double GetSlope(Line line)
+        public double GetSlope(Line line)
         {
             return (line.Y2 - line.Y1) / (line.X2 - line.X1);
         }
@@ -25,7 +25,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             return result;
         }
 
-        private PointF GetIntersection(Line line1, Line line2)
+        public PointF GetIntersection(Line line1, Line line2)
         {
             PointF intersection = new PointF();
 
