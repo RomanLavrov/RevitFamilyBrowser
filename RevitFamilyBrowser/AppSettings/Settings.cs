@@ -17,10 +17,10 @@ namespace RevitFamilyBrowser.Revit_Classes
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             SettingsControl settings = new SettingsControl();
-          
+
             Window window = new Window
             {
-                Height = 160,
+                Height = 210,
                 Width = 600,
                 Title = "Familien Browser Settings",
                 WindowStartupLocation = WindowStartupLocation.CenterScreen,
@@ -30,21 +30,8 @@ namespace RevitFamilyBrowser.Revit_Classes
                 Name = "Settings",
                 ResizeMode = ResizeMode.NoResize
             };
-
-            UIApplication uiapp = commandData.Application;
-            UIDocument uidoc = uiapp.ActiveUIDocument;
-            Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
-            Document doc = uidoc.Document;
-
-            
-
             window.Show();
-
-           
-
             return Result.Succeeded;
         }
-
-
     }
 }

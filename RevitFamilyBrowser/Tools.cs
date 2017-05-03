@@ -69,7 +69,7 @@ namespace RevitFamilyBrowser
                     foreach (ElementId id in familySymbolId)
                     {
                         var symbol = family.Document.GetElement(id) as FamilySymbol;
-                        temp += "#" + symbol.Name;
+                        if (symbol != null) temp += "#" + symbol.Name;
                     }
                     temp += "\n";
                 }
@@ -101,40 +101,32 @@ namespace RevitFamilyBrowser
 
         public static void CreateImages(Autodesk.Revit.DB.Document doc)
         {
-            //TaskDialog.Show("Create Image", "Process Images");
-            FilteredElementCollector collector;
-            collector = new FilteredElementCollector(doc).OfClass(typeof(FamilyInstance));
-            int Instances = 0;
-
+            var collector = new FilteredElementCollector(doc).OfClass(typeof(FamilyInstance));
             foreach (FamilyInstance fi in collector)
             {
-                try
+                ElementId typeId = fi.GetTypeId();
+                ElementType type = doc.GetElement(typeId) as ElementType;
+
+                string TempImgFolder = Path.GetTempPath() + "FamilyBrowser\\";
+                if (!Directory.Exists(TempImgFolder))
                 {
-                    ElementId typeId = fi.GetTypeId();
-                    ElementType type = doc.GetElement(typeId) as ElementType;
+                    Directory.CreateDirectory(TempImgFolder);
+                }
+
+                string filename = Path.Combine(TempImgFolder + type.Name + ".bmp");
+
+                if (!File.Exists(filename))
+                {
                     System.Drawing.Size imgSize = new System.Drawing.Size(200, 200);
-                    Instances++;
-                    //------------Prewiew Image-----
                     Bitmap image = type.GetPreviewImage(imgSize);
-
-                    JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+                    //JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+                    BitmapEncoder encoder = new BmpBitmapEncoder();
                     encoder.Frames.Add(BitmapFrame.Create(ConvertBitmapToBitmapSource(image)));
-                    encoder.QualityLevel = 25;
-
-                    string TempImgFolder = System.IO.Path.GetTempPath() + "FamilyBrowser\\";
-                    if (!System.IO.Directory.Exists(TempImgFolder))
-                    {
-                        System.IO.Directory.CreateDirectory(TempImgFolder);
-                    }
-                    string filename = TempImgFolder + type.Name + ".bmp";
+                   // encoder.QualityLevel = 25;
                     FileStream file = new FileStream(filename, FileMode.Create, FileAccess.Write);
+                   
                     encoder.Save(file);
                     file.Close();
-                }
-                //TODO
-                catch (Exception)
-                {
-                    ;
                 }
             }
         }

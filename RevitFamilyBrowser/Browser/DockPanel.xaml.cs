@@ -36,7 +36,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
             System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 1);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 1 );
             dispatcherTimer.Start();
            
             CreateEmptyFamilyImage();
@@ -69,7 +69,7 @@ namespace RevitFamilyBrowser.WPF_Classes
                 collectedData = Properties.Settings.Default.CollectedData;
                 ObservableCollection<FamilyData> collectionData = new ObservableCollection<FamilyData>();
                 List<string> listData = new List<string>(collectedData.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries));
-                DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\RevitLogo.png");
+                DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\RevitLogo.bmp");
                 foreach (var item in listData)
                 {
                     int index = item.IndexOf('#');
@@ -123,7 +123,6 @@ namespace RevitFamilyBrowser.WPF_Classes
 
             if (temp != Properties.Settings.Default.SymbolList)
             {
-                // MessageBox.Show("History Upgraded");
                 temp = Properties.Settings.Default.SymbolList;
                 string category = Properties.Settings.Default.RootFolder;
                 label_CategoryName.Content = " " + category.Substring(category.LastIndexOf("\\") + 1);
@@ -155,7 +154,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
                 //------Collection to sort data in XAML------
                 ListCollectionView collection = new ListCollectionView(fi);
-                collection.GroupDescriptions.Add(new PropertyGroupDescription("FamilyName"));
+                collection.GroupDescriptions?.Add(new PropertyGroupDescription("FamilyName"));
                 dataGrid.ItemsSource = collection;
             }
         }
@@ -302,8 +301,11 @@ namespace RevitFamilyBrowser.WPF_Classes
                 System.IO.Directory.CreateDirectory(TempImgFolder);
             }
             ImageConverter converter = new ImageConverter();
-            DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\RevitLogo.png");
-            File.WriteAllBytes(di.ToString(), (byte[])converter.ConvertTo(Properties.Resources.RevitLogo, typeof(byte[])));
+            DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\RevitLogo.bmp");
+            if (!System.IO.File.Exists(di.ToString()))
+            {
+                File.WriteAllBytes(di.ToString(), (byte[])converter.ConvertTo(Properties.Resources.RevitLogo, typeof(byte[])));
+            }
         }
     }
 }

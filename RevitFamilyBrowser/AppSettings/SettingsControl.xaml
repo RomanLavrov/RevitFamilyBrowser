@@ -5,19 +5,27 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:RevitFamilyBrowser.Settings"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="150"
+    d:DesignHeight="200"
     d:DesignWidth="600"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.2*" />
             <RowDefinition />
+
+            <RowDefinition />
+            <RowDefinition />
             <RowDefinition />
             <RowDefinition />
             <RowDefinition Height="0.1*" />
         </Grid.RowDefinitions>
-        <Grid
+        <Label
             Grid.Row="1"
+            Margin="20,0"
+            VerticalAlignment="Center"
+            Content="Select initial folder with Revit family files:" />
+        <Grid
+            Grid.Row="2"
             Width="560"
             HorizontalAlignment="Center">
             <Button
@@ -44,11 +52,10 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 VerticalContentAlignment="Center"
-                Text=" Select initial folder with Revit family files:"
                 TextWrapping="Wrap" />
         </Grid>
         <Grid
-            Grid.Row="2"
+            Grid.Row="4"
             Width="560"
             HorizontalAlignment="Center">
             <TextBox
@@ -58,7 +65,6 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 VerticalContentAlignment="Center"
-                Text=" Select path to store your settings:"
                 TextWrapping="Wrap" />
 
             <Button
@@ -77,7 +83,12 @@
                 FontSize="16"
                 Foreground="White" />
         </Grid>
-        <Grid Grid.Row="3">
+        <Label
+            Grid.Row="3"
+            Margin="20,0"
+            VerticalAlignment="Center"
+            Content="Select path to store your settings:" />
+        <Grid Grid.Row="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="3*" />

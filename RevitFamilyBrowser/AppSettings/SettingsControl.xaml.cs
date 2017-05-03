@@ -17,9 +17,6 @@ using System.IO;
 
 namespace RevitFamilyBrowser.Settings
 {
-    /// <summary>
-    /// Interaction logic for SettingsControl.xaml
-    /// </summary>
     public partial class SettingsControl : UserControl
     {
         private string DefaultFamilyPath { get; set; }
