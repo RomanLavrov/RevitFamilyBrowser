@@ -53,7 +53,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             if (temp > 0)
                 temp--;
             textBoxHorizontal.Text = temp.ToString();
-        }      
+        }
 
         public void buttonReset_Click(object sender, RoutedEventArgs e)
         {
@@ -67,17 +67,11 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         public void ButtonInsertClick(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.Offset = int.Parse(comboBoxHeight.Text);
+            Properties.Settings.Default.Offset = GetHeight(comboBoxHeight.Text);
             m_ExEvent.Raise();
-            //this.TextBoxSymbol.Text = string.Empty;
+           
             var parentWindow = Window.GetWindow(this);
             parentWindow?.Close();
-           // TextBoxFamily.Text = string.Empty;
-           // TextBoxSymbol.Text = string.Empty;
-            //Properties.Settings.Default.FamilyPath = string.Empty;
-            //Properties.Settings.Default.FamilyName = string.Empty;
-            //Properties.Settings.Default.FamilySymbol = string.Empty;
-            //Properties.Settings.Default.Save();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -115,13 +109,41 @@ namespace RevitFamilyBrowser.WPF_Classes
             1500
         };
 
-        enum heights
+        enum Heights
         {
             Socket = 200,
             Cardreader = 850,
             Lightswitch = 1100,
             Thermostat = 1300,
             FireAlarm = 1500
+        }
+
+        private int GetHeight(string text)
+        {
+            int height = 0;
+            if (text == ("Socket"))
+                height = (int) Heights.Socket;
+            else if (text == ("Cardreader"))
+            {
+                height = (int) Heights.Cardreader;
+            }
+            else if (text == ("Lightswitch"))
+            {
+                height = (int) Heights.Lightswitch;
+            }
+            else if (text == ("Thermostat"))
+            {
+                height = (int) Heights.Thermostat;
+            }
+            else if (text == ("FireAlarm"))
+            {
+                height = (int) Heights.FireAlarm;
+            }
+            else
+            {
+                height = 0;
+            }
+            return height;
         }
     }
 }

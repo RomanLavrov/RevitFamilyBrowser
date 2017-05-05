@@ -190,10 +190,6 @@ namespace RevitFamilyBrowser.WPF_Classes
             if (dataGridHistory.Items.Count <= 0) return;
             var instance = dataGridHistory.SelectedItem as FamilyData;
             SetHistoryProperty(instance);
-            //Properties.Settings.Default.FamilyPath = string.Empty;
-            //Properties.Settings.Default.FamilySymbol = instance.Name;
-            //Properties.Settings.Default.FamilyName = instance.FamilyName;
-            //Properties.Settings.Default.Save();
         }
 
         private void dataGrid_MouseDown(object sender, MouseButtonEventArgs e)
@@ -213,17 +209,8 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
             if (dataGridHistory.Items.Count <= 0) return;
             var instance = dataGridHistory.SelectedItem as FamilyData;
-
             SetHistoryProperty(instance);
-            //Properties.Settings.Default.FamilyPath = string.Empty;
-            //Properties.Settings.Default.FamilySymbol = instance.Name;
-            //Properties.Settings.Default.FamilyName = instance.FamilyName;
-
             SetHistoryTemp(instance);
-            //tempFamilyPath = string.Empty;
-            //tempFamilySymbol = instance.Name;
-            //tempFamilyName = instance.FamilyName;
-
             DragDrop.DoDragDrop(dataGridHistory, instance, DragDropEffects.Copy);
         }
 

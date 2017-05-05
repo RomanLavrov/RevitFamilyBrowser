@@ -14,7 +14,6 @@ using System.Diagnostics;
 using Ookii.Dialogs.Wpf;
 using TaskDialog = Autodesk.Revit.UI.TaskDialog;
 
-
 namespace RevitFamilyBrowser.Revit_Classes
 {
     [Transaction(TransactionMode.Manual)]
@@ -39,7 +38,6 @@ namespace RevitFamilyBrowser.Revit_Classes
                     fbd.SelectedPath = File.ReadAllText(Properties.Settings.Default.SettingPath);
                 else
                     fbd.SelectedPath = Properties.Settings.Default.RootFolder;
-                //List<string> Directories = new List<string>();
             }
 
             else
@@ -55,10 +53,9 @@ namespace RevitFamilyBrowser.Revit_Classes
             {
                 if (fbd.SelectedPath.Contains("ROCHE") && app.VersionNumber != "2015")
                 {
-                    Autodesk.Revit.UI.TaskDialog.Show("Warning", "Please select other family path.");
+                    TaskDialog.Show("Warning", "Please select other family path.");
                     fbd.ShowDialog();
                 }
-                //Directories = Directory.GetDirectories(fbd.SelectedPath).ToList();
                 Properties.Settings.Default.RootFolder = fbd.SelectedPath;
                 Properties.Settings.Default.Save();
             }
@@ -70,6 +67,8 @@ namespace RevitFamilyBrowser.Revit_Classes
             FamilyPath = GetFamilyPath(fbd.SelectedPath);
             FamilyName = GetFamilyName(FamilyPath);
             Properties.Settings.Default.SymbolList = string.Empty;
+            Properties.Settings.Default.Save();
+
             SymbolName = GetSymbols(FamilyPath, doc);
 
             foreach (var item in SymbolName)
@@ -79,17 +78,7 @@ namespace RevitFamilyBrowser.Revit_Classes
             return Result.Succeeded;
         }
 
-        //private void DisplayList(List<string> list)
-        //{
-        //    string temp = string.Empty;
-        //    foreach (var item in list)
-        //    {
-        //        temp += item + Environment.NewLine;
-        //    }
-        //    TaskDialog.Show("DisplayList", temp);
-        //}
-
-        public List<string> GetFamilyPath(string dir)
+        private List<string> GetFamilyPath(string dir)
         {
             List<string> FamiliesList = new List<string>();
             foreach (var item in Directory.GetFiles(dir))
@@ -99,9 +88,10 @@ namespace RevitFamilyBrowser.Revit_Classes
                     FamiliesList.Add(item);
                 }
             }
+
             if (FamiliesList.Count == 0)
             {
-                //TaskDialog.Show("Families not found", "Try to select other folder");
+                TaskDialog.Show("Families not found", "Try to select other folder");
                 System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
             }
             return FamiliesList;
@@ -124,57 +114,58 @@ namespace RevitFamilyBrowser.Revit_Classes
             using (var transaction = new Transaction(doc, "Family Symbol Collecting"))
             {
                 transaction.Start();
+                Family family = null;
+                FamilySymbol symbol = null;
                 foreach (var item in FamilyPath)
                 {
-                    Family family = null;
-                    FamilySymbol symbol = null;
-
-
                     if (!doc.LoadFamily(item, out family))
                     {
-                        // TaskDialog.Show("Load failed", "Unable to load " + item);
-                        continue;
+                        family = GetFamilyFromPath(item, doc);
                     }
 
                     ISet<ElementId> familySymbolId = family.GetFamilySymbolIds();
+
                     foreach (ElementId id in familySymbolId)
                     {
                         symbol = family.Document.GetElement(id) as FamilySymbol;
                         FamilyInstance.Add(symbol.Name.ToString() + " " + item);
-
-                        System.Drawing.Size imgSize = new System.Drawing.Size(200, 200);
-                        Bitmap image = symbol.GetPreviewImage(imgSize);
-
-                        //------Eencode image to jpeg for test display purposes:------
-                        JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-                        encoder.Frames.Add(BitmapFrame.Create(ConvertBitmapToBitmapSource(image)));
-                        encoder.QualityLevel = 20;
-
-                        //------------Create temporary folder for images--------
+                       
                         string TempImgFolder = System.IO.Path.GetTempPath() + "FamilyBrowser\\";
-                        if (!System.IO.Directory.Exists(TempImgFolder))
-                        {
-                            System.IO.Directory.CreateDirectory(TempImgFolder);
-                        }
                         string filename = TempImgFolder + symbol.Name + ".bmp";
-                        FileStream file = new FileStream(filename, FileMode.Create, FileAccess.Write);
-                        encoder.Save(file);
-                        file.Close();
+
+                        if (!File.Exists(filename))
+                        {
+                            System.Drawing.Size imgSize = new System.Drawing.Size(200, 200);
+                            Bitmap image = symbol.GetPreviewImage(imgSize);
+                            BitmapEncoder encoder = new BmpBitmapEncoder();
+                            encoder.Frames.Add(BitmapFrame.Create(Tools.ConvertBitmapToBitmapSource(image)));
+                            FileStream file = new FileStream(filename, FileMode.Create, FileAccess.Write);
+
+                            encoder.Save(file);
+                            file.Close();
+                        }
                     }
                 }
                 transaction.RollBack();
                 return FamilyInstance;
             }
         }
-
-        static BitmapSource ConvertBitmapToBitmapSource(Bitmap bmp)
+        
+        private Family GetFamilyFromPath(string path, Document doc)
         {
-            return System.Windows.Interop.Imaging
-                .CreateBitmapSourceFromHBitmap(
-                    bmp.GetHbitmap(),
-                    IntPtr.Zero,
-                    Int32Rect.Empty,
-                    BitmapSizeOptions.FromEmptyOptions());
+            Family family = null;
+            int index = path.LastIndexOf('\\') + 1;
+            string familyName = path.Substring(index);
+            familyName = familyName.Remove(familyName.IndexOf('.'));
+
+            FilteredElementCollector elementCollector = new FilteredElementCollector(doc);
+            elementCollector = elementCollector.OfClass(typeof(Family));
+            foreach (Element element in elementCollector)
+            {
+                if (element.Name == familyName)
+                    family = element as Family;
+            }
+            return family;
         }
     }
 }

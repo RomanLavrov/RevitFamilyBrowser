@@ -54,10 +54,10 @@ namespace RevitFamilyBrowser.Revit_Classes
             window.Content = grid;
             window.Background = System.Windows.Media.Brushes.WhiteSmoke;
             window.Topmost = true;
-
+            //----------------------------------------------------------------------------------------
             Selection selection = uidoc.Selection;
             Room newRoom = null;
-            //-----User select the Room first-----
+            //-----User select existing Room first-----
             if (selection.GetElementIds().Count > 0)
             {
                 foreach (var item in selection.GetElementIds())
@@ -70,7 +70,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                 }
             }
 
-            using (var transaction = new Transaction(doc, "Family Symbol Collecting"))
+            using (var transaction = new Transaction(doc, "Get room parameters"))
             {
                 transaction.Start();
                 View view = doc.ActiveView;
@@ -78,13 +78,20 @@ namespace RevitFamilyBrowser.Revit_Classes
                 {
                     try
                     {
+                       
+                        if (uidoc.ActiveView.SketchPlane == null)
+                        {
+                            TaskDialog.Show("Section View", "Please switch to level view.");
+                            return Result.Failed;
+                        }
                         var point = selection.PickPoint("Point to create a room");
+                       
                         if (view.GenLevel == null)
                         {
                             TaskDialog.Show("3D View", "Please switch to level view.");
                             return Result.Cancelled;
                         }
-                            
+
                         newRoom = doc.Create.NewRoom(view.GenLevel, new UV(point.X, point.Y));
                         
                     }
@@ -93,8 +100,9 @@ namespace RevitFamilyBrowser.Revit_Classes
                         return Result.Cancelled;
                     }
                 }
-
+                //----------------------------------------------------------------------------------------
                 BoundingBoxXYZ box = newRoom.get_BoundingBox(view);
+                if (box == null) { return Result.Failed;}
                 var roomMin = new ConversionPoint(box.Min);
                 var roomMax = new ConversionPoint(box.Max);
                 RoomDimensions roomDimensions = new RoomDimensions();
@@ -271,6 +279,59 @@ namespace RevitFamilyBrowser.Revit_Classes
             }
 
             return Result.Succeeded;
+        }
+
+        private Room GetRoom(UIDocument uidoc)
+        {
+            Room room = null;
+            Document doc = uidoc.Document;
+
+            Selection selection = uidoc.Selection;
+            //-----User select existing Room first-----
+            if (selection.GetElementIds().Count > 0)
+            {
+                foreach (var item in selection.GetElementIds())
+                {
+                    Element elementType = doc.GetElement(item);
+                    if ((elementType.ToString() == typeof(Room).ToString()))
+                    {
+                        room = elementType as Room;
+                    }
+                }
+            }
+
+            using (var transaction = new Transaction(doc, "Get room parameters"))
+            {
+                transaction.Start();
+                View view = doc.ActiveView;
+                if (room == null)
+                {
+                    try
+                    {
+                        if (uidoc.ActiveView.SketchPlane == null)
+                        {
+                            TaskDialog.Show("Section View", "Please switch to level view.");
+                            return null;
+                        }
+                        var point = selection.PickPoint("Point to create a room");
+
+                        if (view.GenLevel == null)
+                        {
+                            TaskDialog.Show("3D View", "Please switch to level view.");
+                            return null;
+                        }
+
+                        room = doc.Create.NewRoom(view.GenLevel, new UV(point.X, point.Y));
+
+                    }
+                    catch (Autodesk.Revit.Exceptions.OperationCanceledException)
+                    {
+                        return null;
+                    }
+                }
+                transaction.RollBack();
+            }
+            return room;
         }
     }
 }

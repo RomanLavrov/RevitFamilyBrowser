@@ -131,7 +131,7 @@ namespace RevitFamilyBrowser
             }
         }
 
-        private static BitmapSource ConvertBitmapToBitmapSource(Bitmap bmp)
+        public static BitmapSource ConvertBitmapToBitmapSource(Bitmap bmp)
         {
             return System.Windows.Interop.Imaging
                 .CreateBitmapSourceFromHBitmap(

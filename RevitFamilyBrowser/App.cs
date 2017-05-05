@@ -51,16 +51,12 @@ namespace RevitFamilyBrowser
             btnSettings.LargeImage = Tools.GetImage(Resources.settings.GetHbitmap());
             RibbonItem ri3 = G17.AddItem(btnSettings);
 
-            //PushButtonData btnSpace = new PushButtonData("Space", "Space", path, "RevitFamilyBrowser.Revit_Classes.Space");
-            //RibbonItem ri4 = G17.AddItem(btnSpace);
+            PushButtonData btnSpace = new PushButtonData("Space", "Space", path, "RevitFamilyBrowser.Revit_Classes.Space");
+            RibbonItem ri4 = G17.AddItem(btnSpace);
 
-
+            // a.ControlledApplication.DocumentChanged += OnDocChanged;
             a.ControlledApplication.DocumentOpened += OnDocOpened;
             a.ViewActivated += OnViewActivated;
-
-            //Properties.Settings.Default.CollectedData = string.Empty;
-            //Properties.Settings.Default.FamilyPath = string.Empty;
-            //Properties.Settings.Default.SymbolList = string.Empty;
 
             if (File.Exists(Properties.Settings.Default.SettingPath))
             {
@@ -83,26 +79,16 @@ namespace RevitFamilyBrowser
 
         public Result OnShutdown(UIControlledApplication a)
         {
-            //DirectoryInfo di = new DirectoryInfo(System.IO.Path.GetTempPath() + "FamilyBrowser\\");
-            //foreach (var imgfile in di.GetFiles())
-            //{
-            //    try
-            //    {
-            //        imgfile.Delete();
-            //    }
-            //    catch (Exception) { }
-            //}
-
             a.ControlledApplication.DocumentOpened -= OnDocOpened;
+           // a.ControlledApplication.DocumentChanged -= OnDocChanged;
             a.ViewActivated -= OnViewActivated;
+
 
             Properties.Settings.Default.FamilyPath = string.Empty;
             Properties.Settings.Default.FamilyName = string.Empty;
             Properties.Settings.Default.FamilySymbol = string.Empty;
             Properties.Settings.Default.Save();
-            //Properties.Settings.Default.CollectedData = string.Empty;
-            //Properties.Settings.Default.FamilyPath = string.Empty;
-            //Properties.Settings.Default.SymbolList = string.Empty;
+          
             return Result.Succeeded;
         }
 
@@ -117,6 +103,12 @@ namespace RevitFamilyBrowser
             Tools.CreateImages(e.Document);
             Tools.CollectFamilyData(e.Document);
         }
+
+        //private void OnDocChanged(object sender, DocumentChangedEventArgs e)
+        //{
+        //    Tools.CreateImages(e.GetDocument());
+        //    Tools.CollectFamilyData(e.GetDocument());
+        //}
 
         private void OnDocSaved(object sender, DocumentSavedEventArgs e)
         {

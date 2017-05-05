@@ -65,7 +65,6 @@ namespace RevitFamilyBrowser.Revit_Classes
                     if (family.Document.GetElement(id).Name == FamilySymbol && FamilySymbol != null)
                         symbol = family.Document.GetElement(id) as FamilySymbol;
                 }
-
                 uidoc.PostRequestForElementTypePlacement(symbol);
             }
             Tools.CollectFamilyData(doc);
