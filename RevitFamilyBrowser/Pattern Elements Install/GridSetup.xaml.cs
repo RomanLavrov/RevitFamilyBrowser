@@ -37,7 +37,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             TextBoxSymbol.Text = " Type: " + Properties.Settings.Default.FamilySymbol;
             TextBoxFamily.Text = " Family: " + Properties.Settings.Default.FamilyName;
             ImageSymbol.Source = new BitmapImage(new Uri(GetImage()));
-            comboBoxHeight.ItemsSource = Enum.GetValues(typeof(heights));
+            comboBoxHeight.ItemsSource = Enum.GetValues(typeof(Heights));
         }
 
         private void buttonAddHorizontal_Click(object sender, RoutedEventArgs e)
@@ -69,7 +69,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
             Properties.Settings.Default.Offset = GetHeight(comboBoxHeight.Text);
             m_ExEvent.Raise();
-           
+
             var parentWindow = Window.GetWindow(this);
             parentWindow?.Close();
         }
@@ -100,15 +100,6 @@ namespace RevitFamilyBrowser.WPF_Classes
             return imageUri;
         }
 
-        List<int> InstallHeight = new List<int>()
-        {
-            200,
-            850,
-            1100,
-            1300,
-            1500
-        };
-
         enum Heights
         {
             Socket = 200,
@@ -121,23 +112,26 @@ namespace RevitFamilyBrowser.WPF_Classes
         private int GetHeight(string text)
         {
             int height = 0;
+            if (int.TryParse(text, out height))
+                return height;
+
             if (text == ("Socket"))
-                height = (int) Heights.Socket;
+                height = (int)Heights.Socket;
             else if (text == ("Cardreader"))
             {
-                height = (int) Heights.Cardreader;
+                height = (int)Heights.Cardreader;
             }
             else if (text == ("Lightswitch"))
             {
-                height = (int) Heights.Lightswitch;
+                height = (int)Heights.Lightswitch;
             }
             else if (text == ("Thermostat"))
             {
-                height = (int) Heights.Thermostat;
+                height = (int)Heights.Thermostat;
             }
             else if (text == ("FireAlarm"))
             {
-                height = (int) Heights.FireAlarm;
+                height = (int)Heights.FireAlarm;
             }
             else
             {
@@ -145,5 +139,40 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             return height;
         }
+
+        public void line_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (!Equals(((System.Windows.Shapes.Line)sender).Stroke, Brushes.Red))
+            {
+                ((System.Windows.Shapes.Line)sender).Stroke = Brushes.Black;
+            }
+        }
+
+        public void line_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            // Change line colour back to normal 
+            ((System.Windows.Shapes.Line)sender).Stroke = System.Windows.Media.Brushes.Red;
+        }
+
+        public void line_MouseEnter(object sender, MouseEventArgs e)
+        {
+            ((System.Windows.Shapes.Line)sender).Stroke = Brushes.Gray;
+        }
+
+        public List<Line> GetWpfWalls(List<Line> revitWalls, int derrivationX, int derrivationY, int Scale)
+        {
+            List<Line> wpfWalls = new List<Line>();
+            foreach (var item in revitWalls)
+            {
+                System.Windows.Shapes.Line myLine = new System.Windows.Shapes.Line();
+                myLine.X1 = (item.X1 / Scale) + derrivationX;
+                myLine.Y1 = ((-item.Y1 / Scale) + derrivationY);
+                myLine.X2 = (item.X2 / Scale) + derrivationX;
+                myLine.Y2 = ((-item.Y2 / Scale) + derrivationY);
+                wpfWalls.Add(myLine);
+            }
+            return wpfWalls;
+        }
+
     }
 }

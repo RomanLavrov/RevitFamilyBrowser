@@ -23,77 +23,34 @@ namespace RevitFamilyBrowser.Revit_Classes
             Document doc = uidoc.Document;
             View view = uidoc.ActiveView;
 
-            int Offset = Properties.Settings.Default.Offset;
-            string FamilyPath = Properties.Settings.Default.FamilyPath;
-            string FamilySymbol = Properties.Settings.Default.FamilySymbol;
-            string FamilyName = Properties.Settings.Default.FamilyName;
+            double Offset = Properties.Settings.Default.Offset/(25.4*12);
+           
+            string familyPath = Properties.Settings.Default.FamilyPath;
+            string familySymbol = Properties.Settings.Default.FamilySymbol;
+            string familyName = Properties.Settings.Default.FamilyName;
             var insertionPoints = GetInsertionPoints();
+            FamilySymbol targetSymbol;
 
-            if (string.IsNullOrEmpty(FamilyPath))
+            if (string.IsNullOrEmpty(familyPath))
             {
-                FamilySymbol historySymbol = null;
-                Family historyFamily = new FilteredElementCollector(doc).OfClass(typeof(Family)).FirstOrDefault(e => e.Name.Equals(FamilyName)) as Family;
-                ISet<ElementId> historyFamilySymbolId = historyFamily.GetFamilySymbolIds();
-                foreach (ElementId id in historyFamilySymbolId)
-                {
-                    if (historyFamily.Document.GetElement(id).Name == FamilySymbol && FamilySymbol != null)
-                        historySymbol = historyFamily.Document.GetElement(id) as FamilySymbol;
-                }
-
-                foreach (var item in insertionPoints)
-                {
-                    using (var transact = new Transaction(doc, "Insert Symbol"))
-                    {
-                        transact.Start();
-                      
-                        XYZ point = new XYZ(item.X, item.Y, Offset);
-                        Level level = view.GenLevel;
-                        Element host = level as Element;
-                        historySymbol.Activate();
-                        doc.Create.NewFamilyInstance(point, historySymbol, host, StructuralType.NonStructural);
-                        transact.Commit();
-                    }
-                }
+                targetSymbol = GetSymbolHistory(doc, familyName, familySymbol);
             }
             else
             {
+                targetSymbol = GetSymbolNew(doc, familyPath, familySymbol);
+            }
 
-                FilteredElementCollector collector = new FilteredElementCollector(doc);
-                collector.OfCategory(BuiltInCategory.OST_ElectricalFixtures);
-                collector.OfClass(typeof(Family));
-
-                FamilySymbol symbol = collector.FirstElement() as FamilySymbol;
-                Family family = FindFamilyByName(doc, typeof(Family), FamilyPath) as Family;
-
-                if (null == family)
+            foreach (var item in insertionPoints)
+            {
+                using (var transact = new Transaction(doc, "Insert Symbol"))
                 {
-                    using (var trans = new Transaction(doc, "Load Family"))
-                    {
-                        trans.Start();
-                        doc.LoadFamily(FamilyPath, out family);
-                        trans.Commit();
-                    }
-                }
-
-                ISet<ElementId> familySymbolId = family.GetFamilySymbolIds();
-                foreach (ElementId id in familySymbolId)
-                {
-                    if (family.Document.GetElement(id).Name == FamilySymbol && FamilySymbol != null)
-                        symbol = family.Document.GetElement(id) as FamilySymbol;
-                }
-
-                foreach (var item in insertionPoints)
-                {
-                    using (var transact = new Transaction(doc, "Insert Symbol"))
-                    {
-                        transact.Start();
-                        XYZ point = new XYZ(item.X, item.Y, 0);
-                        Level level = view.GenLevel;
-                        Element host = level as Element;
-                        symbol.Activate();
-                        doc.Create.NewFamilyInstance(point, symbol, host, StructuralType.NonStructural);
-                        transact.Commit();
-                    }
+                    transact.Start();
+                    XYZ point = new XYZ(item.X, item.Y, Offset);
+                    Level level = view.GenLevel;
+                    Element host = level as Element;
+                    targetSymbol.Activate();
+                    doc.Create.NewFamilyInstance(point, targetSymbol, host, StructuralType.NonStructural);
+                    transact.Commit();
                 }
             }
         }
@@ -134,6 +91,48 @@ namespace RevitFamilyBrowser.Revit_Classes
             return insertionPoints;
         }
 
-       
+        private FamilySymbol GetSymbolNew(Document doc, string familyPath, string familySymbol)
+        {
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            collector.OfCategory(BuiltInCategory.OST_ElectricalFixtures);
+            collector.OfClass(typeof(Family));
+
+            FamilySymbol symbol = collector.FirstElement() as FamilySymbol;
+            Family family = FindFamilyByName(doc, typeof(Family), familyPath) as Family;
+
+            if (null == family)
+            {
+                using (var trans = new Transaction(doc, "Load Family"))
+                {
+                    trans.Start();
+                    doc.LoadFamily(familyPath, out family);
+                    trans.Commit();
+                }
+            }
+
+            ISet<ElementId> familySymbolId = family.GetFamilySymbolIds();
+            foreach (ElementId id in familySymbolId)
+            {
+                if (family.Document.GetElement(id).Name == familySymbol && familySymbol != null)
+                    symbol = family.Document.GetElement(id) as FamilySymbol;
+            }
+
+            return symbol;
+        }
+
+        private FamilySymbol GetSymbolHistory(Document doc, string FamilyName, string familySymbol)
+        {
+            FamilySymbol historySymbol = null;
+            Family historyFamily = new FilteredElementCollector(doc).OfClass(typeof(Family)).FirstOrDefault(e => e.Name.Equals(FamilyName)) as Family;
+            ISet<ElementId> historyFamilySymbolId = historyFamily.GetFamilySymbolIds();
+            foreach (ElementId id in historyFamilySymbolId)
+            {
+                if (historyFamily.Document.GetElement(id).Name == familySymbol && familySymbol != null)
+                    historySymbol = historyFamily.Document.GetElement(id) as FamilySymbol;
+            }
+
+            return historySymbol;
+        }
+
     }
 }

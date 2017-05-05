@@ -21,11 +21,9 @@ namespace RevitFamilyBrowser.Revit_Classes
     [Transaction(TransactionMode.Manual)]
     public class Space : IExternalCommand
     {
-        public List<System.Drawing.Point> InsertCoord { get; set; }
-        int derrivationX = 0;
-        int derrivationY = 0;
-        int Scale = 0;
-        int CanvasSize = 0;
+        private System.Drawing.Point derrivation;
+        int Scale;
+        int CanvasSize;
         private List<Line> revitWalls;
         private List<Line> wpfWalls;
         List<Line> BoundingBox;
@@ -40,20 +38,15 @@ namespace RevitFamilyBrowser.Revit_Classes
         {
             UIApplication uiapp = commandData.Application;
             UIDocument uidoc = uiapp.ActiveUIDocument;
-            Autodesk.Revit.ApplicationServices.Application app = uiapp.Application;
             Document doc = uidoc.Document;
 
             GridInstallEvent handler = new GridInstallEvent();
             ExternalEvent exEvent = ExternalEvent.Create(handler);
 
             GridSetup grid = new GridSetup(exEvent, handler);
-            Window window = new Window();
-            window.Width = grid.Width;
-            window.Height = grid.Height+50;
-            window.ResizeMode = ResizeMode.NoResize;
-            window.Content = grid;
-            window.Background = System.Windows.Media.Brushes.WhiteSmoke;
-            window.Topmost = true;
+            Window window = WindowSetup(grid);
+
+            CanvasSize = (int)grid.canvas.Width;
             //----------------------------------------------------------------------------------------
             Selection selection = uidoc.Selection;
             Room newRoom = null;
@@ -78,7 +71,6 @@ namespace RevitFamilyBrowser.Revit_Classes
                 {
                     try
                     {
-                       
                         if (uidoc.ActiveView.SketchPlane == null)
                         {
                             TaskDialog.Show("Section View", "Please switch to level view.");
@@ -91,9 +83,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                             TaskDialog.Show("3D View", "Please switch to level view.");
                             return Result.Cancelled;
                         }
-
                         newRoom = doc.Create.NewRoom(view.GenLevel, new UV(point.X, point.Y));
-                        
                     }
                     catch (Autodesk.Revit.Exceptions.OperationCanceledException)
                     {
@@ -102,59 +92,27 @@ namespace RevitFamilyBrowser.Revit_Classes
                 }
                 //----------------------------------------------------------------------------------------
                 BoundingBoxXYZ box = newRoom.get_BoundingBox(view);
-                if (box == null) { return Result.Failed;}
+                if (box == null) { return Result.Failed; }
                 var roomMin = new ConversionPoint(box.Min);
                 var roomMax = new ConversionPoint(box.Max);
                 RoomDimensions roomDimensions = new RoomDimensions();
-
-                CanvasSize = (int)grid.canvas.Width;
+                
                 Scale = roomDimensions.GetScale(roomMin, roomMax, CanvasSize);
-
-                System.Windows.Shapes.Line centerRoom = new System.Windows.Shapes.Line();
-                centerRoom.X1 = 0;
-                centerRoom.Y1 = 0;
-                centerRoom.X2 = roomMin.X / Scale + (roomMax.X / Scale - roomMin.X / Scale) / 2;
-                centerRoom.Y2 = roomMin.Y / Scale + (roomMax.Y / Scale - roomMin.Y / Scale) / 2;
-                //centerRoom.Stroke = System.Windows.Media.Brushes.Red;
-                // grid.canvas.Children.Add(centerRoom); 
-                derrivationX = (int)(CanvasSize / 2 - centerRoom.X2);
-                derrivationY = (int)(CanvasSize / 2 + centerRoom.Y2);
+                derrivation = GetDerrivation(box, Scale);
 
                 WpfCoordinates bBox = new WpfCoordinates();
-                BoundingBox = bBox.GetBoundingBox(roomMin, roomMax, Scale, derrivationX, derrivationY);
-
-                if (!string.IsNullOrEmpty(Properties.Settings.Default.FamilyName) &&
-                    !string.IsNullOrEmpty(Properties.Settings.Default.FamilySymbol))
-                {
-                    window.Show();
-                }
-                else
-                    MessageBox.Show("Select  symbol from browser");
-
-                grid.TextBoxScale.Text = "Scale 1: " + Scale.ToString();
-                grid.buttonReset.Click += grid.buttonReset_Click;
-
+                BoundingBox = bBox.GetBoundingBox(roomMin, roomMax, Scale, derrivation.X, derrivation.Y);
+                
+                SymbolPreselectCheck(window);
                 revitWalls = roomDimensions.GetWalls(newRoom);
-                wpfWalls = GetWpfWalls(revitWalls, derrivationX, derrivationY, Scale);
+                wpfWalls = grid.GetWpfWalls(revitWalls, derrivation.X, derrivation.Y, Scale);
                 Draw(wpfWalls);
 
                 transaction.RollBack();
             }
-
-            List<Line> GetWpfWalls(List<Line> revitWalls, int derrivationX, int derrivationY, int Scale)
-            {
-                List<Line> wpfWalls = new List<Line>();
-                foreach (var item in revitWalls)
-                {
-                    System.Windows.Shapes.Line myLine = new System.Windows.Shapes.Line();
-                    myLine.X1 = (item.X1 / Scale) + derrivationX;
-                    myLine.Y1 = ((-item.Y1 / Scale) + derrivationY);
-                    myLine.X2 = (item.X2 / Scale) + derrivationX;
-                    myLine.Y2 = ((-item.Y2 / Scale) + derrivationY);
-                    wpfWalls.Add(myLine);
-                }
-                return wpfWalls;
-            }
+            
+            grid.TextBoxScale.Text = "Scale 1: " + Scale.ToString();
+            grid.buttonReset.Click += grid.buttonReset_Click;
 
             void line_MouseDown(object sender, MouseButtonEventArgs e)
             {
@@ -191,8 +149,8 @@ namespace RevitFamilyBrowser.Revit_Classes
                 grid.textBoxQuantity.Text = "Items: " + gridPoints.Count;
                 foreach (var item in gridPoints)
                 {
-                    double x = ((((item.X - 0.5) * Scale) / 304.8) - derrivationX * Scale / 304.8);
-                    double y = (((-(item.Y - 0.5) * Scale) / 304.8) + derrivationY * Scale / 304.8);
+                    double x = ((((item.X - 0.5) * Scale) / 304.8) - derrivation.X * Scale / 304.8);
+                    double y = (((-(item.Y - 0.5) * Scale) / 304.8) + derrivation.Y * Scale / 304.8);
                 }
                 
                 //----------------------------------------Revit coordinates--------------------------------------------------------
@@ -231,49 +189,39 @@ namespace RevitFamilyBrowser.Revit_Classes
                 //-----------------------------------------------------------------------------------------------------------------------
             }
 
-            void line_MouseEnter(object sender, MouseEventArgs e)
-            {
-                ((System.Windows.Shapes.Line)sender).Stroke = Brushes.Gray;
-            }
-
-            void line_MouseLeave(object sender, MouseEventArgs e)
-            {
-                if (!Equals(((System.Windows.Shapes.Line)sender).Stroke, Brushes.Red))
-                {
-                    ((System.Windows.Shapes.Line)sender).Stroke = Brushes.Black;
-                }
-            }
-
-            void line_MouseUp(object sender, MouseButtonEventArgs e)
-            {
-                // Change line colour back to normal 
-                ((System.Windows.Shapes.Line)sender).Stroke = System.Windows.Media.Brushes.Red;
-            }
-
-            //void buttonReset_Click(object sender, RoutedEventArgs e)
+            //void line_MouseEnter(object sender, MouseEventArgs e)
             //{
-            //    List<System.Windows.Shapes.Line> lines = grid.canvas.Children.OfType<System.Windows.Shapes.Line>().Where(r => Equals(r.Stroke, Brushes.SteelBlue)).ToList();
-            //    grid.textBoxQuantity.Text = "No Items";
-            //    foreach (var item in lines)
+            //    ((System.Windows.Shapes.Line)sender).Stroke = Brushes.Gray;
+            //}
+
+            //void line_MouseLeave(object sender, MouseEventArgs e)
+            //{
+            //    if (!Equals(((System.Windows.Shapes.Line)sender).Stroke, Brushes.Red))
             //    {
-            //        grid.canvas.Children.Remove(item);
+            //        ((System.Windows.Shapes.Line)sender).Stroke = Brushes.Black;
             //    }
             //}
 
-            void Draw(List<Line> wpfWalls)
+            //void line_MouseUp(object sender, MouseButtonEventArgs e)
+            //{
+            //    // Change line colour back to normal 
+            //    ((System.Windows.Shapes.Line)sender).Stroke = System.Windows.Media.Brushes.Red;
+            //}
+
+            void Draw(List<Line> _wpfWalls)
             {
-                foreach (Line myLine in wpfWalls)
+                foreach (Line myLine in _wpfWalls)
                 {
                     myLine.Stroke = System.Windows.Media.Brushes.Black;
-                    myLine.StrokeThickness = 3;
+                    myLine.StrokeThickness = 2;
 
                     myLine.StrokeEndLineCap = PenLineCap.Round;
                     myLine.StrokeStartLineCap = PenLineCap.Round;
 
                     myLine.MouseDown += new MouseButtonEventHandler(line_MouseDown);
-                    myLine.MouseUp += new MouseButtonEventHandler(line_MouseUp);
-                    myLine.MouseEnter += new MouseEventHandler(line_MouseEnter);
-                    myLine.MouseLeave += new MouseEventHandler(line_MouseLeave);
+                    myLine.MouseUp += new MouseButtonEventHandler(grid.line_MouseUp);
+                    myLine.MouseEnter += new MouseEventHandler(grid.line_MouseEnter);
+                    myLine.MouseLeave += new MouseEventHandler(grid.line_MouseLeave);
                     grid.canvas.Children.Add(myLine);
                 }
             }
@@ -281,57 +229,44 @@ namespace RevitFamilyBrowser.Revit_Classes
             return Result.Succeeded;
         }
 
-        private Room GetRoom(UIDocument uidoc)
+        private System.Drawing.Point GetDerrivation(BoundingBoxXYZ box, int scale)
         {
-            Room room = null;
-            Document doc = uidoc.Document;
+            System.Drawing.Point DerrivationPoint = new System.Drawing.Point();
 
-            Selection selection = uidoc.Selection;
-            //-----User select existing Room first-----
-            if (selection.GetElementIds().Count > 0)
+            var roomMin = new ConversionPoint(box.Min);
+            var roomMax = new ConversionPoint(box.Max);
+
+            double centerRoomX = roomMin.X / scale + (roomMax.X / scale - roomMin.X / scale) / 2;
+            double centerRoomY = roomMin.Y / scale + (roomMax.Y / scale - roomMin.Y / scale) / 2;
+
+            DerrivationPoint.X = (int)(CanvasSize / 2 - centerRoomX);
+            DerrivationPoint.Y = (int)(CanvasSize / 2 + centerRoomY);
+
+            return DerrivationPoint;
+        }
+
+        private Window WindowSetup (GridSetup grid)
+        {
+            Window window = new Window();
+           
+            window.Width = grid.Width;
+            window.Height = grid.Height + 50;
+            window.ResizeMode = ResizeMode.NoResize;
+            window.Content = grid;
+            window.Background = System.Windows.Media.Brushes.WhiteSmoke;
+            window.Topmost = true;
+            return window;
+        }
+
+        private void SymbolPreselectCheck(Window window)
+        {
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.FamilyName) &&
+                !string.IsNullOrEmpty(Properties.Settings.Default.FamilySymbol))
             {
-                foreach (var item in selection.GetElementIds())
-                {
-                    Element elementType = doc.GetElement(item);
-                    if ((elementType.ToString() == typeof(Room).ToString()))
-                    {
-                        room = elementType as Room;
-                    }
-                }
+                window.Show();
             }
-
-            using (var transaction = new Transaction(doc, "Get room parameters"))
-            {
-                transaction.Start();
-                View view = doc.ActiveView;
-                if (room == null)
-                {
-                    try
-                    {
-                        if (uidoc.ActiveView.SketchPlane == null)
-                        {
-                            TaskDialog.Show("Section View", "Please switch to level view.");
-                            return null;
-                        }
-                        var point = selection.PickPoint("Point to create a room");
-
-                        if (view.GenLevel == null)
-                        {
-                            TaskDialog.Show("3D View", "Please switch to level view.");
-                            return null;
-                        }
-
-                        room = doc.Create.NewRoom(view.GenLevel, new UV(point.X, point.Y));
-
-                    }
-                    catch (Autodesk.Revit.Exceptions.OperationCanceledException)
-                    {
-                        return null;
-                    }
-                }
-                transaction.RollBack();
-            }
-            return room;
+            else
+                MessageBox.Show("Select  symbol from browser");
         }
     }
 }
