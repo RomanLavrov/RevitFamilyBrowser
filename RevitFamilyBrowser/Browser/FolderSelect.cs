@@ -123,6 +123,13 @@ namespace RevitFamilyBrowser.Revit_Classes
                         family = GetFamilyFromPath(item, doc);
                     }
 
+                    if (family == null)
+                    {
+                        TaskDialog.Show("Error", item);
+                        continue;
+                    }
+                        
+
                     ISet<ElementId> familySymbolId = family.GetFamilySymbolIds();
 
                     foreach (ElementId id in familySymbolId)

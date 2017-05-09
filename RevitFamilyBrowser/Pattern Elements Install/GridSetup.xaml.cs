@@ -1,7 +1,9 @@
 ﻿using Autodesk.Revit.UI;
+using RevitFamilyBrowser.Pattern_Elements_Install;
 using RevitFamilyBrowser.Revit_Classes;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,10 +13,10 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Brushes = System.Windows.Media.Brushes;
 
 namespace RevitFamilyBrowser.WPF_Classes
 {
@@ -172,6 +174,45 @@ namespace RevitFamilyBrowser.WPF_Classes
                 wpfWalls.Add(myLine);
             }
             return wpfWalls;
+        }
+
+        public void GetRevitInstallCoordinates(List<Line>revitWallNormals,List<Line> revitWalls, int wallIndex, bool isEqual)
+        {
+            CoordinatesRevit rvt = new CoordinatesRevit();
+            Line rvtWall = revitWalls[wallIndex];
+
+            List<PointF> rvtPointsOnWall = new List<PointF>();
+            if (isEqual)
+            {
+                rvtPointsOnWall = rvt.GetSplitPointsEqual(rvtWall, Convert.ToInt32(textBoxHorizontal.Text));
+            }
+            else
+            {
+                rvtPointsOnWall = rvt.GetSplitPointsProportional(rvtWall, Convert.ToInt32(textBoxHorizontal.Text));
+            }
+
+            List<System.Windows.Shapes.Line> rvtListPerpendiculars = rvt.GetPerpendiculars(rvtWall, rvtPointsOnWall);
+            List<System.Drawing.PointF> rvtGridPoints = rvt.GetGridPointsRvt(revitWallNormals, rvtListPerpendiculars);
+           
+
+            foreach (var item in rvtGridPoints)
+            {
+                Properties.Settings.Default.InstallPoints += (item.X) / (25.4 * 12) + "*" + (item.Y) / (25.4 * 12) + "\n";
+            }
+        }
+
+        public List<System.Drawing.Point> GetListPointsOnWall(Line line)
+        {
+            List<System.Drawing.Point> listPointsOnWall = new List<System.Drawing.Point>();
+            WpfCoordinates wpfCoord = new WpfCoordinates();
+            if (this.radioEqual.IsChecked == true)
+            {
+                listPointsOnWall = wpfCoord.SplitLineEqual(line, Convert.ToInt32(this.textBoxHorizontal.Text));
+            }
+            else
+                listPointsOnWall = wpfCoord.SplitLineProportional(line, Convert.ToInt32(this.textBoxHorizontal.Text));
+
+            return listPointsOnWall;
         }
 
     }

@@ -32,7 +32,6 @@ namespace RevitFamilyBrowser.Revit_Classes
         List<List<Line>> wallNormals = new List<List<Line>>();
 
         List<System.Drawing.Point> gridPoints = new List<System.Drawing.Point>();
-        List<System.Drawing.PointF> rvtGridPoints = new List<PointF>();
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
@@ -48,6 +47,7 @@ namespace RevitFamilyBrowser.Revit_Classes
 
             CanvasSize = (int)grid.canvas.Width;
             //----------------------------------------------------------------------------------------
+            RoomDimensions roomDimensions = new RoomDimensions();
             Selection selection = uidoc.Selection;
             Room newRoom = null;
             //-----User select existing Room first-----
@@ -95,7 +95,6 @@ namespace RevitFamilyBrowser.Revit_Classes
                 if (box == null) { return Result.Failed; }
                 var roomMin = new ConversionPoint(box.Min);
                 var roomMax = new ConversionPoint(box.Max);
-                RoomDimensions roomDimensions = new RoomDimensions();
                 
                 Scale = roomDimensions.GetScale(roomMin, roomMax, CanvasSize);
                 derrivation = GetDerrivation(box, Scale);
@@ -127,86 +126,35 @@ namespace RevitFamilyBrowser.Revit_Classes
                         wallIndex = wpfWalls.IndexOf(item);
                     }
                 }
+                //-----------------------------------------------------------------------------------------------------
 
-                List<System.Drawing.Point> listPointsOnWall;
-                gridPoints.Clear();
+                List<System.Drawing.Point> listPointsOnWall = grid.GetListPointsOnWall(line);
 
+                bool isEqual = false;
                 WpfCoordinates wpfCoord = new WpfCoordinates();
                 if (grid.radioEqual.IsChecked == true)
                 {
-                    listPointsOnWall = wpfCoord.SplitLine(line, Convert.ToInt32(grid.textBoxHorizontal.Text));
+                    listPointsOnWall = wpfCoord.SplitLineEqual(line, Convert.ToInt32(grid.textBoxHorizontal.Text));
+                    isEqual = true;
                 }
                 else
+                {
                     listPointsOnWall = wpfCoord.SplitLineProportional(line, Convert.ToInt32(grid.textBoxHorizontal.Text));
-
+                    isEqual = false;
+                }
+                    
+                //---------------------------------------------------------------------------------------------------------------------
                 List<System.Windows.Shapes.Line> listPerpendiculars = wpfCoord.DrawPerp(line, listPointsOnWall);
                 foreach (var item in listPerpendiculars)
                 {
                     grid.canvas.Children.Add(wpfCoord.BuildBoundedLine(BoundingBox, item));
                 }
-
+                gridPoints.Clear();
                 gridPoints = wpfCoord.GetGridPoints(listPerpendiculars, wallNormals);
                 grid.textBoxQuantity.Text = "Items: " + gridPoints.Count;
-                foreach (var item in gridPoints)
-                {
-                    double x = ((((item.X - 0.5) * Scale) / 304.8) - derrivation.X * Scale / 304.8);
-                    double y = (((-(item.Y - 0.5) * Scale) / 304.8) + derrivation.Y * Scale / 304.8);
-                }
                 
-                //----------------------------------------Revit coordinates--------------------------------------------------------
-                CoordinatesRevit rvt = new CoordinatesRevit();
-                Line rvtWall = revitWalls[wallIndex];
-                List<System.Drawing.PointF> rvtPointsOnWall = rvt.GetSplitPoints(rvtWall, Convert.ToInt32(grid.textBoxHorizontal.Text));
-
-                //MessageBox.Show($"Wall coors\nX1={rvtWall.X1}, Y1={rvtWall.Y1}\nX2={rvtWall.X2} Y2={rvtWall.Y2}");
-                List<System.Windows.Shapes.Line> rvtListPerpendiculars = rvt.GetPerpendiculars(rvtWall, rvtPointsOnWall);
-                rvtGridPoints = rvt.GetGridPointsRvt(revitWallNormals, rvtListPerpendiculars);
-                
-                foreach (var item in rvtGridPoints)
-                {
-                    Properties.Settings.Default.InstallPoints += (item.X)/(25.4*12) + "*" + (item.Y)/(25.4*12) + "\n";
-                }
-
-                //------------------------------------Draw Lines to intersection points in wpf window---------------------------------
-                //List<System.Drawing.Point> temp = new List<System.Drawing.Point>();
-                //temp = coord.GetIntersectInRoom(BoundingBox, gridPoints);
-
-                //string test = string.Empty;
-                //int count = 0;
-                //foreach (var item in temp)
-                //{
-                //    System.Windows.Shapes.Line intersect = new System.Windows.Shapes.Line();
-                //    intersect.X1 = 0;
-                //    intersect.Y1 = 0;
-                //    intersect.X2 = item.X;
-                //    intersect.Y2 = item.Y;
-                //    count++;
-                //    //test += count.ToString() + ". X=" + item.X.ToString() + " Y=" + item.Y.ToString() + "\n";
-                //    intersect.Stroke = Brushes.Red;
-
-                //    grid.canvas.Children.Add(intersect);
-                //}
-                //-----------------------------------------------------------------------------------------------------------------------
+                grid.GetRevitInstallCoordinates(revitWallNormals, revitWalls, wallIndex, isEqual);
             }
-
-            //void line_MouseEnter(object sender, MouseEventArgs e)
-            //{
-            //    ((System.Windows.Shapes.Line)sender).Stroke = Brushes.Gray;
-            //}
-
-            //void line_MouseLeave(object sender, MouseEventArgs e)
-            //{
-            //    if (!Equals(((System.Windows.Shapes.Line)sender).Stroke, Brushes.Red))
-            //    {
-            //        ((System.Windows.Shapes.Line)sender).Stroke = Brushes.Black;
-            //    }
-            //}
-
-            //void line_MouseUp(object sender, MouseButtonEventArgs e)
-            //{
-            //    // Change line colour back to normal 
-            //    ((System.Windows.Shapes.Line)sender).Stroke = System.Windows.Media.Brushes.Red;
-            //}
 
             void Draw(List<Line> _wpfWalls)
             {
@@ -268,5 +216,7 @@ namespace RevitFamilyBrowser.Revit_Classes
             else
                 MessageBox.Show("Select  symbol from browser");
         }
+
+       
     }
 }

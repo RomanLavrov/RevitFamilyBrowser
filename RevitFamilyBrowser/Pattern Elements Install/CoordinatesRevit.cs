@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Shapes;
@@ -58,7 +59,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             return intersection;
         }
 
-        public List<PointF> GetSplitPoints(Line line, int parts)
+        public List<PointF> GetSplitPointsEqual(Line line, int parts)
         {
             List<PointF> splitPoints = new List<PointF>();
             int partNumber = parts + 1;
@@ -78,6 +79,27 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
                 splitPoints.Add(point);
             }
             return splitPoints;
+        }
+
+        public List<PointF> GetSplitPointsProportional(Line line, int parts)
+        {
+            List<PointF> points = new List<PointF>();
+            int partNumber = parts * 2;
+            for (int i = 1; i < partNumber; i = i + 2)
+            {
+                PointF point = new PointF();
+                float top = i;
+                float bottom = (partNumber - i);
+                if ((partNumber - i) == 0)
+                {
+                    bottom = 1;
+                }
+                var proportion = top / bottom;
+                point.X = (float)((line.X1 + (line.X2 * proportion)) / (1 + proportion));
+                point.Y = (float)((line.Y1 + (line.Y2 * proportion)) / (1 + proportion));
+                points.Add(point);
+            }
+            return points;
         }
 
         public List<Line> GetPerpendiculars(Line baseWall, List<PointF> points)
@@ -103,7 +125,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
                 {
                     double slope = -1 / GetSlope(baseWall);
                     target.X = 0;
-                    target.Y = (float) (point.Y - (slope * point.X));
+                    target.Y = (float)(point.Y - (slope * point.X));
                 }
 
                 Line perpendicular = new Line();

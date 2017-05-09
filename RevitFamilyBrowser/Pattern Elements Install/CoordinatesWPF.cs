@@ -208,7 +208,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             return points;
         }
 
-        public List<Point> SplitLine(Line line, int lineNumber)
+        public List<Point> SplitLineEqual(Line line, int lineNumber)
         {
             List<Point> points = new List<Point>();
 
