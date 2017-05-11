@@ -230,6 +230,66 @@ namespace RevitFamilyBrowser.WPF_Classes
             return points;
         }
 
+        #region Split line on parts by segment lenght
+
+        private int GetLinePartsNumber(Line line, int distance)
+        {
+            int parts;
+            double wallLength = this.GetLength(line);
+            if (wallLength % distance == 0 && wallLength / distance > 2)
+            {
+                parts = (int)(wallLength / distance) - 1;
+            }
+            else if (wallLength / distance <= 2 && wallLength > distance)
+            {
+                parts = 2;
+            }
+            else
+            {
+                parts = (int)Math.Truncate(wallLength / distance);
+            }
+            return parts;
+        }
+
+        private List<double> GetPartsSizes(Line line, int distance)
+        {
+            List<double> partLenghts = new List<double>();
+            int parts = GetLinePartsNumber(line, distance);
+            double firstPart = (GetLength(line) - ((parts - 1) * distance)) / 2;
+            partLenghts.Add(firstPart);
+            for (int i = 1; i <= parts - 1; i++)
+            {
+                double part = firstPart + i * distance;
+                partLenghts.Add(part);
+            }
+            return partLenghts;
+        }
+
+        private double GetAngle(Line line)
+        {
+            List<double> lineCoefs = LineEquation(line);
+            double angle = -Math.Atan(lineCoefs[1] / lineCoefs[0]);
+            return angle;
+        }
+        private Point GetSecondCoord(Line line, double distance)
+        {
+            Point point = new Point();
+            double Angle = GetAngle(line);
+            point.X = Convert.ToInt32(line.X1 + distance * Math.Sin(Angle));
+            point.Y = Convert.ToInt32(line.Y1 + distance * Math.Cos(Angle));
+            return point;
+        }
+        public List<Point> SplitLineDistance(Line line, int distance)
+        {
+            List<Point> points = new List<Point>();
+            List<double> partSizes = GetPartsSizes(line, distance);
+            foreach (var part in partSizes)
+            {
+                points.Add(GetSecondCoord(line, part));
+            }
+            return points;
+        }
+        #endregion 
         //public List<Point> revitInstallPoints (List<Point> wpfPoints, int Scale, int derX, int derY)
         //{
         //    List<Point> revitPoints = new List<Point>();

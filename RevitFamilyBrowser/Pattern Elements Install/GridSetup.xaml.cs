@@ -25,6 +25,7 @@ namespace RevitFamilyBrowser.WPF_Classes
     /// 
     public partial class GridSetup : UserControl
     {
+        public int SCALE { get; set; }
         private ExternalEvent m_ExEvent;
         private GridInstallEvent m_Handler;
 
@@ -44,17 +45,17 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         private void buttonAddHorizontal_Click(object sender, RoutedEventArgs e)
         {
-            int temp = int.Parse(textBoxHorizontal.Text);
+            int temp = int.Parse(TextBoxSplitPartNumber.Text);
             temp++;
-            textBoxHorizontal.Text = temp.ToString();
+            TextBoxSplitPartNumber.Text = temp.ToString();
         }
 
         private void buttonRemoveHorizontal_Click(object sender, RoutedEventArgs e)
         {
-            int temp = int.Parse(textBoxHorizontal.Text);
+            int temp = int.Parse(TextBoxSplitPartNumber.Text);
             if (temp > 0)
                 temp--;
-            textBoxHorizontal.Text = temp.ToString();
+            TextBoxSplitPartNumber.Text = temp.ToString();
         }
 
         public void buttonReset_Click(object sender, RoutedEventArgs e)
@@ -84,10 +85,10 @@ namespace RevitFamilyBrowser.WPF_Classes
             TextBoxFamily.Text = string.Empty;
             TextBoxSymbol.Text = string.Empty;
 
-            Properties.Settings.Default.FamilyPath = string.Empty;
-            Properties.Settings.Default.FamilyName = string.Empty;
-            Properties.Settings.Default.FamilySymbol = string.Empty;
-            Properties.Settings.Default.Save();
+            //Properties.Settings.Default.FamilyPath = string.Empty;
+            //Properties.Settings.Default.FamilyName = string.Empty;
+            //Properties.Settings.Default.FamilySymbol = string.Empty;
+           // Properties.Settings.Default.Save();
         }
 
         private string GetImage()
@@ -184,16 +185,15 @@ namespace RevitFamilyBrowser.WPF_Classes
             List<PointF> rvtPointsOnWall = new List<PointF>();
             if (isEqual)
             {
-                rvtPointsOnWall = rvt.GetSplitPointsEqual(rvtWall, Convert.ToInt32(textBoxHorizontal.Text));
+                rvtPointsOnWall = rvt.GetSplitPointsEqual(rvtWall, Convert.ToInt32(TextBoxSplitPartNumber.Text));
             }
             else
             {
-                rvtPointsOnWall = rvt.GetSplitPointsProportional(rvtWall, Convert.ToInt32(textBoxHorizontal.Text));
+                rvtPointsOnWall = rvt.GetSplitPointsProportional(rvtWall, Convert.ToInt32(TextBoxSplitPartNumber.Text));
             }
 
             List<System.Windows.Shapes.Line> rvtListPerpendiculars = rvt.GetPerpendiculars(rvtWall, rvtPointsOnWall);
             List<System.Drawing.PointF> rvtGridPoints = rvt.GetGridPointsRvt(revitWallNormals, rvtListPerpendiculars);
-           
 
             foreach (var item in rvtGridPoints)
             {
@@ -201,19 +201,46 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
         }
 
-        public List<System.Drawing.Point> GetListPointsOnWall(Line line)
+        public List<System.Drawing.Point> GetListPointsOnWall(Line line, out bool isEqual)
         {
             List<System.Drawing.Point> listPointsOnWall = new List<System.Drawing.Point>();
             WpfCoordinates wpfCoord = new WpfCoordinates();
-            if (this.radioEqual.IsChecked == true)
+
+            if (radioEqual.IsChecked == true)
             {
-                listPointsOnWall = wpfCoord.SplitLineEqual(line, Convert.ToInt32(this.textBoxHorizontal.Text));
+                listPointsOnWall = wpfCoord.SplitLineEqual(line, Convert.ToInt32(this.TextBoxSplitPartNumber.Text));
+                isEqual = true;
+            }
+            else if (radioProportoinal.IsChecked == true)
+            {
+                listPointsOnWall =
+                    wpfCoord.SplitLineProportional(line, Convert.ToInt32(this.TextBoxSplitPartNumber.Text));
+                isEqual = false;
             }
             else
-                listPointsOnWall = wpfCoord.SplitLineProportional(line, Convert.ToInt32(this.textBoxHorizontal.Text));
+            {
+                MessageBox.Show((wpfCoord.GetLength(line)*(20)).ToString());
+                double distance = (Convert.ToInt32(TextBoxDistance.Text) / SCALE);
+                listPointsOnWall = wpfCoord.SplitLineDistance(line, Convert.ToInt32(distance));
+                isEqual = false;
+            }
 
+            //string temp = string.Empty;
+            //temp += "Start: X " + line.X1 + "; Y " + line.Y1 + "\nEnd: " + line.X2 + " ; Y " + line.Y2 + "\n";
+            //foreach (System.Drawing.Point _point in listPointsOnWall)
+            //{
+            //    temp += "X: " + _point.X + " Y: " + _point.Y + "\n";
+            //}
+            //MessageBox.Show(temp);
             return listPointsOnWall;
         }
 
+       
+
+        private void TextBoxDistance_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (radioDistance.IsChecked == false)
+                radioDistance.IsChecked = true;
+        }
     }
 }

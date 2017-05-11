@@ -22,7 +22,8 @@ namespace RevitFamilyBrowser.Revit_Classes
     public class Space : IExternalCommand
     {
         private System.Drawing.Point derrivation;
-        int Scale;
+       
+        public int Scale;
         int CanvasSize;
         private List<Line> revitWalls;
         private List<Line> wpfWalls;
@@ -111,39 +112,24 @@ namespace RevitFamilyBrowser.Revit_Classes
             }
             
             grid.TextBoxScale.Text = "Scale 1: " + Scale.ToString();
+            grid.SCALE = Scale;
             grid.buttonReset.Click += grid.buttonReset_Click;
 
             void line_MouseDown(object sender, MouseButtonEventArgs e)
             {
                 Line line = (Line)sender;
                 line.Stroke = Brushes.Red;
-
+               
                 int wallIndex = 0;
                 foreach (var item in wpfWalls)
                 {
                     if (sender.Equals(item))
-                    {
                         wallIndex = wpfWalls.IndexOf(item);
-                    }
                 }
-                //-----------------------------------------------------------------------------------------------------
-
-                List<System.Drawing.Point> listPointsOnWall = grid.GetListPointsOnWall(line);
-
-                bool isEqual = false;
+              
+                List<System.Drawing.Point> listPointsOnWall = grid.GetListPointsOnWall(line,out bool isEqual);
+                
                 WpfCoordinates wpfCoord = new WpfCoordinates();
-                if (grid.radioEqual.IsChecked == true)
-                {
-                    listPointsOnWall = wpfCoord.SplitLineEqual(line, Convert.ToInt32(grid.textBoxHorizontal.Text));
-                    isEqual = true;
-                }
-                else
-                {
-                    listPointsOnWall = wpfCoord.SplitLineProportional(line, Convert.ToInt32(grid.textBoxHorizontal.Text));
-                    isEqual = false;
-                }
-                    
-                //---------------------------------------------------------------------------------------------------------------------
                 List<System.Windows.Shapes.Line> listPerpendiculars = wpfCoord.DrawPerp(line, listPointsOnWall);
                 foreach (var item in listPerpendiculars)
                 {
@@ -217,6 +203,16 @@ namespace RevitFamilyBrowser.Revit_Classes
                 MessageBox.Show("Select  symbol from browser");
         }
 
+        public int GetScale()
+        {
+            int scale = this.Scale;
+            return scale;
+        }
+
+        public void SetScale(int Scale)
+        {
+            this.Scale = Scale;
+        }
        
     }
 }

@@ -33,10 +33,13 @@
                 <RowDefinition Height="6*" />
                 <RowDefinition Height="2*" />
                 <RowDefinition Height="2*" />
-                <RowDefinition Height="1*" />
+                <RowDefinition Height="2*" />
                 <RowDefinition Height="5*" />
                 <RowDefinition Height="2*" />
-                <RowDefinition Height="14*" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="7*" />
             </Grid.RowDefinitions>
 
 
@@ -78,6 +81,14 @@
                 FontSize="14"
                 Foreground="White" />
 
+            <Label
+                Name="LabelSpliMethod"
+                Grid.Row="4"
+                Margin="20,0,0,0"
+                VerticalAlignment="Center"
+                Content="Split method"
+                FontSize="16" />
+
             <Grid Name="GridConrols" Grid.Row="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
@@ -99,7 +110,7 @@
                         FontSize="16" />
 
                     <TextBox
-                        x:Name="textBoxHorizontal"
+                        x:Name="TextBoxSplitPartNumber"
                         Width="73"
                         Height="30"
                         HorizontalAlignment="Center"
@@ -110,8 +121,6 @@
                         FontSize="16"
                         Text="1"
                         TextWrapping="Wrap" />
-
-
 
                     <Button
                         x:Name="buttonAddHorizontal"
@@ -140,22 +149,25 @@
                         Content="-"
                         FontSize="16"
                         Foreground="White" />
+
+                    <TextBox
+                        Name="TextBoxDistance"
+                        Width="auto"
+                        Height="30"
+                        VerticalAlignment="Bottom"
+                        VerticalContentAlignment="Center"
+                        FontSize="16"
+                        TextChanged="TextBoxDistance_TextChanged" />
                 </Grid>
 
-                <Label
-                    Name="LabelSpliMethod"
-                    Grid.Column="0"
-                    Margin="20,0,0,0"
-                    VerticalAlignment="Top"
-                    Content="Split method"
-                    FontSize="16" />
+
 
                 <RadioButton
                     Name="radioEqual"
                     Grid.Row="0"
                     Margin="20,0,0,0"
                     HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
+                    VerticalAlignment="Top"
                     VerticalContentAlignment="Center"
                     Content="Equal"
                     FontSize="16"
@@ -166,18 +178,35 @@
                     Grid.Row="0"
                     Margin="20,0,0,0"
                     HorizontalAlignment="Left"
-                    VerticalAlignment="Bottom"
+                    VerticalAlignment="Center"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
                     Content="Proportional"
                     FontSize="16"
                     GroupName="SplitOption" />
+                <RadioButton
+                    Name="radioDistance"
+                    Grid.Row="0"
+                    Margin="20,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    VerticalContentAlignment="Center"
+                    Content="Distance"
+                    FontSize="16"
+                    GroupName="SplitOption" />
 
             </Grid>
 
+            <Label
+                Grid.Row="7"
+                Margin="20,0"
+                VerticalAlignment="Center"
+                Content="Set elements height:"
+                FontSize="16" />
+
             <ComboBox
                 Name="comboBoxHeight"
-                Grid.Row="6"
+                Grid.Row="8"
                 Width="340"
                 Height="30"
                 Background="Black"
