@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Autodesk.Revit.Attributes;
@@ -127,19 +128,26 @@ namespace RevitFamilyBrowser.Revit_Classes
                         wallIndex = wpfWalls.IndexOf(item);
                 }
               
-                List<System.Drawing.Point> listPointsOnWall = grid.GetListPointsOnWall(line,out bool isEqual);
+                List<System.Drawing.Point> listPointsOnWall = grid.GetListPointsOnWall(line,out string InstallType);
                 
                 WpfCoordinates wpfCoord = new WpfCoordinates();
                 List<System.Windows.Shapes.Line> listPerpendiculars = wpfCoord.DrawPerp(line, listPointsOnWall);
                 foreach (var item in listPerpendiculars)
                 {
                     grid.canvas.Children.Add(wpfCoord.BuildBoundedLine(BoundingBox, item));
+                    //TODO arrange label with size -------------------------------------------
+                    //System.Windows.Controls.Label WallDimension = new Label();
+                    //WallDimension.Content = (wpfCoord.GetLength(line) / Convert.ToInt32(grid.textBoxQuantity)).ToString();
+                    //Canvas.SetLeft(WallDimension, item.X2);
+                    //Canvas.SetTop(WallDimension, item.Y2);
+                    //grid.canvas.Children.Add(WallDimension);
+                    //--------------------------------------------------
                 }
                 gridPoints.Clear();
                 gridPoints = wpfCoord.GetGridPoints(listPerpendiculars, wallNormals);
                 grid.textBoxQuantity.Text = "Items: " + gridPoints.Count;
                 
-                grid.GetRevitInstallCoordinates(revitWallNormals, revitWalls, wallIndex, isEqual);
+                grid.GetRevitInstallCoordinates(revitWallNormals, revitWalls, wallIndex, InstallType);
             }
 
             void Draw(List<Line> _wpfWalls)
@@ -202,17 +210,5 @@ namespace RevitFamilyBrowser.Revit_Classes
             else
                 MessageBox.Show("Select  symbol from browser");
         }
-
-        public int GetScale()
-        {
-            int scale = this.Scale;
-            return scale;
-        }
-
-        public void SetScale(int Scale)
-        {
-            this.Scale = Scale;
-        }
-       
     }
 }

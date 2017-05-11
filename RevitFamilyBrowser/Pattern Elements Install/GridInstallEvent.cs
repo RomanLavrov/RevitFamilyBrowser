@@ -45,7 +45,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                 using (var transact = new Transaction(doc, "Insert Symbol"))
                 {
                     transact.Start();
-                    XYZ point = new XYZ(item.X, item.Y, Offset);
+                    XYZ point = new XYZ(item.X, item.Y , Offset);
                     Level level = view.GenLevel;
                     Element host = level as Element;
                     targetSymbol.Activate();

@@ -177,21 +177,24 @@ namespace RevitFamilyBrowser.WPF_Classes
             return wpfWalls;
         }
 
-        public void GetRevitInstallCoordinates(List<Line>revitWallNormals,List<Line> revitWalls, int wallIndex, bool isEqual)
+        public void GetRevitInstallCoordinates(List<Line>revitWallNormals,List<Line> revitWalls, int wallIndex, string InstallType)
         {
             CoordinatesRevit rvt = new CoordinatesRevit();
             Line rvtWall = revitWalls[wallIndex];
 
             List<PointF> rvtPointsOnWall = new List<PointF>();
-            if (isEqual)
+            if (InstallType == "Equal")
             {
                 rvtPointsOnWall = rvt.GetSplitPointsEqual(rvtWall, Convert.ToInt32(TextBoxSplitPartNumber.Text));
             }
-            else
+            else if (InstallType == "Proportional")
             {
                 rvtPointsOnWall = rvt.GetSplitPointsProportional(rvtWall, Convert.ToInt32(TextBoxSplitPartNumber.Text));
             }
-
+            else if (InstallType == "Distance")
+            {
+                rvtPointsOnWall = rvt.GetSplitPointsDistance(rvtWall, Convert.ToInt32(TextBoxDistance.Text));
+            }
             List<System.Windows.Shapes.Line> rvtListPerpendiculars = rvt.GetPerpendiculars(rvtWall, rvtPointsOnWall);
             List<System.Drawing.PointF> rvtGridPoints = rvt.GetGridPointsRvt(revitWallNormals, rvtListPerpendiculars);
 
@@ -201,7 +204,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
         }
 
-        public List<System.Drawing.Point> GetListPointsOnWall(Line line, out bool isEqual)
+        public List<System.Drawing.Point> GetListPointsOnWall(Line line, out string InstallType)
         {
             List<System.Drawing.Point> listPointsOnWall = new List<System.Drawing.Point>();
             WpfCoordinates wpfCoord = new WpfCoordinates();
@@ -209,20 +212,20 @@ namespace RevitFamilyBrowser.WPF_Classes
             if (radioEqual.IsChecked == true)
             {
                 listPointsOnWall = wpfCoord.SplitLineEqual(line, Convert.ToInt32(this.TextBoxSplitPartNumber.Text));
-                isEqual = true;
+                InstallType = "Equal";
             }
             else if (radioProportoinal.IsChecked == true)
             {
                 listPointsOnWall =
                     wpfCoord.SplitLineProportional(line, Convert.ToInt32(this.TextBoxSplitPartNumber.Text));
-                isEqual = false;
+                InstallType = "Proportional";
             }
             else
             {
-                MessageBox.Show((wpfCoord.GetLength(line)*(20)).ToString());
+               // MessageBox.Show((wpfCoord.GetLength(line)*(20)).ToString());
                 double distance = (Convert.ToInt32(TextBoxDistance.Text) / SCALE);
                 listPointsOnWall = wpfCoord.SplitLineDistance(line, Convert.ToInt32(distance));
-                isEqual = false;
+                InstallType = "Distance";
             }
 
             //string temp = string.Empty;

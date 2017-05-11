@@ -377,7 +377,9 @@ namespace RevitFamilyBrowser.WPF_Classes
         public Line DrawDashedLine(System.Windows.Shapes.Line line)
         {
             line.Stroke = System.Windows.Media.Brushes.SteelBlue;
-            DoubleCollection dash = new DoubleCollection() { 20, 10, 20, 10 };
+            line.SnapsToDevicePixels = true;
+            line.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
+            DoubleCollection dash = new DoubleCollection() { 20, 5, 20, 5 };
             line.StrokeDashArray = dash;
             return line;
         }
