@@ -60,7 +60,8 @@ namespace RevitFamilyBrowser
             foreach (Element element in elementCollector)
             {
                 if (!(element.Name.Contains("Standart") ||
-                      element.Name.Contains("Mullion")))
+                      element.Name.Contains("Mullion") ||
+                      element.Name.Contains("Tag")))
                 {
                     Family family = element as Family;
                     temp += element.Name;

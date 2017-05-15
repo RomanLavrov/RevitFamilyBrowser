@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -28,6 +29,15 @@ namespace RevitFamilyBrowser.WPF_Classes
         public int SCALE { get; set; }
         private ExternalEvent m_ExEvent;
         private GridInstallEvent m_Handler;
+        public List<Line> WpfWalls { get; set; }
+        public List<Line> BoundingBoxLines { get; set; }
+        public List <Line> RevitWalls { get; set; }
+        public List<Line> RevitWallNormals { get; set; }
+
+
+        List<Line> revitWallNormals = new List<Line>();
+
+        List<System.Drawing.Point> gridPoints = new List<System.Drawing.Point>();
 
         public GridSetup(ExternalEvent exEvent, GridInstallEvent handler)
         {
@@ -88,7 +98,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             //Properties.Settings.Default.FamilyPath = string.Empty;
             //Properties.Settings.Default.FamilyName = string.Empty;
             //Properties.Settings.Default.FamilySymbol = string.Empty;
-           // Properties.Settings.Default.Save();
+            // Properties.Settings.Default.Save();
         }
 
         private string GetImage()
@@ -160,6 +170,15 @@ namespace RevitFamilyBrowser.WPF_Classes
         public void line_MouseEnter(object sender, MouseEventArgs e)
         {
             ((System.Windows.Shapes.Line)sender).Stroke = Brushes.Gray;
+            //------------------------------------Add Wall size---------------------------------------
+            //Line line = sender as Line;
+            //WpfCoordinates wpfCoord = new WpfCoordinates();
+            //System.Windows.Controls.Label WallDimension = new Label();
+            //WallDimension.Content = wpfCoord.GetLength(line).ToString();
+            //Canvas.SetLeft(WallDimension, line.X2 + wpfCoord.GetLength(line)/2);
+            //Canvas.SetTop(WallDimension, line.Y2 + wpfCoord.GetLength(line) / 2);
+            //this.canvas.Children.Add(WallDimension);
+            //-----------------------------------------------------------------------------
         }
 
         public List<Line> GetWpfWalls(List<Line> revitWalls, int derrivationX, int derrivationY, int Scale)
@@ -167,17 +186,20 @@ namespace RevitFamilyBrowser.WPF_Classes
             List<Line> wpfWalls = new List<Line>();
             foreach (var item in revitWalls)
             {
-                System.Windows.Shapes.Line myLine = new System.Windows.Shapes.Line();
-                myLine.X1 = (item.X1 / Scale) + derrivationX;
-                myLine.Y1 = ((-item.Y1 / Scale) + derrivationY);
-                myLine.X2 = (item.X2 / Scale) + derrivationX;
-                myLine.Y2 = ((-item.Y2 / Scale) + derrivationY);
+                System.Windows.Shapes.Line myLine =
+                    new System.Windows.Shapes.Line
+                    {
+                        X1 = (item.X1 / Scale) + derrivationX,
+                        Y1 = ((-item.Y1 / Scale) + derrivationY),
+                        X2 = (item.X2 / Scale) + derrivationX,
+                        Y2 = ((-item.Y2 / Scale) + derrivationY)
+                    };
                 wpfWalls.Add(myLine);
             }
             return wpfWalls;
         }
 
-        public void GetRevitInstallCoordinates(List<Line>revitWallNormals,List<Line> revitWalls, int wallIndex, string InstallType)
+        public void GetRevitInstallCoordinates(List<Line> revitWallNormals, List<Line> revitWalls, int wallIndex, string InstallType)
         {
             CoordinatesRevit rvt = new CoordinatesRevit();
             Line rvtWall = revitWalls[wallIndex];
@@ -206,7 +228,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         public List<System.Drawing.Point> GetListPointsOnWall(Line line, out string InstallType)
         {
-            List<System.Drawing.Point> listPointsOnWall = new List<System.Drawing.Point>();
+            List<System.Drawing.Point> listPointsOnWall;
             WpfCoordinates wpfCoord = new WpfCoordinates();
 
             if (radioEqual.IsChecked == true)
@@ -222,28 +244,75 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             else
             {
-               // MessageBox.Show((wpfCoord.GetLength(line)*(20)).ToString());
-                double distance = (Convert.ToInt32(TextBoxDistance.Text) / SCALE);
+                double distance = (Convert.ToDouble(TextBoxDistance.Text) / SCALE);
                 listPointsOnWall = wpfCoord.SplitLineDistance(line, Convert.ToInt32(distance));
                 InstallType = "Distance";
             }
-
-            //string temp = string.Empty;
-            //temp += "Start: X " + line.X1 + "; Y " + line.Y1 + "\nEnd: " + line.X2 + " ; Y " + line.Y2 + "\n";
-            //foreach (System.Drawing.Point _point in listPointsOnWall)
-            //{
-            //    temp += "X: " + _point.X + " Y: " + _point.Y + "\n";
-            //}
-            //MessageBox.Show(temp);
             return listPointsOnWall;
         }
-
-       
 
         private void TextBoxDistance_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (radioDistance.IsChecked == false)
                 radioDistance.IsChecked = true;
+        }
+
+        /////////////---------------------------------------------
+        /// 
+        /// 
+        public void line_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Line line = (Line)sender;
+            line.Stroke = Brushes.Red;
+
+            int wallIndex = 0;
+            foreach (var item in this.WpfWalls)
+                //     foreach (var item in wpfWalls)
+            {
+                if (sender.Equals(item))
+                    // wallIndex = wpfWalls.IndexOf(item);
+                    wallIndex = this.WpfWalls.IndexOf(item);
+            }
+
+            List<System.Drawing.Point> listPointsOnWall = this.GetListPointsOnWall(line, out string InstallType);
+
+            WpfCoordinates wpfCoord = new WpfCoordinates();
+            List<Line> listPerpendiculars = wpfCoord.DrawPerp(line, listPointsOnWall);
+            foreach (var item in listPerpendiculars)
+            {
+                this.canvas.Children.Add(wpfCoord.BuildBoundedLine(this.BoundingBoxLines, item));
+                //  grid.canvas.Children.Add(wpfCoord.BuildBoundedLine(BoundingBox, item));
+                //TODO arrange label with size -------------------------------------------
+                System.Windows.Controls.Label WallDimension = new Label();
+                WallDimension.Content = (wpfCoord.GetLength(line) * this.SCALE);
+                Canvas.SetLeft(WallDimension, item.X2);
+                Canvas.SetTop(WallDimension, item.Y2);
+                this.canvas.Children.Add(WallDimension);
+                //--------------------------------------------------
+            }
+            gridPoints.Clear();
+
+            gridPoints = wpfCoord.GetGridPoints(listPerpendiculars);
+            this.textBoxQuantity.Text = "Items: " + gridPoints.Count;
+            this.GetRevitInstallCoordinates(revitWallNormals, this.RevitWalls, wallIndex, InstallType);
+        }
+
+        public void Draw(List<Line> wpfWalls)
+        {
+            foreach (Line myLine in wpfWalls)
+            {
+                myLine.Stroke = System.Windows.Media.Brushes.Black;
+                myLine.StrokeThickness = 2;
+
+                myLine.StrokeEndLineCap = PenLineCap.Round;
+                myLine.StrokeStartLineCap = PenLineCap.Round;
+
+                myLine.MouseDown += new MouseButtonEventHandler(this.line_MouseDown);
+                myLine.MouseUp += new MouseButtonEventHandler(this.line_MouseUp);
+                myLine.MouseEnter += new MouseEventHandler(this.line_MouseEnter);
+                myLine.MouseLeave += new MouseEventHandler(this.line_MouseLeave);
+                this.canvas.Children.Add(myLine);
+            }
         }
     }
 }

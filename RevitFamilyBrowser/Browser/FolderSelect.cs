@@ -135,6 +135,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                     foreach (ElementId id in familySymbolId)
                     {
                         symbol = family.Document.GetElement(id) as FamilySymbol;
+                        if (symbol == null) continue;
                         FamilyInstance.Add(symbol.Name.ToString() + " " + item);
                        
                         string TempImgFolder = System.IO.Path.GetTempPath() + "FamilyBrowser\\";

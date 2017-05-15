@@ -223,6 +223,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
         public List<PointF> GetGridPointsRvt(List<Line> perpendicularsList, List<Line> perpendiculars)
         {
             List<PointF> target = new List<PointF>();
+           
             perpendicularsList.AddRange(perpendiculars);
             //MessageBox.Show(perpendicularsList.Count.ToString());
             foreach (var lineA in perpendicularsList)
