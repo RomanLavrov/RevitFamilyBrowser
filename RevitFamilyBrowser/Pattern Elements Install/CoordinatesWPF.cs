@@ -15,17 +15,12 @@ namespace RevitFamilyBrowser.WPF_Classes
     {
         public double X { get; set; }
         public double Y { get; set; }
-        public double Xstart { get; set; }
-        public double Ystart { get; set; }
-        public double Xend { get; set; }
-        public double Yend { get; set; }
-
-        //-----Return Line length
+       
         public double GetLength(Line line)
         {
             return Math.Sqrt(Math.Pow((line.X1 - line.X2), 2) + Math.Pow((line.Y1 - line.Y2), 2));
         }
-        //-----Return Line slope
+       
         public double GetSlope(Line line)
         {
             return (line.Y2 - line.Y1) / (line.X2 - line.X1);
@@ -40,7 +35,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         }
 
         //-----Return coefficients of Line equation ax+by+c=0
-        public static List<double> LineEquation(Line line)
+        public List<double> LineEquation(Line line)
         {
             List<double> result = new List<double>();
             double a = line.Y2 - line.Y1;
@@ -265,18 +260,18 @@ namespace RevitFamilyBrowser.WPF_Classes
             return partLenghts;
         }
 
-        private double GetAngle(Line line)
+        public double GetAngle(Line line)
         {
             List<double> lineCoefs = LineEquation(line);
             double angle = -Math.Atan(lineCoefs[1] / lineCoefs[0]);
             return angle;
         }
-        private Point GetSecondCoord(Line line, double distance)
+        public Point GetSecondCoord(Line line, double distance)
         {
             Point point = new Point();
-            double Angle = GetAngle(line);
-            point.X = Convert.ToInt32(line.X1 + distance * Math.Sin(Angle));
-            point.Y = Convert.ToInt32(line.Y1 + distance * Math.Cos(Angle));
+            double angle = GetAngle(line);
+            point.X = Convert.ToInt32(line.X1 + distance * Math.Sin(angle));
+            point.Y = Convert.ToInt32(line.Y1 + distance * Math.Cos(angle));
             return point;
         }
         public List<Point> SplitLineDistance(Line line, int distance)
@@ -290,20 +285,13 @@ namespace RevitFamilyBrowser.WPF_Classes
             return points;
         }
         #endregion 
-        //public List<Point> revitInstallPoints (List<Point> wpfPoints, int Scale, int derX, int derY)
-        //{
-        //    List<Point> revitPoints = new List<Point>();
-        //    foreach (var wpfPoint in wpfPoints)
-        //    {
-        //        Point point = new Point();
-        //        point.X = wpfPoint.X * Scale - derX;
-        //        point.Y = -wpfPoint.Y * Scale - derY;
-        //    }
-        //    return revitPoints;
-        //}
-        //-----Create 4 lines in given scale and central position around selected room
-        public List<Line> GetBoundingBox(ConversionPoint min, ConversionPoint max, int Scale, int derX, int derY)
+
+        public List<Line> GetBoundingBox(ConversionPoint min, ConversionPoint max, GridSetup grid)
         {
+            int Scale = grid.Scale;
+            int derX = grid.Derrivation.X;
+            int derY = grid.Derrivation.Y;
+
             List<Line> boxSides = new List<Line>();
             int offset = 500 / Scale;
 
@@ -358,7 +346,7 @@ namespace RevitFamilyBrowser.WPF_Classes
                 perpendicular.Y1 = target.Y;
                 perpendicular.X2 = point.X;
                 perpendicular.Y2 = point.Y;
-                perpendicular.Stroke = System.Windows.Media.Brushes.Red;
+               // perpendicular.Stroke = System.Windows.Media.Brushes.Red;
                 lines.Add(perpendicular);
             }
             return lines;
