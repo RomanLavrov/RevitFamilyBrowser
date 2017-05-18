@@ -33,6 +33,8 @@ namespace RevitFamilyBrowser.WPF_Classes
         private const int ExtensionLineLength = 40;
         private const int ExtensionLineExtent = 10;
 
+        private List<List<Line>> wpfWalls = new List<List<Line>>();
+
         List<Line> RevitWallNormals = new List<Line>();
         List<System.Drawing.Point> gridPoints = new List<System.Drawing.Point>();
 
@@ -280,9 +282,9 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
 
             List<System.Drawing.Point> listPointsOnWall = GetListPointsOnWall(line, out string InstallType);
-            Dimension dimension = new Dimension();
-            dimension.WallSizeText(line, this);
-            dimension.AddDimLine(line, this);
+            //Dimension dimension = new Dimension();
+            //dimension.WallSizeText(line, this);
+            //dimension.AddDimLine(line, this);
             WpfCoordinates wpfCoord = new WpfCoordinates();
             List<Line> listPerpendiculars = wpfCoord.DrawPerp(line, listPointsOnWall);
             foreach (var perpendicular in listPerpendiculars)
@@ -291,8 +293,9 @@ namespace RevitFamilyBrowser.WPF_Classes
                 // AddSegmentSize(line, perpendicular);
             }
             gridPoints.Clear();
-
-            gridPoints = wpfCoord.GetGridPoints(listPerpendiculars);
+            gridPoints = wpfCoord.GetGridPoints(listPerpendiculars, wpfWalls);
+            MessageBox.Show(gridPoints.Count.ToString());
+            MessageBox.Show(gridPoints.Count.ToString());
             textBoxQuantity.Text = "Items: " + gridPoints.Count;
             GetRevitInstallCoordinates(RevitWallNormals, RevitWalls, wallIndex, InstallType);
         }
@@ -306,99 +309,5 @@ namespace RevitFamilyBrowser.WPF_Classes
             Canvas.SetTop(WallSegmentSize, perpendicular.Y2);
             canvas.Children.Add(WallSegmentSize);
         }
-
-        //private void WallSizeText(Line wall)
-        //{
-        //    Label WallSize = new Label();
-        //    WallSize.Height = 40;
-        //    WallSize.Width = 80;
-        //    WpfCoordinates wpfCoordinates = new WpfCoordinates();
-        //    WallSize.Content = (int)(wpfCoordinates.GetLength(wall) * Scale);
-        //    Canvas.SetLeft(WallSize, ((wall.X2 + wall.X1) / 2) - WallSize.Width / 2);
-        //    Canvas.SetTop(WallSize, ((wall.Y2 + wall.Y1) / 2) - WallSize.Height / 2 - 10);
-        //    WallSize.LayoutTransform = new RotateTransform(SetTextAngle(wall));
-        //    AddDimLine(wall);
-        //    canvas.Children.Add(WallSize);
-        //}
-
-        //private void AddDimLine(Line line)
-        //{
-        //    WpfCoordinates tool = new WpfCoordinates();
-        //    tool.LineEquation(line);
-        //    tool.GetAngle(line);
-
-        //    List<System.Drawing.Point> pointList = new List<System.Drawing.Point>();
-        //    System.Drawing.Point start = new System.Drawing.Point
-        //    {
-        //        X = (int)line.X1,
-        //        Y = (int)line.Y1
-        //    };
-        //    pointList.Add(start);
-        //    System.Drawing.Point end = new System.Drawing.Point
-        //    {
-        //        X = (int)line.X2,
-        //        Y = (int)line.Y2
-        //    };
-        //    pointList.Add(end);
-          
-        //    List<Line> extensionLines = new List<Line>();
-
-        //    foreach (Line item in tool.DrawPerp(line, pointList))
-        //    {
-        //        Line extensionLine = new Line();
-        //        System.Drawing.Point point = new System.Drawing.Point();
-
-        //        if (tool.GetSlope(item) > 0)
-        //        {
-        //            point = tool.GetSecondCoord(item, tool.GetLength(item) - ExtensionLineLength);
-        //            extensionLine.X1 = point.X;
-        //            extensionLine.Y1 = point.Y;
-        //            extensionLine.X2 = item.X2;
-        //            extensionLine.Y2 = item.Y2;
-        //        }
-        //        else
-        //        {
-        //            Line temp = new Line();
-        //            temp.X1 = item.X2;
-        //            temp.Y1 = item.Y2;
-        //            temp.X2 = 2 * item.X2 - item.X1;
-        //            temp.Y2 = 2 * item.Y2 - item.Y1;
-                    
-        //            point = tool.GetSecondCoord(temp, - ExtensionLineLength);
-        //            extensionLine.X1 = point.X;
-        //            extensionLine.Y1 = point.Y;
-        //            extensionLine.X2 = item.X2;
-        //            extensionLine.Y2 = item.Y2;
-        //        }
-        //        extensionLine.Stroke = Brushes.OrangeRed;
-        //        extensionLines.Add(extensionLine);
-        //        canvas.Children.Add(extensionLine);
-        //    }
-
-        //    Line dimensionLine = new Line();
-        //    dimensionLine.X1 = tool.GetSecondCoord(extensionLines[0], ExtensionLineExtent).X;
-        //    dimensionLine.Y1 = tool.GetSecondCoord(extensionLines[0], ExtensionLineExtent).Y;
-        //    dimensionLine.X2 = tool.GetSecondCoord(extensionLines[1], ExtensionLineExtent).X;
-        //    dimensionLine.Y2 = tool.GetSecondCoord(extensionLines[1], ExtensionLineExtent).Y;
-        //    dimensionLine.Stroke = Brushes.RoyalBlue;
-        //    canvas.Children.Add(dimensionLine);
-
-        //}
-
-        //private double SetTextAngle(Line line)
-        //{
-        //    WpfCoordinates tool = new WpfCoordinates();
-        //    double angleRad = tool.GetAngle(line);
-        //    double angleDegrees = angleRad * 180 / Math.PI;
-
-        //    if (angleDegrees.Equals(-90) || angleDegrees.Equals(90))
-        //        angleDegrees = 0;
-        //    else if (angleDegrees.Equals(0) || angleDegrees.Equals(180))
-        //    {
-        //        angleDegrees = -90;
-        //    }
-
-        //    return angleDegrees;
-        //}
     }
 }

@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Collections.Generic;
 using System.Windows;
+using Autodesk.Revit.UI;
 using Brushes = System.Windows.Media.Brushes;
 using Point = System.Drawing.Point;
 
@@ -17,22 +18,57 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
         private List<Point> PointList = new List<Point>();
         private List<Line> ExtensionLines = new List<Line>();
         private Line dimensionLine;
-        private Point textPosition;
+        //  private Point textPosition;
 
         public void WallSizeText(Line wall, GridSetup grid)
         {
+            double angle = SetTextAngle(wall);
+            // TaskDialog.Show("Angle", angle.ToString());
             Label WallSize = new Label();
-            WallSize.Height = 40;
-            WallSize.Width = 80;
+
+            WallSize.Background = Brushes.GreenYellow;
             WpfCoordinates wpfCoordinates = new WpfCoordinates();
             WallSize.Content = (int)(wpfCoordinates.GetLength(wall) * grid.Scale);
-            //Canvas.SetLeft(WallSize, ((wall.X2 + wall.X1) / 2) - WallSize.Width / 2);
-            //Canvas.SetTop(WallSize, ((wall.Y2 + wall.Y1) / 2) - WallSize.Height / 2 - 10);
-           
-            Canvas.SetLeft(WallSize, textPosition.X);
-            Canvas.SetTop(WallSize, textPosition.Y);
-            WallSize.LayoutTransform = new RotateTransform(SetTextAngle(wall));
+
             AddDimLine(wall, grid);
+            Point pos = GetTextposition();
+            MessageBox.Show(angle.ToString());
+
+            if (angle.Equals(0))
+            {
+                Canvas.SetLeft(WallSize, pos.X - 25);
+                Canvas.SetTop(WallSize, pos.Y - 25);
+            }
+            else if (angle > 0 && angle < 45)
+            {
+                MessageBox.Show("True small");
+                angle = angle + 180;
+                Canvas.SetLeft(WallSize, pos.X - Math.Abs(40 * Math.Sin(angle)));
+                Canvas.SetTop(WallSize, pos.Y - Math.Abs(50 * Math.Cos(angle)));
+            }
+
+            else if (angle >= 45 && angle < 90)
+            {
+                MessageBox.Show("True big");
+                angle = angle + 180;
+                Canvas.SetLeft(WallSize, pos.X );
+                Canvas.SetTop(WallSize, pos.Y - Math.Abs(50 * Math.Cos(angle)));
+            }
+
+            else if (angle > 90 && angle < 180)
+            {
+                Canvas.SetLeft(WallSize, pos.X + Math.Abs(40 * Math.Sin(angle)));
+                Canvas.SetTop(WallSize, pos.Y - Math.Abs(50 * Math.Cos(angle)));
+            }
+
+            else
+            {
+                Canvas.SetLeft(WallSize, pos.X - Math.Abs(40 * Math.Sin(angle)));
+                Canvas.SetTop(WallSize, pos.Y - Math.Abs(50 * Math.Cos(angle)));
+            }
+
+
+            WallSize.LayoutTransform = new RotateTransform(270 - angle, pos.X, pos.Y);
             grid.canvas.Children.Add(WallSize);
         }
 
@@ -51,7 +87,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             dimensionLine.X2 = tool.GetSecondCoord(ExtensionLines[1], ExtensionLineExtent).X;
             dimensionLine.Y2 = tool.GetSecondCoord(ExtensionLines[1], ExtensionLineExtent).Y;
             dimensionLine.Stroke = Brushes.RoyalBlue;
-            textPosition = tool.GetCenter(dimensionLine);
+            // textPosition = tool.GetCenter(dimensionLine);
             grid.canvas.Children.Add(dimensionLine);
         }
 
@@ -59,14 +95,21 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
         {
             WpfCoordinates tool = new WpfCoordinates();
             double angleRad = tool.GetAngle(line);
-            double angleDegrees = angleRad * 180 / Math.PI;
+            double angleDegrees = (angleRad * 180 / Math.PI);
+            MessageBox.Show(angleDegrees.ToString());
 
             if (angleDegrees.Equals(-90) || angleDegrees.Equals(90))
-                angleDegrees = 0;
-            else if (angleDegrees.Equals(0) || angleDegrees.Equals(180))
             {
                 angleDegrees = -90;
             }
+            else if (angleDegrees.Equals(0) || angleDegrees.Equals(180))
+            {
+                angleDegrees = 0;
+            }
+            //else if (angleDegrees > 0 && angleDegrees < 90)
+            //{
+            //    angleDegrees = angleDegrees+180;
+            //}
 
             return angleDegrees;
         }
@@ -123,5 +166,12 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             }
         }
 
-       }
+        private Point GetTextposition()
+        {
+            WpfCoordinates tool = new WpfCoordinates();
+
+            return tool.GetCenter(this.dimensionLine);
+        }
+
+    }
 }

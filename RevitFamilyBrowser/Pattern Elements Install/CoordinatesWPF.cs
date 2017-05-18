@@ -1,13 +1,13 @@
 ﻿using RevitFamilyBrowser.Revit_Classes;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Point = System.Drawing.Point;
 
 namespace RevitFamilyBrowser.WPF_Classes
 {
@@ -353,7 +353,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         }
 
         //-----Draw Center Line on Canvas by given Start and End points
-        public System.Windows.Shapes.Line DrawCenterLine(System.Windows.Shapes.Line line)
+        public Line DrawCenterLine(Line line)
         {
             line.Stroke = System.Windows.Media.Brushes.Red;
             DoubleCollection dash = new DoubleCollection() { 130, 8, 15, 8 };
@@ -372,15 +372,16 @@ namespace RevitFamilyBrowser.WPF_Classes
             return line;
         }
 
-        public List<Point> GetGridPoints(List<Line> listPerpendiculars)
+        public List<Point> GetGridPoints(List<Line> listPerpendiculars, List<List<Line>> wallNormals)
         {
-            List<List<Line>> wallNormals = new List<List<Line>>();
+           //List<List<Line>> wallNormals = new List<List<Line>>();
+           
             //if (listPerpendiculars.Count > 0)
             {
                 wallNormals.Add(listPerpendiculars);
                 // System.Windows.MessageBox.Show("Walls with perpendiculars = " + wallNormals.Count.ToString());
             }
-            List<System.Drawing.Point> temp = new List<System.Drawing.Point>();
+            List<Point> temp = new List<Point>();
 
             foreach (var normalA in wallNormals)
             {
@@ -390,7 +391,7 @@ namespace RevitFamilyBrowser.WPF_Classes
                     {
                         foreach (var lineB in normalB)
                         {
-                            if (lineA != lineB)
+                            if (!lineA.Equals(lineB))
                                 temp.Add(GetIntersection(lineA, lineB));
                         }
                     }
