@@ -1,6 +1,7 @@
 ﻿using RevitFamilyBrowser.Revit_Classes;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -182,9 +183,9 @@ namespace RevitFamilyBrowser.WPF_Classes
             return DrawDashedLine(gridLine);
         }
 
-        public List<Point> SplitLineProportional(Line line, int lineNumber)
+        public List<PointF> SplitLineProportional(Line line, int lineNumber)
         {
-            List<Point> points = new List<Point>();
+            List<PointF> points = new List<PointF>();
             int partNumber = lineNumber * 2;
             for (int i = 1; i < partNumber; i = i + 2)
             {
@@ -203,9 +204,9 @@ namespace RevitFamilyBrowser.WPF_Classes
             return points;
         }
 
-        public List<Point> SplitLineEqual(Line line, int lineNumber)
+        public List<PointF> SplitLineEqual(Line line, int lineNumber)
         {
-            List<Point> points = new List<Point>();
+            List<PointF> points = new List<PointF>();
 
             int partNumber = lineNumber + 1;
             for (int i = 1; i < partNumber; i++)
@@ -266,17 +267,18 @@ namespace RevitFamilyBrowser.WPF_Classes
             double angle = -Math.Atan(lineCoefs[1] / lineCoefs[0]);
             return angle;
         }
-        public Point GetSecondCoord(Line line, double distance)
+
+        public PointF GetSecondCoord(Line line, double distance)
         {
-            Point point = new Point();
+            PointF point = new Point();
             double angle = GetAngle(line);
-            point.X = Convert.ToInt32(line.X1 + distance * Math.Sin(angle));
-            point.Y = Convert.ToInt32(line.Y1 + distance * Math.Cos(angle));
+            point.X = (float)(line.X1 + distance * Math.Sin(angle));
+            point.Y = (float)(line.Y1 + distance * Math.Cos(angle));
             return point;
         }
-        public List<Point> SplitLineDistance(Line line, int distance)
+        public List<PointF> SplitLineDistance(Line line, int distance)
         {
-            List<Point> points = new List<Point>();
+            List<PointF> points = new List<PointF>();
             List<double> partSizes = GetPartsSizes(line, distance);
             foreach (var part in partSizes)
             {
@@ -330,12 +332,12 @@ namespace RevitFamilyBrowser.WPF_Classes
         }
 
         //-----Create perpendiculars to given line in given points
-        public List<Line> DrawPerp(Line baseWall, List<Point> points)
+        public List<Line> DrawPerp(Line baseWall, List<PointF> points)
         {
             List<Line> lines = new List<Line>();
             double slope = -1 / (GetSlope(baseWall));
 
-            foreach (Point point in points)
+            foreach (PointF point in points)
             {
                 Point target = new Point();
                 target.X = 0;

@@ -222,14 +222,12 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
         public List<PointF> GetGridPointsRvt(List<Line> perpendicularsList, List<Line> perpendiculars)
         {
             List<PointF> target = new List<PointF>();
-           
             perpendicularsList.AddRange(perpendiculars);
-            //MessageBox.Show(perpendicularsList.Count.ToString());
+           
             foreach (var lineA in perpendicularsList)
             {
                 foreach (var lineB in perpendicularsList)
                 {
-                    //MessageBox.Show(String.Format("Start x={0}; y={1};\n End x={2}; y={3}\n", lineB.X1, lineB.Y1, lineB.X2, lineB.Y2));
                     if (!lineA.Equals(lineB))
                         target.Add(GetIntersection(lineA, lineB));
                 }

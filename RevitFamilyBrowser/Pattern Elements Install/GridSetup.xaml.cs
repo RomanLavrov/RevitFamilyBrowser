@@ -210,11 +210,9 @@ namespace RevitFamilyBrowser.WPF_Classes
             return wpfWalls;
         }
 
-       
-
-        private List<System.Drawing.Point> GetListPointsOnWall(Line line, out string InstallType)
+        private List<System.Drawing.PointF> GetListPointsOnWall(Line line, out string InstallType)
         {
-            List<System.Drawing.Point> listPointsOnWall;
+            List<System.Drawing.PointF> listPointsOnWall;
             WpfCoordinates wpfCoord = new WpfCoordinates();
 
             if (radioEqual.IsChecked == true)
@@ -255,20 +253,20 @@ namespace RevitFamilyBrowser.WPF_Classes
                     wallIndex = WpfWalls.IndexOf(item);
             }
 
-            List<System.Drawing.Point> listPointsOnWall = GetListPointsOnWall(line, out string InstallType);
+            List<PointF> listPointsOnWall = GetListPointsOnWall(line, out string InstallType);
             Dimension dimension = new Dimension();
-            dimension.WallSizeText(line, this);
+            dimension.DrawWallDimension(line, this);
             dimension.DrawDimLine(line, this);
             WpfCoordinates wpfCoord = new WpfCoordinates();
             List<Line> listPerpendiculars = wpfCoord.DrawPerp(line, listPointsOnWall);
             foreach (var perpendicular in listPerpendiculars)
             {
                 canvas.Children.Add(wpfCoord.BuildBoundedLine(BoundingBoxLines, perpendicular));
-                // AddSegmentSize(line, perpendicular);
+               //-----
             }
             gridPoints.Clear();
             gridPoints = wpfCoord.GetGridPoints(listPerpendiculars);
-            MessageBox.Show("WpfGridPoints number : " + gridPoints.Count.ToString());
+          //  MessageBox.Show("WpfGridPoints number : " + gridPoints.Count.ToString());
            
             textBoxQuantity.Text = "Items: " + gridPoints.Count;
             GetRevitInstallCoordinates(RevitWallNormals, RevitWalls, wallIndex, InstallType);
@@ -294,7 +292,6 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             List<Line> rvtListPerpendiculars = rvt.GetPerpendiculars(rvtWall, rvtPointsOnWall);
             List<PointF> rvtGridPoints = rvt.GetGridPointsRvt(revitWallNormals, rvtListPerpendiculars);
-
            
             Properties.Settings.Default.InstallPoints = string.Empty;
             
@@ -302,16 +299,6 @@ namespace RevitFamilyBrowser.WPF_Classes
             {
                 Properties.Settings.Default.InstallPoints += (item.X) / (25.4 * 12) + "*" + (item.Y) / (25.4 * 12) + "\n";
             }
-        }
-
-        private void AddSegmentSize(Line wall, Line perpendicular)
-        {
-            WpfCoordinates wpfCoord = new WpfCoordinates();
-            Label WallSegmentSize = new Label();
-            WallSegmentSize.Content = (int)(wpfCoord.GetLength(wall) * Scale);
-            Canvas.SetLeft(WallSegmentSize, perpendicular.X2);
-            Canvas.SetTop(WallSegmentSize, perpendicular.Y2);
-            canvas.Children.Add(WallSegmentSize);
         }
     }
 }

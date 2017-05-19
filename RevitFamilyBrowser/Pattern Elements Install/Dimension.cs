@@ -4,7 +4,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows;
+using System.Windows.Media.Effects;
 using Autodesk.Revit.UI;
 using Brushes = System.Windows.Media.Brushes;
 using Point = System.Drawing.Point;
@@ -13,36 +15,37 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
 {
     public class Dimension
     {
-        private const int ExtensionLineLength = 40;
-        private const int ExtensionLineExtent = 10;
-        private List<Point> PointList = new List<Point>();
+        private const int ExtensionLineLength = 60;
+        private const int ExtensionLineExtent = 7;
+        private readonly SolidColorBrush lineColor = Brushes.DarkSlateBlue;
+        private List<PointF> PointList = new List<PointF>();
         private List<Line> ExtensionLines = new List<Line>();
         private Line dimensionLine;
-        //  private Point textPosition;
 
-        public void WallSizeText(Line wall, GridSetup grid)
+        public void DrawWallDimension(Line wall, GridSetup grid)
         {
-            double angle = SetTextAngle(wall);
-            // TaskDialog.Show("Angle", angle.ToString());
-            Label WallSize = new Label();
+            Label wallSize = new Label
+            {
+                Width = 100,
+                Height = 25,
+                VerticalContentAlignment = VerticalAlignment.Bottom,
+                HorizontalContentAlignment = HorizontalAlignment.Right,
+                FontSize = 14,
+                Foreground = lineColor,
+                Effect = null
+            };
 
-            WallSize.Width = 80;
-            WallSize.Height = 30;
-
-            WallSize.VerticalContentAlignment = VerticalAlignment.Center;
-            WallSize.HorizontalContentAlignment = HorizontalAlignment.Right;
-           
             WpfCoordinates wpfCoordinates = new WpfCoordinates();
-            WallSize.Content = (int)(wpfCoordinates.GetLength(wall) * grid.Scale);
+            wallSize.Content = Math.Round((wpfCoordinates.GetLength(wall) * grid.Scale)+0.05).ToString();
 
             DrawDimLine(wall, grid);
-            WallSize.RenderTransform = new RotateTransform(270 - angle, WallSize.Width/2, WallSize.Height);
+            wallSize.RenderTransform = new RotateTransform(270 - SetTextAngle(wall), wallSize.Width / 2, wallSize.Height);
 
             Point pos = GetTextposition();
-            Canvas.SetLeft(WallSize, pos.X  - WallSize.Width / 2);
-            Canvas.SetTop(WallSize, pos.Y - WallSize.Height);
-            
-            grid.canvas.Children.Add(WallSize);
+            Canvas.SetLeft(wallSize, pos.X - wallSize.Width / 2);
+            Canvas.SetTop(wallSize, pos.Y - wallSize.Height);
+
+            grid.canvas.Children.Add(wallSize);
         }
 
         public void DrawDimLine(Line line, GridSetup grid)
@@ -53,14 +56,13 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
 
             GetWallStartEnd(line);
             DrawExtensionLines(line, grid);
-            
 
             dimensionLine = new Line();
             dimensionLine.X1 = tool.GetSecondCoord(ExtensionLines[0], ExtensionLineExtent).X;
             dimensionLine.Y1 = tool.GetSecondCoord(ExtensionLines[0], ExtensionLineExtent).Y;
             dimensionLine.X2 = tool.GetSecondCoord(ExtensionLines[1], ExtensionLineExtent).X;
             dimensionLine.Y2 = tool.GetSecondCoord(ExtensionLines[1], ExtensionLineExtent).Y;
-            dimensionLine.Stroke = Brushes.RoyalBlue;
+            dimensionLine.Stroke = lineColor;
 
             DrawDimensionTick(dimensionLine, grid);
             grid.canvas.Children.Add(dimensionLine);
@@ -75,22 +77,21 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             {
                 angleDegrees = angleDegrees + 180;
             }
-
             return angleDegrees;
         }
 
         private void GetWallStartEnd(Line line)
         {
-            Point start = new Point
+            PointF start = new PointF()
             {
-                X = (int)line.X1,
-                Y = (int)line.Y1
+                X = (float)line.X1,
+                Y = (float)line.Y1
             };
             PointList.Add(start);
-            Point end = new Point
+            PointF end = new PointF
             {
-                X = (int)line.X2,
-                Y = (int)line.Y2
+                X = (float)line.X2,
+                Y = (float)line.Y2
             };
             PointList.Add(end);
         }
@@ -101,15 +102,11 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             foreach (Line item in tool.DrawPerp(line, PointList))
             {
                 Line extensionLine = new Line();
-                Point point = new Point();
+                PointF point = new PointF();
 
                 if (tool.GetSlope(item) > 0)
                 {
                     point = tool.GetSecondCoord(item, tool.GetLength(item) - ExtensionLineLength);
-                    //extensionLine.X1 = point.X;
-                    //extensionLine.Y1 = point.Y;
-                    //extensionLine.X2 = item.X2;
-                    //extensionLine.Y2 = item.Y2;
                 }
                 else
                 {
@@ -120,10 +117,6 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
                     temp.Y2 = 2 * item.Y2 - item.Y1;
 
                     point = tool.GetSecondCoord(temp, -ExtensionLineLength);
-                    //extensionLine.X1 = point.X;
-                    //extensionLine.Y1 = point.Y;
-                    //extensionLine.X2 = item.X2;
-                    //extensionLine.Y2 = item.Y2;
                 }
 
                 extensionLine.X1 = point.X;
@@ -131,7 +124,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
                 extensionLine.X2 = item.X2;
                 extensionLine.Y2 = item.Y2;
 
-                extensionLine.Stroke = Brushes.OrangeRed;
+                extensionLine.Stroke = lineColor;
                 ExtensionLines.Add(extensionLine);
                 grid.canvas.Children.Add(extensionLine);
             }
@@ -145,14 +138,33 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
 
         private void DrawDimensionTick(Line line, GridSetup grid)
         {
-            Line leftTick = new Line();
-            leftTick.X1 = 0;
-            leftTick.Y1 = 0;
-            leftTick.X2 = line.X1;
-            leftTick.Y2 = line.Y1;
-            leftTick.Stroke = Brushes.Red;
+            WpfCoordinates tool = new WpfCoordinates();
+            double angle = tool.GetAngle(line);
+            int length = 7;
+            double tickAngle = angle + 45 * Math.PI / 180;
+
+            Line leftTick = new Line
+            {
+                X1 = line.X1 - length * Math.Sin(tickAngle),
+                Y1 = line.Y1 - length * Math.Cos(tickAngle),
+                X2 = line.X1 + length * Math.Sin(tickAngle),
+                Y2 = line.Y1 + length * Math.Cos(tickAngle),
+                Stroke = lineColor,
+                StrokeThickness = 2
+            };
+
+            Line rightTick = new Line
+            {
+                X1 = line.X2 - length * Math.Sin(tickAngle),
+                Y1 = line.Y2 - length * Math.Cos(tickAngle),
+                X2 = line.X2 + length * Math.Sin(tickAngle),
+                Y2 = line.Y2 + length * Math.Cos(tickAngle),
+                Stroke = lineColor,
+                StrokeThickness = 2
+            };
 
             grid.canvas.Children.Add(leftTick);
+            grid.canvas.Children.Add(rightTick);
         }
 
     }
