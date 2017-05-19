@@ -372,9 +372,9 @@ namespace RevitFamilyBrowser.WPF_Classes
             return line;
         }
 
-        public List<Point> GetGridPoints(List<Line> listPerpendiculars, List<List<Line>> wallNormals)
+        public List<Point> GetGridPoints(List<Line> listPerpendiculars)
         {
-           //List<List<Line>> wallNormals = new List<List<Line>>();
+           List<List<Line>> wallNormals = new List<List<Line>>();
            
             //if (listPerpendiculars.Count > 0)
             {
@@ -407,6 +407,7 @@ namespace RevitFamilyBrowser.WPF_Classes
                     filteredPoints.Add(item);
                 }
             }
+           
             return filteredPoints;
         }
 

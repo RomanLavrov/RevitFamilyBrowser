@@ -32,10 +32,9 @@ namespace RevitFamilyBrowser.WPF_Classes
         public System.Drawing.Point Derrivation { get; set; }
         private const int ExtensionLineLength = 40;
         private const int ExtensionLineExtent = 10;
-
-        private List<List<Line>> wpfWalls = new List<List<Line>>();
-
+        
         List<Line> RevitWallNormals = new List<Line>();
+
         List<System.Drawing.Point> gridPoints = new List<System.Drawing.Point>();
 
         public GridSetup(ExternalEvent exEvent, GridInstallEvent handler)
@@ -211,32 +210,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             return wpfWalls;
         }
 
-        private void GetRevitInstallCoordinates(List<Line> revitWallNormals, List<Line> revitWalls, int wallIndex, string InstallType)
-        {
-            CoordinatesRevit rvt = new CoordinatesRevit();
-            Line rvtWall = revitWalls[wallIndex];
-
-            List<PointF> rvtPointsOnWall = new List<PointF>();
-            if (InstallType == "Equal")
-            {
-                rvtPointsOnWall = rvt.GetSplitPointsEqual(rvtWall, Convert.ToInt32(TextBoxSplitPartNumber.Text));
-            }
-            else if (InstallType == "Proportional")
-            {
-                rvtPointsOnWall = rvt.GetSplitPointsProportional(rvtWall, Convert.ToInt32(TextBoxSplitPartNumber.Text));
-            }
-            else if (InstallType == "Distance")
-            {
-                rvtPointsOnWall = rvt.GetSplitPointsDistance(rvtWall, Convert.ToInt32(TextBoxDistance.Text));
-            }
-            List<Line> rvtListPerpendiculars = rvt.GetPerpendiculars(rvtWall, rvtPointsOnWall);
-            List<PointF> rvtGridPoints = rvt.GetGridPointsRvt(revitWallNormals, rvtListPerpendiculars);
-
-            foreach (var item in rvtGridPoints)
-            {
-                Properties.Settings.Default.InstallPoints += (item.X) / (25.4 * 12) + "*" + (item.Y) / (25.4 * 12) + "\n";
-            }
-        }
+       
 
         private List<System.Drawing.Point> GetListPointsOnWall(Line line, out string InstallType)
         {
@@ -282,9 +256,9 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
 
             List<System.Drawing.Point> listPointsOnWall = GetListPointsOnWall(line, out string InstallType);
-            //Dimension dimension = new Dimension();
-            //dimension.WallSizeText(line, this);
-            //dimension.AddDimLine(line, this);
+            Dimension dimension = new Dimension();
+            dimension.WallSizeText(line, this);
+            dimension.DrawDimLine(line, this);
             WpfCoordinates wpfCoord = new WpfCoordinates();
             List<Line> listPerpendiculars = wpfCoord.DrawPerp(line, listPointsOnWall);
             foreach (var perpendicular in listPerpendiculars)
@@ -293,11 +267,41 @@ namespace RevitFamilyBrowser.WPF_Classes
                 // AddSegmentSize(line, perpendicular);
             }
             gridPoints.Clear();
-            gridPoints = wpfCoord.GetGridPoints(listPerpendiculars, wpfWalls);
-            MessageBox.Show(gridPoints.Count.ToString());
-            MessageBox.Show(gridPoints.Count.ToString());
+            gridPoints = wpfCoord.GetGridPoints(listPerpendiculars);
+            MessageBox.Show("WpfGridPoints number : " + gridPoints.Count.ToString());
+           
             textBoxQuantity.Text = "Items: " + gridPoints.Count;
             GetRevitInstallCoordinates(RevitWallNormals, RevitWalls, wallIndex, InstallType);
+        }
+
+        private void GetRevitInstallCoordinates(List<Line> revitWallNormals, List<Line> revitWalls, int wallIndex, string InstallType)
+        {
+            CoordinatesRevit rvt = new CoordinatesRevit();
+            Line rvtWall = revitWalls[wallIndex];
+
+            List<PointF> rvtPointsOnWall = new List<PointF>();
+            if (InstallType == "Equal")
+            {
+                rvtPointsOnWall = rvt.GetSplitPointsEqual(rvtWall, Convert.ToInt32(TextBoxSplitPartNumber.Text));
+            }
+            else if (InstallType == "Proportional")
+            {
+                rvtPointsOnWall = rvt.GetSplitPointsProportional(rvtWall, Convert.ToInt32(TextBoxSplitPartNumber.Text));
+            }
+            else if (InstallType == "Distance")
+            {
+                rvtPointsOnWall = rvt.GetSplitPointsDistance(rvtWall, Convert.ToInt32(TextBoxDistance.Text));
+            }
+            List<Line> rvtListPerpendiculars = rvt.GetPerpendiculars(rvtWall, rvtPointsOnWall);
+            List<PointF> rvtGridPoints = rvt.GetGridPointsRvt(revitWallNormals, rvtListPerpendiculars);
+
+           
+            Properties.Settings.Default.InstallPoints = string.Empty;
+            
+            foreach (var item in rvtGridPoints)
+            {
+                Properties.Settings.Default.InstallPoints += (item.X) / (25.4 * 12) + "*" + (item.Y) / (25.4 * 12) + "\n";
+            }
         }
 
         private void AddSegmentSize(Line wall, Line perpendicular)

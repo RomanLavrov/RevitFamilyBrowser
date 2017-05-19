@@ -188,9 +188,8 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
         {
             List<Line> perpList = new List<Line>();
 
-            for (var index = 0; index < points.Count; index++)
+            foreach (PointF point in points)
             {
-                PointF point = points[index];
                 PointF target = new PointF();
 
                 if (GetSlope(baseWall).CompareTo(0) == 0)
