@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media.Effects;
 using Autodesk.Revit.UI;
@@ -13,15 +14,26 @@ using Point = System.Drawing.Point;
 
 namespace RevitFamilyBrowser.Pattern_Elements_Install
 {
-    public class Dimension
+    public class WallDimension
     {
-        private const int ExtensionLineLength = 60;
-        private const int ExtensionLineExtent = 7;
+        private  int ExtensionLineLength = 60;
+        private  int ExtensionLineExtent = 7;
+        private HorizontalAlignment allign = HorizontalAlignment.Right;
         private readonly SolidColorBrush lineColor = Brushes.DarkSlateBlue;
         private List<PointF> PointList = new List<PointF>();
         private List<Line> ExtensionLines = new List<Line>();
         private Line dimensionLine;
 
+        public WallDimension()
+        {
+            
+        }
+        public WallDimension(int ExtensionlineLength, int ExtensionlineExtent, HorizontalAlignment allign)
+        {
+            this.ExtensionLineLength = ExtensionlineLength;
+            this.ExtensionLineExtent = ExtensionlineExtent;
+            this.allign = allign;
+        }
         public void DrawWallDimension(Line wall, GridSetup grid)
         {
             Label wallSize = new Label
@@ -29,14 +41,15 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
                 Width = 100,
                 Height = 25,
                 VerticalContentAlignment = VerticalAlignment.Bottom,
-                HorizontalContentAlignment = HorizontalAlignment.Right,
+                HorizontalContentAlignment = allign,
                 FontSize = 14,
                 Foreground = lineColor,
                 Effect = null
             };
 
             WpfCoordinates wpfCoordinates = new WpfCoordinates();
-            wallSize.Content = Math.Round((wpfCoordinates.GetLength(wall) * grid.Scale)+0.05).ToString();
+            wallSize.Content = Math.Round((wpfCoordinates.GetLength(wall) * grid.Scale) + 0.05).ToString();
+          
 
             DrawDimLine(wall, grid);
             wallSize.RenderTransform = new RotateTransform(270 - SetTextAngle(wall), wallSize.Width / 2, wallSize.Height);
@@ -48,7 +61,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             grid.canvas.Children.Add(wallSize);
         }
 
-        public void DrawDimLine(Line line, GridSetup grid)
+        private void DrawDimLine(Line line, GridSetup grid)
         {
             WpfCoordinates tool = new WpfCoordinates();
             tool.LineEquation(line);
@@ -167,5 +180,66 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             grid.canvas.Children.Add(rightTick);
         }
 
+        public List<Line> GetPartials(List<PointF> points, Line wall, GridSetup grid)
+        {
+            List<Line> parts = new List<Line>();
+            List<PointF> partCoordinates = new List<PointF>();
+
+            PointF start = new PointF();
+            start.X = (float)wall.X1;
+            start.Y = (float)wall.Y1;
+            partCoordinates.Add(start);
+
+            PointF end = new PointF();
+            end.X = (float)wall.X2;
+            end.Y = (float)wall.Y2;
+            partCoordinates.Add(end);
+
+            partCoordinates.AddRange(points);
+            partCoordinates.OrderByDescending(p => p.X).ToList();
+            string temp = string.Empty;
+            foreach (PointF point  in partCoordinates)
+            {
+                temp +=(point.X + " - " + point.Y);
+            }
+            MessageBox.Show(temp);
+            temp = string.Empty;
+            partCoordinates.Reverse();
+            foreach (PointF point in partCoordinates)
+            {
+                temp += (point.X + " - " + point.Y);
+            }
+            MessageBox.Show(temp);
+
+            PointF pointA = partCoordinates[0];
+            for (int i = 1; i < partCoordinates.Count; i++)
+            {
+                Line part = new Line();
+                part.X1 = pointA.X;
+                part.Y1 = pointA.Y;
+                part.X2 = partCoordinates[i].X;
+                part.Y2 = partCoordinates[i].Y;
+                pointA = partCoordinates[i];
+                parts.Add(part);
+            }
+            return parts;
+        }
+
+        private void DrawPartsDimensions(Line line, GridSetup grid)
+        {
+            Label partSize = new Label
+            {
+                Width = 100,
+                Height = 25,
+                VerticalContentAlignment = VerticalAlignment.Bottom,
+                HorizontalContentAlignment = HorizontalAlignment.Right,
+                FontSize = 14,
+                Foreground = lineColor,
+                Effect = null
+            };
+
+            WpfCoordinates wpfCoordinates = new WpfCoordinates();
+            partSize.Content = Math.Round((wpfCoordinates.GetLength(line) * grid.Scale) + 0.05).ToString();
+        }
     }
 }

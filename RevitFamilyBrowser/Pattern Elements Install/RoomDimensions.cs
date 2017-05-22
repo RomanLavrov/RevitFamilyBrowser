@@ -66,18 +66,18 @@ namespace RevitFamilyBrowser.WPF_Classes
                     wallCoord.Add(wall);
 
                     SegmentNumber++;
-                    temp += "WallNumber:" + WallNumber + " " + "SegmentNumber:" + SegmentNumber + " " + Start.ToString() + End.ToString() + "\n";
+                    temp += "WallNumber:" + WallNumber + " " + "SegmentNumber:" + SegmentNumber + " " + Start + End + "\n";
                 }
             }
-            //  TaskDialog.Show("Boundaries", temp);
             return wallCoord;
         }
 
         public int GetScale(ConversionPoint min, ConversionPoint max, int CanvasSize)
         {
+            int BorderAroutWorkArea = 150;
             double LongestWall = 0;
             int Scale = 0;
-            CanvasSize = CanvasSize - 20;
+            CanvasSize = CanvasSize - BorderAroutWorkArea;
             List<System.Windows.Shapes.Line> sides = new List<System.Windows.Shapes.Line>();
 
             System.Windows.Shapes.Line sideA = new System.Windows.Shapes.Line();

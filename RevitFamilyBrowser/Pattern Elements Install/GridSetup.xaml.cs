@@ -32,7 +32,11 @@ namespace RevitFamilyBrowser.WPF_Classes
         public System.Drawing.Point Derrivation { get; set; }
         private const int ExtensionLineLength = 40;
         private const int ExtensionLineExtent = 10;
-        
+
+        List<List<Line>> wallNormals = new List<List<Line>>();
+
+
+
         List<Line> RevitWallNormals = new List<Line>();
 
         List<System.Drawing.Point> gridPoints = new List<System.Drawing.Point>();
@@ -210,9 +214,9 @@ namespace RevitFamilyBrowser.WPF_Classes
             return wpfWalls;
         }
 
-        private List<System.Drawing.PointF> GetListPointsOnWall(Line line, out string InstallType)
+        private List<PointF> GetListPointsOnWall(Line line, out string InstallType)
         {
-            List<System.Drawing.PointF> listPointsOnWall;
+            List<PointF> listPointsOnWall;
             WpfCoordinates wpfCoord = new WpfCoordinates();
 
             if (radioEqual.IsChecked == true)
@@ -229,7 +233,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             else
             {
                 double distance = (Convert.ToDouble(TextBoxDistance.Text) / Scale);
-                listPointsOnWall = wpfCoord.SplitLineDistance(line, Convert.ToInt32(distance));
+                listPointsOnWall = wpfCoord.SplitLineDistance(line, Convert.ToDouble(distance));
                 InstallType = "Distance";
             }
             return listPointsOnWall;
@@ -254,19 +258,27 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
 
             List<PointF> listPointsOnWall = GetListPointsOnWall(line, out string InstallType);
-            Dimension dimension = new Dimension();
-            dimension.DrawWallDimension(line, this);
-            dimension.DrawDimLine(line, this);
+
+            WallDimension wallDimension = new WallDimension();
+            wallDimension.DrawWallDimension(line, this);
+           // wallDimension.DrawDimLine(line, this);
+
             WpfCoordinates wpfCoord = new WpfCoordinates();
+            
             List<Line> listPerpendiculars = wpfCoord.DrawPerp(line, listPointsOnWall);
             foreach (var perpendicular in listPerpendiculars)
             {
                 canvas.Children.Add(wpfCoord.BuildBoundedLine(BoundingBoxLines, perpendicular));
-               //-----
             }
             gridPoints.Clear();
-            gridPoints = wpfCoord.GetGridPoints(listPerpendiculars);
-          //  MessageBox.Show("WpfGridPoints number : " + gridPoints.Count.ToString());
+            gridPoints = wpfCoord.GetGridPoints(listPerpendiculars, wallNormals);
+
+
+            foreach (Line item in GetPartials(listPointsOnWall, line, this))
+            {
+                WallDimension partDim = new WallDimension(30, 7, HorizontalAlignment.Center);
+                partDim.DrawWallDimension(item, this);
+            }
            
             textBoxQuantity.Text = "Items: " + gridPoints.Count;
             GetRevitInstallCoordinates(RevitWallNormals, RevitWalls, wallIndex, InstallType);
@@ -299,6 +311,54 @@ namespace RevitFamilyBrowser.WPF_Classes
             {
                 Properties.Settings.Default.InstallPoints += (item.X) / (25.4 * 12) + "*" + (item.Y) / (25.4 * 12) + "\n";
             }
+        }
+
+        public List<Line> GetPartials(List<PointF> points, Line wall, GridSetup grid)
+        {
+            List<Line> parts = new List<Line>();
+            List<PointF> partCoordinates = new List<PointF>();
+
+            PointF start = new PointF();
+            start.X = (float)wall.X1;
+            start.Y = (float)wall.Y1;
+           // partCoordinates.Add(start);
+
+            PointF end = new PointF();
+            end.X = (float)wall.X2;
+            end.Y = (float)wall.Y2;
+           // partCoordinates.Add(end);
+
+            Line startline = new Line();
+            startline.X1 = start.X;
+            startline.Y1 = start.Y;
+            startline.X2 = points[0].X;
+            startline.Y2 = points[0].Y;
+            parts.Add(startline);
+
+            Line endLine = new Line();
+            endLine.X1 = points[points.Count-1].X;
+            endLine.Y1 = points[points.Count-1].Y;
+            endLine.X2 = end.X;
+            endLine.Y2 = end.Y;
+            parts.Add(endLine);
+
+
+           // partCoordinates.AddRange(points);
+           // partCoordinates.OrderByDescending(p => p.X).ToList();
+       
+            PointF pointA = new PointF();
+            pointA = points[0];
+            for (int i = 1; i < points.Count; i++)
+            {
+                Line part = new Line();
+                part.X1 = pointA.X;
+                part.Y1 = pointA.Y;
+                part.X2 = points[i].X;
+                part.Y2 = points[i].Y;
+                pointA = points[i];
+                parts.Add(part);
+            }
+            return parts;
         }
     }
 }

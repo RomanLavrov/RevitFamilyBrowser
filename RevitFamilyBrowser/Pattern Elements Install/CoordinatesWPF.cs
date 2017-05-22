@@ -16,12 +16,13 @@ namespace RevitFamilyBrowser.WPF_Classes
     {
         public double X { get; set; }
         public double Y { get; set; }
-       
+
+
         public double GetLength(Line line)
         {
             return Math.Sqrt(Math.Pow((line.X1 - line.X2), 2) + Math.Pow((line.Y1 - line.Y2), 2));
         }
-       
+
         public double GetSlope(Line line)
         {
             return (line.Y2 - line.Y1) / (line.X2 - line.X1);
@@ -68,11 +69,11 @@ namespace RevitFamilyBrowser.WPF_Classes
             {
                 double x = (c1 * b2 - c2 * b1) / (a2 * b1 - a1 * b2);
                 double y = 0;
-                if (b1 == 0)
+                if (b1.Equals(0))
                 {
                     y = (int)(-c2 - a2 * x) / b2;
                 }
-                else if (b2 == 0)
+                else if (b2.Equals(0))
                     y = (-c1 - a1 * x) / b1;
 
                 else
@@ -189,7 +190,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             int partNumber = lineNumber * 2;
             for (int i = 1; i < partNumber; i = i + 2)
             {
-                Point point = new Point();
+                PointF point = new PointF();
                 double top = i;
                 double bottom = (partNumber - i);
                 if ((partNumber - i) == 0)
@@ -197,8 +198,8 @@ namespace RevitFamilyBrowser.WPF_Classes
                     bottom = 1;
                 }
                 var proportion = top / bottom;
-                point.X = Convert.ToInt32((line.X1 + (line.X2 * proportion)) / (1 + proportion));
-                point.Y = Convert.ToInt32((line.Y1 + (line.Y2 * proportion)) / (1 + proportion));
+                point.X = (float)((line.X1 + (line.X2 * proportion)) / (1 + proportion));
+                point.Y = (float)((line.Y1 + (line.Y2 * proportion)) / (1 + proportion));
                 points.Add(point);
             }
             return points;
@@ -211,7 +212,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             int partNumber = lineNumber + 1;
             for (int i = 1; i < partNumber; i++)
             {
-                Point point = new Point();
+                PointF point = new PointF();
                 double top = i;
                 double bottom = (partNumber - i);
                 if ((partNumber - i) == 0)
@@ -219,8 +220,8 @@ namespace RevitFamilyBrowser.WPF_Classes
                     bottom = 1;
                 }
                 var proportion = top / bottom;
-                point.X = Convert.ToInt32((line.X1 + (line.X2 * proportion)) / (1 + proportion));
-                point.Y = Convert.ToInt32((line.Y1 + (line.Y2 * proportion)) / (1 + proportion));
+                point.X = (float)((line.X1 + (line.X2 * proportion)) / (1 + proportion));
+                point.Y = (float)((line.Y1 + (line.Y2 * proportion)) / (1 + proportion));
                 points.Add(point);
             }
             return points;
@@ -228,11 +229,11 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         #region Split line on parts by segment lenght
 
-        private int GetLinePartsNumber(Line line, int distance)
+        private int GetLinePartsNumber(Line line, double distance)
         {
             int parts;
             double wallLength = this.GetLength(line);
-            if (wallLength % distance == 0 && wallLength / distance > 2)
+            if ((wallLength % distance).Equals(0) && wallLength / distance > 2)
             {
                 parts = (int)(wallLength / distance) - 1;
             }
@@ -247,7 +248,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             return parts;
         }
 
-        private List<double> GetPartsSizes(Line line, int distance)
+        private List<double> GetPartsSizes(Line line, double distance)
         {
             List<double> partLenghts = new List<double>();
             int parts = GetLinePartsNumber(line, distance);
@@ -276,7 +277,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             point.Y = (float)(line.Y1 + distance * Math.Cos(angle));
             return point;
         }
-        public List<PointF> SplitLineDistance(Line line, int distance)
+        public List<PointF> SplitLineDistance(Line line, double distance)
         {
             List<PointF> points = new List<PointF>();
             List<double> partSizes = GetPartsSizes(line, distance);
@@ -290,39 +291,39 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         public List<Line> GetBoundingBox(ConversionPoint min, ConversionPoint max, GridSetup grid)
         {
-            int Scale = grid.Scale;
+            int scale = grid.Scale;
             int derX = grid.Derrivation.X;
             int derY = grid.Derrivation.Y;
 
             List<Line> boxSides = new List<Line>();
-            int offset = 500 / Scale;
+            int offset = 800 / scale;
 
             Line SideA = new Line();
-            SideA.X1 = min.X / Scale + derX - offset;
-            SideA.Y1 = -min.Y / Scale + derY + offset;
-            SideA.X2 = min.X / Scale + derX - offset;
-            SideA.Y2 = -max.Y / Scale + derY - offset;
+            SideA.X1 = min.X / scale + derX - offset;
+            SideA.Y1 = -min.Y / scale + derY + offset;
+            SideA.X2 = min.X / scale + derX - offset;
+            SideA.Y2 = -max.Y / scale + derY - offset;
             boxSides.Add(SideA);
 
             Line SideB = new Line();
-            SideB.X1 = min.X / Scale + derX - offset;
-            SideB.Y1 = -max.Y / Scale + derY - offset;
-            SideB.X2 = max.X / Scale + derX + offset;
-            SideB.Y2 = -max.Y / Scale + derY - offset;
+            SideB.X1 = min.X / scale + derX - offset;
+            SideB.Y1 = -max.Y / scale + derY - offset;
+            SideB.X2 = max.X / scale + derX + offset;
+            SideB.Y2 = -max.Y / scale + derY - offset;
             boxSides.Add(SideB);
 
             Line SideC = new Line();
-            SideC.X1 = max.X / Scale + derX + offset;
-            SideC.Y1 = -max.Y / Scale + derY - offset;
-            SideC.X2 = max.X / Scale + derX + offset;
-            SideC.Y2 = -min.Y / Scale + derY + offset;
+            SideC.X1 = max.X / scale + derX + offset;
+            SideC.Y1 = -max.Y / scale + derY - offset;
+            SideC.X2 = max.X / scale + derX + offset;
+            SideC.Y2 = -min.Y / scale + derY + offset;
             boxSides.Add(SideC);
 
             Line SideD = new Line();
-            SideD.X1 = max.X / Scale + derX + offset;
-            SideD.Y1 = -min.Y / Scale + derY + offset;
-            SideD.X2 = min.X / Scale + derX - offset;
-            SideD.Y2 = -min.Y / Scale + derY + offset;
+            SideD.X1 = max.X / scale + derX + offset;
+            SideD.Y1 = -min.Y / scale + derY + offset;
+            SideD.X2 = min.X / scale + derX - offset;
+            SideD.Y2 = -min.Y / scale + derY + offset;
             boxSides.Add(SideD);
             foreach (var item in boxSides)
             {
@@ -348,7 +349,7 @@ namespace RevitFamilyBrowser.WPF_Classes
                 perpendicular.Y1 = target.Y;
                 perpendicular.X2 = point.X;
                 perpendicular.Y2 = point.Y;
-               // perpendicular.Stroke = System.Windows.Media.Brushes.Red;
+                // perpendicular.Stroke = System.Windows.Media.Brushes.Red;
                 lines.Add(perpendicular);
             }
             return lines;
@@ -374,15 +375,9 @@ namespace RevitFamilyBrowser.WPF_Classes
             return line;
         }
 
-        public List<Point> GetGridPoints(List<Line> listPerpendiculars)
+        public List<Point> GetGridPoints(List<Line> listPerpendiculars, List<List<Line>> wallNormals)
         {
-           List<List<Line>> wallNormals = new List<List<Line>>();
-           
-            //if (listPerpendiculars.Count > 0)
-            {
-                wallNormals.Add(listPerpendiculars);
-                // System.Windows.MessageBox.Show("Walls with perpendiculars = " + wallNormals.Count.ToString());
-            }
+            wallNormals.Add(listPerpendiculars);
             List<Point> temp = new List<Point>();
 
             foreach (var normalA in wallNormals)
@@ -409,7 +404,6 @@ namespace RevitFamilyBrowser.WPF_Classes
                     filteredPoints.Add(item);
                 }
             }
-           
             return filteredPoints;
         }
 
@@ -420,8 +414,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             double roomMinY = boundingBox[0].Y1;
             double roomMaxX = boundingBox[0].X1;
             double roomMaxY = boundingBox[0].Y1;
-            string temp = string.Empty;
-
+          
             foreach (var item in boundingBox)
             {
                 if (item.X1 < roomMinX || item.X2 < roomMinX)
