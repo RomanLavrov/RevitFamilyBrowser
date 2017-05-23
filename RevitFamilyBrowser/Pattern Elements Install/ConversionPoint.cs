@@ -18,7 +18,7 @@ namespace RevitFamilyBrowser.Revit_Classes
 
         static int ConvertFeetToMils (double d)
         {
-            return (int)(conversion * d + 0.5);
+            return Convert.ToInt32(conversion * d +0.5);
         }
 
         public ConversionPoint (XYZ p)

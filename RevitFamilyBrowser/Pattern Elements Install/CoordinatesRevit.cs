@@ -45,21 +45,21 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             double b2 = line2coef[1];
             double c2 = line2coef[2];
 
-            float x = (float)((c1 * b2 - c2 * b1) / (a2 * b1 - a1 * b2));
-            float y = 0;
+            double x = (float)((c1 * b2 - c2 * b1) / (a2 * b1 - a1 * b2));
+            double y = 0;
             if (b1.CompareTo(0) == 0)
             {
-                y = (float)((-c2 - a2 * x) / b2);
+                y = ((-c2 - a2 * x) / b2);
             }
 
             else if (b2.CompareTo(0) == 0)
-                y = (float)((-c1 - a1 * x) / b1);
+                y = (-c1 - a1 * x) / b1;
 
             else
-                y = (float)((-c2 - (a2 * x)) / b2);
+                y = (-c2 - (a2 * x)) / b2;
 
-            intersection.X = x;
-            intersection.Y = y;
+            intersection.X = (float) x;
+            intersection.Y = (float) y;
 
             return intersection;
         }

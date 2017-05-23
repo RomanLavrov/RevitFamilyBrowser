@@ -17,7 +17,7 @@ namespace RevitFamilyBrowser.WPF_Classes
     //This class transform Revit coordinates into WPF canvas coordinates
 
     class RoomDimensions
-    {       
+    {
         public void GetBoundingBox(Room newRoom, View view)
         {
             BoundingBoxXYZ box = newRoom.get_BoundingBox(view);
@@ -37,36 +37,32 @@ namespace RevitFamilyBrowser.WPF_Classes
             boundaryOption.SpatialElementBoundaryLocation = SpatialElementBoundaryLocation.Center;
 
             IList<IList<BoundarySegment>> boundary = room.GetBoundarySegments(boundaryOption);
-
-            string temp = string.Empty; //can be used to see Wall and segment numbers  
-            int WallNumber = 0;
-            int SegmentNumber = 0;
             List<System.Windows.Shapes.Line> wallCoord = new List<System.Windows.Shapes.Line>();
-            XYZ segmentStart = null; ///
-            XYZ segmentEnd = null;
 
-            int nLoops = boundary.Count;
             foreach (IList<BoundarySegment> walls in boundary)
             {
-                WallNumber++;
                 foreach (BoundarySegment segment in walls)
                 {
                     System.Windows.Shapes.Line wall = new System.Windows.Shapes.Line();
 
-                    segmentStart = segment.GetCurve().GetEndPoint(0);
+                    var segmentStart = segment.GetCurve().GetEndPoint(0);
                     ConversionPoint Start = new ConversionPoint(segmentStart);
-                    wall.X1 = Start.X;
-                    wall.Y1 = Start.Y;
+                    wall.X1 = Start.X ;
+                    wall.Y1 = Start.Y ;
+                    //MessageBox.Show(wall.X1 + " - " + wall.Y1);
 
-                    segmentEnd = segment.GetCurve().GetEndPoint(1);
+                    //wall.X1 = segmentStart.X * 25.4 * 12;
+                    //wall.Y1 = segmentStart.Y * 25.4 * 12;
+                    //MessageBox.Show(wall.X1 + " - " + wall.Y1);
+                    var segmentEnd = segment.GetCurve().GetEndPoint(1);
                     ConversionPoint End = new ConversionPoint(segmentEnd);
-                    wall.X2 = End.X;
-                    wall.Y2 = End.Y;
+                    wall.X2 = End.X ;
+                    wall.Y2 = End.Y ;
+
+                    //wall.X2 = segmentEnd.X * 25.4 * 12;
+                    //wall.Y2 = segmentEnd.Y * 25.4 * 12;
 
                     wallCoord.Add(wall);
-
-                    SegmentNumber++;
-                    temp += "WallNumber:" + WallNumber + " " + "SegmentNumber:" + SegmentNumber + " " + Start + End + "\n";
                 }
             }
             return wallCoord;
@@ -153,6 +149,6 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
 
             return Scale;
-        }   
+        }
     }
 }

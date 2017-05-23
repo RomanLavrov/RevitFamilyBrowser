@@ -316,21 +316,10 @@ namespace RevitFamilyBrowser.WPF_Classes
         public List<Line> GetPartials(List<PointF> points, Line wall, GridSetup grid)
         {
             List<Line> parts = new List<Line>();
-            List<PointF> partCoordinates = new List<PointF>();
-
-            PointF start = new PointF();
-            start.X = (float)wall.X1;
-            start.Y = (float)wall.Y1;
-           // partCoordinates.Add(start);
-
-            PointF end = new PointF();
-            end.X = (float)wall.X2;
-            end.Y = (float)wall.Y2;
-           // partCoordinates.Add(end);
 
             Line startline = new Line();
-            startline.X1 = start.X;
-            startline.Y1 = start.Y;
+            startline.X1 = wall.X1;
+            startline.Y1 = wall.Y1;
             startline.X2 = points[0].X;
             startline.Y2 = points[0].Y;
             parts.Add(startline);
@@ -338,14 +327,10 @@ namespace RevitFamilyBrowser.WPF_Classes
             Line endLine = new Line();
             endLine.X1 = points[points.Count-1].X;
             endLine.Y1 = points[points.Count-1].Y;
-            endLine.X2 = end.X;
-            endLine.Y2 = end.Y;
+            endLine.X2 = wall.X2;
+            endLine.Y2 = wall.Y2;
             parts.Add(endLine);
 
-
-           // partCoordinates.AddRange(points);
-           // partCoordinates.OrderByDescending(p => p.X).ToList();
-       
             PointF pointA = new PointF();
             pointA = points[0];
             for (int i = 1; i < points.Count; i++)
