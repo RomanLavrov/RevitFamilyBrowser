@@ -30,14 +30,13 @@ namespace RevitFamilyBrowser.WPF_Classes
         public List<Line> BoundingBoxLines { get; set; }
         public List<Line> RevitWalls { get; set; }
         public System.Drawing.Point Derrivation { get; set; }
-
         private const int ExtensionLineLength = 40;
         private const int ExtensionLineExtent = 10;
         private WpfCoordinates tool = new WpfCoordinates();
-
         List<List<Line>> wallNormals = new List<List<Line>>();
         List<Line> RevitWallNormals = new List<Line>();
         List<System.Drawing.Point> gridPoints = new List<System.Drawing.Point>();
+
 
         public GridSetup(ExternalEvent exEvent, GridInstallEvent handler)
         {
@@ -150,7 +149,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         public void DrawWalls()
         {
-           
+
             WpfWalls = GetWpfWalls();
             foreach (Line myLine in WpfWalls)
             {
@@ -164,27 +163,58 @@ namespace RevitFamilyBrowser.WPF_Classes
                 myLine.MouseUp += line_MouseUp;
                 myLine.MouseEnter += line_MouseEnter;
                 myLine.MouseLeave += line_MouseLeave;
-                myLine.ToolTip ="L = " + tool.GetLength(myLine) * Scale;
+                myLine.ToolTip = "L = " + tool.GetLength(myLine) * Scale;
                 canvas.Children.Add(myLine);
             }
+        }
+
+        private void line_MouseEnter(object sender, MouseEventArgs e)
+        {
+            ((Line)sender).Stroke = Brushes.Gray;
         }
 
         private void line_MouseLeave(object sender, MouseEventArgs e)
         {
             if (!Equals(((Line)sender).Stroke, Brushes.Red))
             {
-                ((System.Windows.Shapes.Line)sender).Stroke = Brushes.Black;
+                ((Line)sender).Stroke = Brushes.Black;
             }
+        }
+
+        private void line_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Line line = (Line)sender;
+            line.Stroke = Brushes.Red;
+            List<PointF> listPointsOnWall = GetListPointsOnWall(line, out string InstallType);
+
+            Dimension dimension = new Dimension();
+            dimension.DrawWallDimension(line, this);
+
+            List<Line> listPerpendiculars = tool.DrawPerp(line, listPointsOnWall);
+            foreach (var perpendicular in listPerpendiculars)
+            {
+                canvas.Children.Add(tool.BuildInstallAxis(BoundingBoxLines, perpendicular));
+            }
+
+            gridPoints.Clear();
+            gridPoints = tool.GetGridPoints(listPerpendiculars, wallNormals);
+            AddElementsPreview();
+
+            textBoxQuantity.Text = "Items: " + gridPoints.Count;
+
+            foreach (Line item in WallPartsAfterSplit(listPointsOnWall, line))
+            {
+                Dimension partDim = new Dimension(30, 7, HorizontalAlignment.Center);
+                partDim.DrawWallDimension(item, this);
+            }
+
+            var wallIndex = GetWallIndex(sender);
+            GetRevitInstallCoordinates(RevitWallNormals, RevitWalls, wallIndex, InstallType);
         }
 
         private void line_MouseUp(object sender, MouseButtonEventArgs e)
         {
             ((Line)sender).Stroke = Brushes.Red;
-        }
-
-        private void line_MouseEnter(object sender, MouseEventArgs e)
-        {
-            ((Line)sender).Stroke = Brushes.Gray;
         }
 
         private List<Line> GetWpfWalls()
@@ -235,45 +265,6 @@ namespace RevitFamilyBrowser.WPF_Classes
                 radioDistance.IsChecked = true;
         }
 
-        private void line_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Line line = (Line)sender;
-            line.Stroke = Brushes.Red;
-
-            int wallIndex = 0;
-            foreach (var item in WpfWalls)
-            {
-                if (sender.Equals(item))
-                    wallIndex = WpfWalls.IndexOf(item);
-            }
-
-            List<PointF> listPointsOnWall = GetListPointsOnWall(line, out string InstallType);
-
-            Dimension dimension = new Dimension();
-            dimension.DrawWallDimension(line, this);
-           
-
-            WpfCoordinates wpfCoord = new WpfCoordinates();
-            
-            List<Line> listPerpendiculars = wpfCoord.DrawPerp(line, listPointsOnWall);
-            foreach (var perpendicular in listPerpendiculars)
-            {
-                canvas.Children.Add(wpfCoord.BuildBoundedLine(BoundingBoxLines, perpendicular));
-            }
-            gridPoints.Clear();
-            gridPoints = wpfCoord.GetGridPoints(listPerpendiculars, wallNormals);
-
-
-            foreach (Line item in GetPartials(listPointsOnWall, line, this))
-            {
-                Dimension partDim = new Dimension(30, 7, HorizontalAlignment.Center);
-                partDim.DrawWallDimension(item, this);
-            }
-           
-            textBoxQuantity.Text = "Items: " + gridPoints.Count;
-            GetRevitInstallCoordinates(RevitWallNormals, RevitWalls, wallIndex, InstallType);
-        }
-
         private void GetRevitInstallCoordinates(List<Line> revitWallNormals, List<Line> revitWalls, int wallIndex, string InstallType)
         {
             CoordinatesRevit rvt = new CoordinatesRevit();
@@ -294,16 +285,16 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             List<Line> rvtListPerpendiculars = rvt.GetPerpendiculars(rvtWall, rvtPointsOnWall);
             List<PointF> rvtGridPoints = rvt.GetGridPointsRvt(revitWallNormals, rvtListPerpendiculars);
-           
+
             Properties.Settings.Default.InstallPoints = string.Empty;
-            
+
             foreach (var item in rvtGridPoints)
             {
                 Properties.Settings.Default.InstallPoints += (item.X) / (25.4 * 12) + "*" + (item.Y) / (25.4 * 12) + "\n";
             }
         }
 
-        private List<Line> GetPartials(List<PointF> points, Line wall, GridSetup grid)
+        private List<Line> WallPartsAfterSplit(List<PointF> points, Line wall)
         {
             List<Line> parts = new List<Line>();
 
@@ -315,8 +306,8 @@ namespace RevitFamilyBrowser.WPF_Classes
             parts.Add(startline);
 
             Line endLine = new Line();
-            endLine.X1 = points[points.Count-1].X;
-            endLine.Y1 = points[points.Count-1].Y;
+            endLine.X1 = points[points.Count - 1].X;
+            endLine.Y1 = points[points.Count - 1].Y;
             endLine.X2 = wall.X2;
             endLine.Y2 = wall.Y2;
             parts.Add(endLine);
@@ -334,6 +325,33 @@ namespace RevitFamilyBrowser.WPF_Classes
                 parts.Add(part);
             }
             return parts;
+        }
+
+        private int GetWallIndex(object sender)
+        {
+            int wallIndex = 0;
+            foreach (var item in WpfWalls)
+            {
+                if (sender.Equals(item))
+                    wallIndex = WpfWalls.IndexOf(item);
+            }
+            return wallIndex;
+        }
+
+        private void AddElementsPreview()
+        {
+            foreach (var item in gridPoints)
+            {
+                Ellipse el = new Ellipse();
+                el.Height = 10;
+                el.Width = 10;
+                el.Stroke = Brushes.Red;
+                el.Fill = Brushes.White;
+                Canvas.SetTop(el, item.Y - el.Height / 2);
+                Canvas.SetLeft(el, item.X - el.Width / 2);
+
+                canvas.Children.Add(el);
+            }
         }
     }
 }

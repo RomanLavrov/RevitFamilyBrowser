@@ -152,7 +152,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         }
 
         //-----Build dashed line in limits of box around the room
-        public Line BuildBoundedLine(List<Line> boundingBox, Line perpend)
+        public Line BuildInstallAxis(List<Line> boundingBox, Line perpend)
         {
             Line gridLine = new Line();
             Line normal = OrtoNormalization(perpend);
