@@ -22,16 +22,19 @@ namespace RevitFamilyBrowser.WPF_Classes
     /// 
     public partial class GridSetup : UserControl
     {
-        public int Scale { get; set; }
-        public int CanvasSize { get; set; }
         private ExternalEvent m_ExEvent;
         private GridInstallEvent m_Handler;
+
+        public int Scale { get; set; }
+        public int CanvasSize { get; set; }
         private List<Line> WpfWalls { get; set; }
         public List<Line> BoundingBoxLines { get; set; }
         public List<Line> RevitWalls { get; set; }
         public System.Drawing.Point Derrivation { get; set; }
+
         private const int ExtensionLineLength = 40;
         private const int ExtensionLineExtent = 10;
+
         private WpfCoordinates tool = new WpfCoordinates();
         List<List<Line>> wallNormals = new List<List<Line>>();
         List<Line> RevitWallNormals = new List<Line>();
@@ -69,12 +72,9 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         private void buttonReset_Click(object sender, RoutedEventArgs e)
         {
-            List<System.Windows.Shapes.Line> lines = canvas.Children.OfType<System.Windows.Shapes.Line>().Where(r => Equals(r.Stroke, Brushes.SteelBlue)).ToList();
-            textBoxQuantity.Text = "No Items";
-            foreach (var item in lines)
-            {
-                canvas.Children.Remove(item);
-            }
+            ClearRoomMarkup();
+            RevitWallNormals.Clear();
+            wallNormals.Clear();
         }
 
         private void ButtonInsertClick(object sender, RoutedEventArgs e)
@@ -347,10 +347,42 @@ namespace RevitFamilyBrowser.WPF_Classes
                 el.Width = 10;
                 el.Stroke = Brushes.Red;
                 el.Fill = Brushes.White;
+                el.Uid = "ElementPreview";
                 Canvas.SetTop(el, item.Y - el.Height / 2);
                 Canvas.SetLeft(el, item.X - el.Width / 2);
 
                 canvas.Children.Add(el);
+            }
+        }
+
+        private void ClearRoomMarkup()
+        {
+            List<Line> walls = canvas.Children.OfType<Line>().Where(w => Equals(w.Stroke, Brushes.Red)).ToList();
+            foreach (var item in walls)
+            {
+                item.Stroke = Brushes.Black;
+            }
+            List<Line> lines = canvas.Children.OfType<Line>().Where(r => Equals(r.Stroke, Brushes.SteelBlue)).ToList();
+            textBoxQuantity.Text = "No Items";
+            foreach (var item in lines)
+            {
+                canvas.Children.Remove(item);
+            }
+
+            List<UIElement> dimensions = canvas.Children.OfType<UIElement>()
+                .Where(n => n.Uid.Contains("Dimension"))
+                .ToList();
+            foreach (var item in dimensions)
+            {
+                canvas.Children.Remove(item);
+            }
+
+            List<UIElement> previewElements = canvas.Children.OfType<UIElement>()
+                .Where(el => el.Uid.Contains("ElementPreview"))
+                .ToList();
+            foreach (var item in previewElements)
+            {
+                canvas.Children.Remove(item);
             }
         }
     }
