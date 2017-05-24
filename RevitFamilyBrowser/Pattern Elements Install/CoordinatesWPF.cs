@@ -48,7 +48,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             result.Add(-c);
             return result;
         }
-        //public Autodesk.Revit.DB.Point GetRevitIntersection(Autodesk.Revit.DB.Line box, Autodesk.Revit.DB.Line wall )
+        
         //-----Get two lines and return intersection point
         public Point GetIntersection(Line box, Line wall)
         {
@@ -288,8 +288,8 @@ namespace RevitFamilyBrowser.WPF_Classes
             return points;
         }
         #endregion 
-
-        public List<Line> GetBoundingBox(ConversionPoint min, ConversionPoint max, GridSetup grid)
+        public List<Line> GetBoundingBox(PointF min, PointF max, GridSetup grid)
+       // public List<Line> GetBoundingBox(ConversionPoint min, ConversionPoint max, GridSetup grid)
         {
             int scale = grid.Scale;
             int derX = grid.Derrivation.X;
@@ -355,7 +355,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             return lines;
         }
 
-        //-----Draw Center Line on Canvas by given Start and End points
+        //-----DrawWalls Center Line on Canvas by given Start and End points
         public Line DrawCenterLine(Line line)
         {
             line.Stroke = System.Windows.Media.Brushes.Red;
@@ -364,7 +364,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             return line;
         }
 
-        //-----Draw Dashed Line on Canvas by given Start and End points
+        //-----DrawWalls Dashed Line on Canvas by given Start and End points
         public Line DrawDashedLine(System.Windows.Shapes.Line line)
         {
             line.Stroke = System.Windows.Media.Brushes.SteelBlue;

@@ -14,7 +14,7 @@ using Point = System.Drawing.Point;
 
 namespace RevitFamilyBrowser.Pattern_Elements_Install
 {
-    public class WallDimension
+    public class Dimension
     {
         private  int ExtensionLineLength = 60;
         private  int ExtensionLineExtent = 7;
@@ -23,12 +23,13 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
         private List<PointF> PointList = new List<PointF>();
         private List<Line> ExtensionLines = new List<Line>();
         private Line dimensionLine;
+        private List<UIElement> interfaceElements = new List<UIElement>();
 
-        public WallDimension()
+        public Dimension()
         {
             
         }
-        public WallDimension(int ExtensionlineLength, int ExtensionlineExtent, HorizontalAlignment allign)
+        public Dimension(int ExtensionlineLength, int ExtensionlineExtent, HorizontalAlignment allign)
         {
             this.ExtensionLineLength = ExtensionlineLength;
             this.ExtensionLineExtent = ExtensionlineExtent;
@@ -49,7 +50,6 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
 
             WpfCoordinates wpfCoordinates = new WpfCoordinates();
             wallSize.Content = Math.Round((wpfCoordinates.GetLength(wall) * grid.Scale) + 0.05).ToString();
-          
 
             DrawDimLine(wall, grid);
             wallSize.RenderTransform = new RotateTransform(270 - SetTextAngle(wall), wallSize.Width / 2, wallSize.Height);
@@ -57,8 +57,10 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             Point pos = GetTextposition();
             Canvas.SetLeft(wallSize, pos.X - wallSize.Width / 2);
             Canvas.SetTop(wallSize, pos.Y - wallSize.Height);
-
-            grid.canvas.Children.Add(wallSize);
+            wallSize.Uid = "Dimension";
+            interfaceElements.Add(wallSize);
+            drawChildrens(grid);
+           // grid.canvas.Children.Add(wallSize);
         }
 
         private void DrawDimLine(Line line, GridSetup grid)
@@ -78,7 +80,8 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             dimensionLine.Stroke = lineColor;
 
             DrawDimensionTick(dimensionLine, grid);
-            grid.canvas.Children.Add(dimensionLine);
+            interfaceElements.Add(dimensionLine);
+           // grid.canvas.Children.Add(dimensionLine);
         }
 
         private double SetTextAngle(Line line)
@@ -136,10 +139,11 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
                 extensionLine.Y1 = point.Y;
                 extensionLine.X2 = item.X2;
                 extensionLine.Y2 = item.Y2;
-
+                extensionLine.Uid = "DimensionExtent";
                 extensionLine.Stroke = lineColor;
                 ExtensionLines.Add(extensionLine);
-                grid.canvas.Children.Add(extensionLine);
+                interfaceElements.Add(extensionLine);
+              //  grid.canvas.Children.Add(extensionLine);
             }
         }
 
@@ -175,9 +179,10 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
                 Stroke = lineColor,
                 StrokeThickness = 2
             };
-
-            grid.canvas.Children.Add(leftTick);
-            grid.canvas.Children.Add(rightTick);
+            interfaceElements.Add(leftTick);
+            interfaceElements.Add(rightTick);
+            //grid.canvas.Children.Add(leftTick);
+            //grid.canvas.Children.Add(rightTick);
         }
 
         public List<Line> GetPartials(List<PointF> points, Line wall, GridSetup grid)
@@ -240,6 +245,15 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
 
             WpfCoordinates wpfCoordinates = new WpfCoordinates();
             partSize.Content = Math.Round((wpfCoordinates.GetLength(line) * grid.Scale) + 0.05).ToString();
+        }
+
+        private void drawChildrens(GridSetup grid)
+        {
+            foreach (var item in interfaceElements)
+            {
+                item.Uid = "Dimension";
+                grid.canvas.Children.Add(item);
+            }
         }
     }
 }

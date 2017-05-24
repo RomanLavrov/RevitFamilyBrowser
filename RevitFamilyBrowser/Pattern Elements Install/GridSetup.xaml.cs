@@ -26,19 +26,17 @@ namespace RevitFamilyBrowser.WPF_Classes
         public int CanvasSize { get; set; }
         private ExternalEvent m_ExEvent;
         private GridInstallEvent m_Handler;
-        public List<Line> WpfWalls { get; set; }
+        private List<Line> WpfWalls { get; set; }
         public List<Line> BoundingBoxLines { get; set; }
         public List<Line> RevitWalls { get; set; }
         public System.Drawing.Point Derrivation { get; set; }
+
         private const int ExtensionLineLength = 40;
         private const int ExtensionLineExtent = 10;
+        private WpfCoordinates tool = new WpfCoordinates();
 
         List<List<Line>> wallNormals = new List<List<Line>>();
-
-
-
         List<Line> RevitWallNormals = new List<Line>();
-
         List<System.Drawing.Point> gridPoints = new List<System.Drawing.Point>();
 
         public GridSetup(ExternalEvent exEvent, GridInstallEvent handler)
@@ -70,7 +68,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             TextBoxSplitPartNumber.Text = temp.ToString();
         }
 
-        public void buttonReset_Click(object sender, RoutedEventArgs e)
+        private void buttonReset_Click(object sender, RoutedEventArgs e)
         {
             List<System.Windows.Shapes.Line> lines = canvas.Children.OfType<System.Windows.Shapes.Line>().Where(r => Equals(r.Stroke, Brushes.SteelBlue)).ToList();
             textBoxQuantity.Text = "No Items";
@@ -150,8 +148,9 @@ namespace RevitFamilyBrowser.WPF_Classes
             return height;
         }
 
-        public void Draw()
+        public void DrawWalls()
         {
+           
             WpfWalls = GetWpfWalls();
             foreach (Line myLine in WpfWalls)
             {
@@ -165,6 +164,7 @@ namespace RevitFamilyBrowser.WPF_Classes
                 myLine.MouseUp += line_MouseUp;
                 myLine.MouseEnter += line_MouseEnter;
                 myLine.MouseLeave += line_MouseLeave;
+                myLine.ToolTip ="L = " + tool.GetLength(myLine) * Scale;
                 canvas.Children.Add(myLine);
             }
         }
@@ -179,22 +179,12 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         private void line_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            // Change line colour back to normal 
             ((Line)sender).Stroke = Brushes.Red;
         }
 
         private void line_MouseEnter(object sender, MouseEventArgs e)
         {
             ((Line)sender).Stroke = Brushes.Gray;
-            //------------------------------------Add Wall size---------------------------------------
-            //Line line = sender as Line;
-            //WpfCoordinates wpfCoord = new WpfCoordinates();
-            //System.Windows.Controls.Label WallDimension = new Label();
-            //WallDimension.Content = wpfCoord.GetLength(line).ToString();
-            //Canvas.SetLeft(WallDimension, line.X2 + wpfCoord.GetLength(line)/2);
-            //Canvas.SetTop(WallDimension, line.Y2 + wpfCoord.GetLength(line) / 2);
-            //this.canvas.Children.Add(WallDimension);
-            //-----------------------------------------------------------------------------
         }
 
         private List<Line> GetWpfWalls()
@@ -259,9 +249,9 @@ namespace RevitFamilyBrowser.WPF_Classes
 
             List<PointF> listPointsOnWall = GetListPointsOnWall(line, out string InstallType);
 
-            WallDimension wallDimension = new WallDimension();
-            wallDimension.DrawWallDimension(line, this);
-           // wallDimension.DrawDimLine(line, this);
+            Dimension dimension = new Dimension();
+            dimension.DrawWallDimension(line, this);
+           
 
             WpfCoordinates wpfCoord = new WpfCoordinates();
             
@@ -276,7 +266,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
             foreach (Line item in GetPartials(listPointsOnWall, line, this))
             {
-                WallDimension partDim = new WallDimension(30, 7, HorizontalAlignment.Center);
+                Dimension partDim = new Dimension(30, 7, HorizontalAlignment.Center);
                 partDim.DrawWallDimension(item, this);
             }
            
@@ -313,7 +303,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
         }
 
-        public List<Line> GetPartials(List<PointF> points, Line wall, GridSetup grid)
+        private List<Line> GetPartials(List<PointF> points, Line wall, GridSetup grid)
         {
             List<Line> parts = new List<Line>();
 

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Windows;
 using System.Windows.Shapes;
+using Point = System.Drawing.Point;
 
 namespace RevitFamilyBrowser.Pattern_Elements_Install
 {
@@ -45,7 +47,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             double b2 = line2coef[1];
             double c2 = line2coef[2];
 
-            double x = (float)((c1 * b2 - c2 * b1) / (a2 * b1 - a1 * b2));
+            double x = (c1 * b2 - c2 * b1) / (a2 * b1 - a1 * b2);
             double y = 0;
             if (b1.CompareTo(0) == 0)
             {
@@ -60,7 +62,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
 
             intersection.X = (float) x;
             intersection.Y = (float) y;
-
+           
             return intersection;
         }
 
@@ -180,9 +182,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             }
             return points;
         }
-
         #endregion
-
 
         public List<Line> GetPerpendiculars(Line baseWall, List<PointF> points)
         {

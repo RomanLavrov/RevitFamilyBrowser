@@ -115,7 +115,9 @@
     </None>
     <None Include="bin\Debug\Ookii.Dialogs.Wpf.dll" />
     <None Include="Resources\Ookii.Dialogs.Wpf.dll" />
-    <Content Include="images\settings.png" />
+    <None Include="Resources\Settings.png" />
+    <Content Include="images\Grid.png" />
+    <None Include="Resources\Grid.png" />
     <Content Include="RevitFamilyBrowser.addin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

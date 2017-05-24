@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows;
-using System.Windows.Media;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using RevitFamilyBrowser.WPF_Classes;
+using Brushes = System.Windows.Media.Brushes;
 using OperationCanceledException = Autodesk.Revit.Exceptions.OperationCanceledException;
 using Point = System.Drawing.Point;
 
@@ -62,8 +63,16 @@ namespace RevitFamilyBrowser.Revit_Classes
                 //----------------------------------------------------------------------------------------
                 var box = newRoom.get_BoundingBox(view);
                 if (box == null) return Result.Failed;
-                var roomMin = new ConversionPoint(box.Min);
-                var roomMax = new ConversionPoint(box.Max);
+                //var roomMin = new ConversionPoint(box.Min);
+                //var roomMax = new ConversionPoint(box.Max);
+
+                PointF roomMin = new PointF();
+                roomMin.X = (float) (box.Min.X * 25.4 * 12);
+                roomMin.Y = (float) (box.Min.Y * 25.4 * 12);
+
+                PointF roomMax = new PointF();
+                roomMax.X = (float)(box.Max.X * 25.4 * 12);
+                roomMax.Y = (float)(box.Max.Y * 25.4 * 12);
 
                 var roomDimensions = new RoomDimensions();
                 grid.Scale = roomDimensions.GetScale(roomMin, roomMax, grid.CanvasSize);
@@ -74,7 +83,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                 grid.BoundingBoxLines = bBox.GetBoundingBox(roomMin, roomMax, grid);
 
                 SymbolPreselectCheck(window);
-                grid.Draw();
+                grid.DrawWalls();
 
                 transaction.RollBack();
             }
@@ -90,6 +99,15 @@ namespace RevitFamilyBrowser.Revit_Classes
 
             var roomMin = new ConversionPoint(box.Min);
             var roomMax = new ConversionPoint(box.Max);
+
+            //Point roomMin = new Point();
+            //roomMin.X = (int) (box.Min.X * 25.4 * 12);
+            //roomMin.Y = (int) (box.Min.Y * 25.4 * 12);
+
+            //Point roomMax = new Point();
+            //roomMax.X = (int) (box.Max.X * 25.4 * 12);
+            //roomMax.X = (int) (box.Max.Y * 25.4 * 12);
+
 
             double centerRoomX = roomMin.X / grid.Scale + (roomMax.X / grid.Scale - roomMin.X / grid.Scale) / 2;
             double centerRoomY = roomMin.Y / grid.Scale + (roomMax.Y / grid.Scale - roomMin.Y / grid.Scale) / 2;

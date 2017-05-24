@@ -16,12 +16,12 @@ namespace RevitFamilyBrowser.Revit_Classes
 
         const double conversion = 25.4 * 12;
 
-        static int ConvertFeetToMils (double d)
+        static int ConvertFeetToMils(double d)
         {
-            return Convert.ToInt32(conversion * d +0.5);
+            return Convert.ToInt32(conversion * d + 0.5);
         }
 
-        public ConversionPoint (XYZ p)
+        public ConversionPoint(XYZ p)
         {
             X = ConvertFeetToMils(p.X);
             Y = ConvertFeetToMils(p.Y);

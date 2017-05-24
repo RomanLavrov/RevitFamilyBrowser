@@ -47,12 +47,16 @@ namespace RevitFamilyBrowser
             btnFolder.LargeImage = Tools.GetImage(Resources.OpenFolder.GetHbitmap());
             RibbonItem ri2 = G17.AddItem(btnFolder);
 
+            PushButtonData btnSpace = new PushButtonData("Space", "Grid Elements\nInstall", path, "RevitFamilyBrowser.Revit_Classes.Space");
+            btnSpace.LargeImage = Tools.GetImage(Resources.Grid.GetHbitmap());
+            btnSpace.ToolTip =
+                "1. Select item form browser.\n2. Pick room in project\n3. Adjust item position and quantity.";
+            RibbonItem ri3 = G17.AddItem(btnSpace);
+
+            G17.AddSeparator();
             PushButtonData btnSettings = new PushButtonData("Settings", "Settings", path, "RevitFamilyBrowser.Revit_Classes.Settings");
             btnSettings.LargeImage = Tools.GetImage(Resources.settings.GetHbitmap());
-            RibbonItem ri3 = G17.AddItem(btnSettings);
-
-            PushButtonData btnSpace = new PushButtonData("Space", "Space", path, "RevitFamilyBrowser.Revit_Classes.Space");
-            RibbonItem ri4 = G17.AddItem(btnSpace);
+            RibbonItem ri4 = G17.AddItem(btnSettings);
 
             // a.ControlledApplication.DocumentChanged += OnDocChanged;
             a.ControlledApplication.DocumentOpened += OnDocOpened;

@@ -5,6 +5,7 @@ using Autodesk.Revit.UI.Selection;
 using RevitFamilyBrowser.Revit_Classes;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,19 +19,19 @@ namespace RevitFamilyBrowser.WPF_Classes
 
     class RoomDimensions
     {
-        public void GetBoundingBox(Room newRoom, View view)
-        {
-            BoundingBoxXYZ box = newRoom.get_BoundingBox(view);
-            WpfCoordinates center = new WpfCoordinates();
+        //public void GetBoundingBox(Room newRoom, View view)
+        //{
+        //    BoundingBoxXYZ box = newRoom.get_BoundingBox(view);
+        //    WpfCoordinates center = new WpfCoordinates();
 
-            center.X = (int)(box.Min.X - box.Max.X) / 2;
-            center.Y = (int)(box.Min.Y - box.Max.Y) / 2;
+        //    center.X = (int)(box.Min.X - box.Max.X) / 2;
+        //    center.Y = (int)(box.Min.Y - box.Max.Y) / 2;
 
-            ConversionPoint roomMin = new ConversionPoint(box.Min);
-            ConversionPoint roomMax = new ConversionPoint(box.Max);
-        }
+        //    ConversionPoint roomMin = new ConversionPoint(box.Min);
+        //    ConversionPoint roomMax = new ConversionPoint(box.Max);
+        //}
 
-        //-----Get coordinates for all walls in Room
+
         public List<System.Windows.Shapes.Line> GetWalls(Room room)
         {
             SpatialElementBoundaryOptions boundaryOption = new SpatialElementBoundaryOptions();
@@ -47,20 +48,13 @@ namespace RevitFamilyBrowser.WPF_Classes
 
                     var segmentStart = segment.GetCurve().GetEndPoint(0);
                     ConversionPoint Start = new ConversionPoint(segmentStart);
-                    wall.X1 = Start.X ;
-                    wall.Y1 = Start.Y ;
-                    //MessageBox.Show(wall.X1 + " - " + wall.Y1);
-
-                    //wall.X1 = segmentStart.X * 25.4 * 12;
-                    //wall.Y1 = segmentStart.Y * 25.4 * 12;
-                    //MessageBox.Show(wall.X1 + " - " + wall.Y1);
+                    wall.X1 = Start.X;
+                    wall.Y1 = Start.Y;
+                   
                     var segmentEnd = segment.GetCurve().GetEndPoint(1);
                     ConversionPoint End = new ConversionPoint(segmentEnd);
-                    wall.X2 = End.X ;
-                    wall.Y2 = End.Y ;
-
-                    //wall.X2 = segmentEnd.X * 25.4 * 12;
-                    //wall.Y2 = segmentEnd.Y * 25.4 * 12;
+                    wall.X2 = End.X;
+                    wall.Y2 = End.Y;
 
                     wallCoord.Add(wall);
                 }
@@ -68,7 +62,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             return wallCoord;
         }
 
-        public int GetScale(ConversionPoint min, ConversionPoint max, int CanvasSize)
+        public int GetScale(PointF min, PointF max, int CanvasSize)
         {
             int BorderAroutWorkArea = 150;
             double LongestWall = 0;
