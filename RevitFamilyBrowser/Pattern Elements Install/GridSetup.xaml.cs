@@ -231,6 +231,7 @@ namespace RevitFamilyBrowser.WPF_Classes
                 };
                 wpfWalls.Add(myLine);
             }
+           
             return wpfWalls;
         }
 

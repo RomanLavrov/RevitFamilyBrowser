@@ -77,6 +77,11 @@ namespace RevitFamilyBrowser.Revit_Classes
                 var roomDimensions = new RoomDimensions();
                 grid.Scale = roomDimensions.GetScale(roomMin, roomMax, grid.CanvasSize);
                 grid.RevitWalls = roomDimensions.GetWalls(newRoom);
+                if (grid.RevitWalls.Count == 0)
+                {
+                    TaskDialog.Show("Error", "Room not detected");
+                    return Result.Cancelled;
+                }
                 grid.Derrivation = GetDerrivation(box, grid);
 
                 var bBox = new WpfCoordinates();
