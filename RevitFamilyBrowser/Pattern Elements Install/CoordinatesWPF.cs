@@ -85,6 +85,46 @@ namespace RevitFamilyBrowser.WPF_Classes
             return intersection;
         }
 
+        public PointF GetIntersectionD(Line box, Line wall)
+        {
+            List<double> wallCoefs = LineEquation(wall);
+            double a1 = wallCoefs[0];
+            double b1 = wallCoefs[1];
+            double c1 = wallCoefs[2];
+
+            List<double> boxCoefs = LineEquation(box);
+            double a2 = boxCoefs[0];
+            double b2 = boxCoefs[1];
+            double c2 = boxCoefs[2];
+
+            PointF intersection = new PointF();
+            {
+                double x = (c1 * b2 - c2 * b1) / (a2 * b1 - a1 * b2);
+                double y = 0;
+                if (b1.Equals(0))
+                {
+                    y = (int)(-c2 - a2 * x) / b2;
+                }
+                else if (b2.Equals(0))
+                    y = (-c1 - a1 * x) / b1;
+
+                else
+                    y = (-c2 - (a2 * x)) / b2;
+
+                if (x.Equals(Double.NaN))
+                {
+                    x = float.PositiveInfinity;
+                }
+                if (y.Equals(Double.NaN))
+                {
+                    y = float.PositiveInfinity;
+                }
+                intersection.X = (float)x;
+                intersection.Y = (float)y;
+            }
+            return intersection;
+        }
+
         //-----Check if point belongs to line
         public bool IntersectionPositionCheck(Line line, Point point)
         {

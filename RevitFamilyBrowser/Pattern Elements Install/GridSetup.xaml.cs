@@ -187,8 +187,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             line.Stroke = Brushes.Red;
             List<PointF> listPointsOnWall = GetListPointsOnWall(line, out string InstallType);
 
-            Dimension dimension = new Dimension();
-            dimension.DrawWallDimension(line, this);
+
 
             List<Line> listPerpendiculars = tool.DrawPerp(line, listPointsOnWall);
             foreach (var perpendicular in listPerpendiculars)
@@ -199,9 +198,10 @@ namespace RevitFamilyBrowser.WPF_Classes
             gridPoints.Clear();
             gridPoints = tool.GetGridPoints(listPerpendiculars, wallNormals);
             AddElementsPreview();
+            textBoxQuantity.Text = "Items: " + CountInstallElements();
 
-            textBoxQuantity.Text = "Items: " + gridPoints.Count;
-
+            Dimension dimension = new Dimension();
+            dimension.DrawWallDimension(line, this);
             foreach (Line item in WallPartsAfterSplit(listPointsOnWall, line))
             {
                 Dimension partDim = new Dimension(30, 7, HorizontalAlignment.Center);
@@ -231,7 +231,7 @@ namespace RevitFamilyBrowser.WPF_Classes
                 };
                 wpfWalls.Add(myLine);
             }
-           
+
             return wpfWalls;
         }
 
@@ -341,19 +341,45 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         private void AddElementsPreview()
         {
+            List<UIElement> prewiElements = canvas.Children.OfType<UIElement>().Where(n => n.Uid.Contains("ElementPreview")).ToList();
+            foreach (var item in prewiElements)
+            {
+                canvas.Children.Remove(item);
+            }
             foreach (var item in gridPoints)
             {
-                Ellipse el = new Ellipse();
-                el.Height = 10;
-                el.Width = 10;
-                el.Stroke = Brushes.Red;
-                el.Fill = Brushes.White;
-                el.Uid = "ElementPreview";
-                Canvas.SetTop(el, item.Y - el.Height / 2);
-                Canvas.SetLeft(el, item.X - el.Width / 2);
+                int counter = 0;
+                Line check = DrawCheckline(item);
+                foreach (var wall in WpfWalls)
+                {
+                    if (CheckIntersection(wall, check))
+                    {
+                        counter++;
+                    }
+                }
+                if (counter % 2 != 0)
+                {
+                    Ellipse el = new Ellipse();
+                    el.Height = 10;
+                    el.Width = 10;
+                    el.Stroke = Brushes.Red;
+                    el.Fill = Brushes.White;
+                    el.Uid = "ElementPreview";
+                    Canvas.SetTop(el, item.Y - el.Height / 2);
+                    Canvas.SetLeft(el, item.X - el.Width / 2);
 
-                canvas.Children.Add(el);
+                    canvas.Children.Add(el);
+                }
             }
+        }
+
+        private int CountInstallElements()
+        {
+            List<UIElement> prewiElements = canvas.Children.OfType<UIElement>().Where(n => n.Uid.Contains("ElementPreview")).ToList();
+            
+            int elementCount = prewiElements.Count;
+
+            return elementCount;
         }
 
         private void ClearRoomMarkup()
@@ -385,6 +411,62 @@ namespace RevitFamilyBrowser.WPF_Classes
             {
                 canvas.Children.Remove(item);
             }
+        }
+
+        //----------------------------------------------------------------------
+        private Line DrawCheckline(PointF point)
+        {
+            Line checkLine = new Line();
+            checkLine.X1 = 0;
+            checkLine.Y1 = 0;
+            checkLine.X2 = point.X;
+            checkLine.Y2 = point.Y;
+            return checkLine;
+        }
+
+        private bool CheckIntersection(Line first, Line second)
+        {
+
+            PointF intersection = tool.GetIntersectionD(first, second);
+
+            if ((float.IsInfinity(intersection.X)) || (float.IsInfinity(intersection.Y)))
+            {
+                return false;
+            }
+
+            bool belongFirst = CheckIfPointBelongToLine(first, intersection);
+            bool belongSecond = CheckIfPointBelongToLine(second, intersection);
+
+            if (belongFirst && belongSecond)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+
+        bool CheckIfPointBelongToLine(Line line, PointF point)
+        {
+            Line check1 = new Line();
+            check1.X1 = line.X1;
+            check1.Y1 = line.Y1;
+            check1.X2 = point.X;
+            check1.Y2 = point.Y;
+
+            Line check2 = new Line();
+            check2.X1 = line.X2;
+            check2.Y1 = line.Y2;
+            check2.X2 = point.X;
+            check2.Y2 = point.Y;
+            double summ = tool.GetLength(check1) + tool.GetLength(check2);
+            double length = tool.GetLength(line);
+
+            double tolerance = Math.Abs(length * .00001);
+            if (Math.Abs(length - summ) < tolerance)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

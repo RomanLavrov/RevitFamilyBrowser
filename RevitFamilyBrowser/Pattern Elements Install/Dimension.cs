@@ -80,7 +80,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
 
             wallSize.RenderTransform = new RotateTransform(270 - SetTextAngle(wall), wallSize.Width / 2, wallSize.Height);
 
-            Point textPosition = tool.GetCenter(dimensionLine);
+            PointF textPosition = tool.GetCenter(dimensionLine);
             Canvas.SetLeft(wallSize, textPosition.X - wallSize.Width / 2);
             Canvas.SetTop(wallSize, textPosition.Y - wallSize.Height);
             wallSize.Uid = "Dimension";
