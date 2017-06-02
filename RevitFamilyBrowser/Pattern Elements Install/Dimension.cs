@@ -63,7 +63,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
 
             interfaceElements.Add(dimensionLine);
         }
-
+       
         private void AddAnnotation(Line wall, GridSetup grid)
         {
             Label wallSize = new Label

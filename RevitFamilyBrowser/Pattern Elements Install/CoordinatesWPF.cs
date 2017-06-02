@@ -48,7 +48,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             result.Add(-c);
             return result;
         }
-        
+
         //-----Get two lines and return intersection point
         public Point GetIntersection(Line box, Line wall)
         {
@@ -140,6 +140,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             return false;
         }
 
+
         //-----If line is paralle to one of axis replace infinity coord to defined
         public Line OrtoNormalization(Line perpend)
         {
@@ -223,6 +224,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             return DrawDashedLine(gridLine);
         }
+
 
         public List<PointF> SplitLineProportional(Line line, int lineNumber)
         {
@@ -447,38 +449,39 @@ namespace RevitFamilyBrowser.WPF_Classes
             return filteredPoints;
         }
 
-        public List<Point> GetIntersectInRoom(List<Line> boundingBox, List<Point> gridPoints)
-        {
-            List<Point> internalPoints = new List<Point>();
-            double roomMinX = boundingBox[0].X1;
-            double roomMinY = boundingBox[0].Y1;
-            double roomMaxX = boundingBox[0].X1;
-            double roomMaxY = boundingBox[0].Y1;
-          
-            foreach (var item in boundingBox)
-            {
-                if (item.X1 < roomMinX || item.X2 < roomMinX)
-                    roomMinX = item.X1 < item.X2 ? item.X1 : item.X2;
 
-                if (item.Y1 < roomMinY || item.Y2 < roomMinY)
-                    roomMinY = item.Y1 < item.Y2 ? item.Y1 : item.Y2;
+        //public List<Point> GetIntersectInRoom(List<Line> boundingBox, List<Point> gridPoints)
+        //{
+        //    List<Point> internalPoints = new List<Point>();
+        //    double roomMinX = boundingBox[0].X1;
+        //    double roomMinY = boundingBox[0].Y1;
+        //    double roomMaxX = boundingBox[0].X1;
+        //    double roomMaxY = boundingBox[0].Y1;
 
-                if (item.X1 > roomMinX || item.X2 > roomMinX)
-                    roomMaxX = item.X1 > item.X2 ? item.X1 : item.X2;
+        //    foreach (var item in boundingBox)
+        //    {
+        //        if (item.X1 < roomMinX || item.X2 < roomMinX)
+        //            roomMinX = item.X1 < item.X2 ? item.X1 : item.X2;
 
-                if (item.Y1 > roomMaxY || item.Y2 > roomMaxY)
-                    roomMaxY = item.Y1 > item.Y2 ? item.Y1 : item.Y2;
-            }
+        //        if (item.Y1 < roomMinY || item.Y2 < roomMinY)
+        //            roomMinY = item.Y1 < item.Y2 ? item.Y1 : item.Y2;
 
-            foreach (var item in gridPoints)
-            {
-                if (item.X > roomMinX && item.X < roomMaxX &&
-                    item.Y > roomMinY && item.Y < roomMaxY)
-                {
-                    internalPoints.Add(item);
-                }
-            }
-            return internalPoints;
-        }
+        //        if (item.X1 > roomMinX || item.X2 > roomMinX)
+        //            roomMaxX = item.X1 > item.X2 ? item.X1 : item.X2;
+
+        //        if (item.Y1 > roomMaxY || item.Y2 > roomMaxY)
+        //            roomMaxY = item.Y1 > item.Y2 ? item.Y1 : item.Y2;
+        //    }
+
+        //    foreach (var item in gridPoints)
+        //    {
+        //        if (item.X > roomMinX && item.X < roomMaxX &&
+        //            item.Y > roomMinY && item.Y < roomMaxY)
+        //        {
+        //            internalPoints.Add(item);
+        //        }
+        //    }
+        //    return internalPoints;
+        //}
     }
 }
