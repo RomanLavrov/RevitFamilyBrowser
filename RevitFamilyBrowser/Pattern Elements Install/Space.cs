@@ -15,6 +15,7 @@ namespace RevitFamilyBrowser.Revit_Classes
     [Transaction(TransactionMode.Manual)]
     public class Space : IExternalCommand
     {
+        private const double FeetToMil = 25.4 * 12;
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             var uiapp = commandData.Application;
@@ -63,16 +64,14 @@ namespace RevitFamilyBrowser.Revit_Classes
                 //----------------------------------------------------------------------------------------
                 var box = newRoom.get_BoundingBox(view);
                 if (box == null) return Result.Failed;
-                //var roomMin = new ConversionPoint(box.Min);
-                //var roomMax = new ConversionPoint(box.Max);
-
+               
                 PointF roomMin = new PointF();
-                roomMin.X = (float) (box.Min.X * 25.4 * 12);
-                roomMin.Y = (float) (box.Min.Y * 25.4 * 12);
+                roomMin.X = (float) (box.Min.X * FeetToMil);
+                roomMin.Y = (float) (box.Min.Y * FeetToMil);
 
                 PointF roomMax = new PointF();
-                roomMax.X = (float)(box.Max.X * 25.4 * 12);
-                roomMax.Y = (float)(box.Max.Y * 25.4 * 12);
+                roomMax.X = (float)(box.Max.X * FeetToMil);
+                roomMax.Y = (float)(box.Max.Y * FeetToMil);
 
                 var roomDimensions = new RoomDimensions();
                 grid.Scale = roomDimensions.GetScale(roomMin, roomMax, grid.CanvasSize);
@@ -98,27 +97,23 @@ namespace RevitFamilyBrowser.Revit_Classes
             return Result.Succeeded;
         }
 
-        private Point GetDerrivation(BoundingBoxXYZ box, GridSetup grid)
+        private PointF GetDerrivation(BoundingBoxXYZ box, GridSetup grid)
         {
-            var derrivationPoint = new Point();
+            var derrivationPoint = new PointF();
 
-            var roomMin = new ConversionPoint(box.Min);
-            var roomMax = new ConversionPoint(box.Max);
+            PointF roomMin = new PointF();
+            roomMin.X = (int)(box.Min.X * FeetToMil);
+            roomMin.Y = (int)(box.Min.Y * FeetToMil);
 
-            //Point roomMin = new Point();
-            //roomMin.X = (int) (box.Min.X * 25.4 * 12);
-            //roomMin.Y = (int) (box.Min.Y * 25.4 * 12);
-
-            //Point roomMax = new Point();
-            //roomMax.X = (int) (box.Max.X * 25.4 * 12);
-            //roomMax.X = (int) (box.Max.Y * 25.4 * 12);
-
+            PointF roomMax = new PointF();
+            roomMax.X = (int)(box.Max.X * FeetToMil);
+            roomMax.Y = (int)(box.Max.Y * FeetToMil);
 
             double centerRoomX = roomMin.X / grid.Scale + (roomMax.X / grid.Scale - roomMin.X / grid.Scale) / 2;
             double centerRoomY = roomMin.Y / grid.Scale + (roomMax.Y / grid.Scale - roomMin.Y / grid.Scale) / 2;
 
-            derrivationPoint.X = Convert.ToInt32(grid.CanvasSize / 2 - centerRoomX);
-            derrivationPoint.Y = Convert.ToInt32(grid.CanvasSize / 2 + centerRoomY);
+            derrivationPoint.X = (float)(grid.CanvasSize / 2 - centerRoomX);
+            derrivationPoint.Y = (float)(grid.CanvasSize / 2 + centerRoomY);
 
             return derrivationPoint;
         }

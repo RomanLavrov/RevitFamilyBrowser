@@ -334,8 +334,8 @@ namespace RevitFamilyBrowser.WPF_Classes
        // public List<Line> GetBoundingBox(ConversionPoint min, ConversionPoint max, GridSetup grid)
         {
             int scale = grid.Scale;
-            int derX = grid.Derrivation.X;
-            int derY = grid.Derrivation.Y;
+            float derX = grid.Derrivation.X;
+            float derY = grid.Derrivation.Y;
 
             List<Line> boxSides = new List<Line>();
             int offset = 800 / scale;
@@ -419,6 +419,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         public List<Point> GetGridPoints(List<Line> listPerpendiculars, List<List<Line>> wallNormals)
         {
+           
             wallNormals.Add(listPerpendiculars);
             List<Point> temp = new List<Point>();
 

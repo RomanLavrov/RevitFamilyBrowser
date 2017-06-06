@@ -27,10 +27,10 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         public int Scale { get; set; }
         public int CanvasSize { get; set; }
-        private List<Line> WpfWalls { get; set; }
+        public List<Line> WpfWalls { get; set; }
         public List<Line> BoundingBoxLines { get; set; }
         public List<Line> RevitWalls { get; set; }
-        public System.Drawing.Point Derrivation { get; set; }
+        public System.Drawing.PointF Derrivation { get; set; }
 
         private const int ExtensionLineLength = 40;
         private const int ExtensionLineExtent = 10;
@@ -38,9 +38,8 @@ namespace RevitFamilyBrowser.WPF_Classes
         private WpfCoordinates tool = new WpfCoordinates();
         List<List<Line>> wallNormals = new List<List<Line>>();
         List<Line> RevitWallNormals = new List<Line>();
-        //List<System.Drawing.Point> gridPoints = new List<System.Drawing.Point>();
-        List<System.Drawing.Point> gridPoints = new List<System.Drawing.Point>();
-
+        public List<System.Drawing.Point> gridPoints = new List<System.Drawing.Point>();
+        private ElementPreview elementPositionPreview = new ElementPreview();
 
         public GridSetup(ExternalEvent exEvent, GridInstallEvent handler)
         {
@@ -198,7 +197,9 @@ namespace RevitFamilyBrowser.WPF_Classes
 
             gridPoints.Clear();
             gridPoints = tool.GetGridPoints(listPerpendiculars, wallNormals);
-            AddElementsPreview();
+
+            ElementPreview elPreview = new ElementPreview();
+            elPreview.AddElementsPreview(this);
             textBoxQuantity.Text = "Items: " + CountInstallElements();
 
             Dimension dimension = new Dimension();
@@ -269,43 +270,36 @@ namespace RevitFamilyBrowser.WPF_Classes
                 radioDistance.IsChecked = true;
         }
 
-        private void GetRevitInstallCoordinates(List<Line> revitWallNormals, List<Line> revitWalls, int wallIndex, string InstallType)
+        private void GetRevitInstallCoordinates(List<Line> revitWallNormals, List<Line> revitWalls, int wallIndex, string installType)
         {
             CoordinatesRevit rvt = new CoordinatesRevit();
             Line rvtWall = revitWalls[wallIndex];
 
-            List<PointF> rvtPointsOnWall = new List<PointF>();
-            if (InstallType == "Equal")
-            {
-                rvtPointsOnWall = rvt.GetSplitPointsEqual(rvtWall, Convert.ToInt32(TextBoxSplitPartNumber.Text));
-            }
-            else if (InstallType == "Proportional")
-            {
-                rvtPointsOnWall = rvt.GetSplitPointsProportional(rvtWall, Convert.ToInt32(TextBoxSplitPartNumber.Text));
-            }
-            else if (InstallType == "Distance")
-            {
-                rvtPointsOnWall = rvt.GetSplitPointsDistance(rvtWall, Convert.ToInt32(TextBoxDistance.Text));
-            }
+            var rvtPointsOnWall = GetRvtPointsOnWall(installType, rvt, rvtWall);
             List<Line> rvtListPerpendiculars = rvt.GetPerpendiculars(rvtWall, rvtPointsOnWall);
             List<PointF> rvtGridPoints = rvt.GetGridPointsRvt(revitWallNormals, rvtListPerpendiculars);
 
-            Properties.Settings.Default.InstallPoints = string.Empty;
-
-            foreach (var item in rvtGridPoints)
-            {
-                int counter = 0;
-                Line check = DrawCheckline(item, 100000000, 100000000);
-                foreach (var wall in revitWalls)
-                {
-                    if (CheckIntersection(wall, check))
-                        counter++;
-                }
-                if (counter % 2 != 0)
-                    Properties.Settings.Default.InstallPoints += (item.X) / (25.4 * 12) + "*" + (item.Y) / (25.4 * 12) + "\n";
-            }
+            elementPositionPreview.GetRvtInstallPoints(revitWalls, rvtGridPoints);
         }
 
+        private List<PointF> GetRvtPointsOnWall(string installType, CoordinatesRevit rvt, Line rvtWall)
+        {
+            List<PointF> rvtPointsOnWall = new List<PointF>();
+            if (installType == "Equal")
+            {
+                rvtPointsOnWall = rvt.GetSplitPointsEqual(rvtWall, Convert.ToInt32(TextBoxSplitPartNumber.Text));
+            }
+            else if (installType == "Proportional")
+            {
+                rvtPointsOnWall = rvt.GetSplitPointsProportional(rvtWall, Convert.ToInt32(TextBoxSplitPartNumber.Text));
+            }
+            else if (installType == "Distance")
+            {
+                rvtPointsOnWall = rvt.GetSplitPointsDistance(rvtWall, Convert.ToInt32(TextBoxDistance.Text));
+            }
+            return rvtPointsOnWall;
+        }
+       
         private List<Line> WallPartsAfterSplit(List<PointF> points, Line wall)
         {
             List<Line> parts = new List<Line>();
@@ -350,44 +344,10 @@ namespace RevitFamilyBrowser.WPF_Classes
             return wallIndex;
         }
 
-        #region Elements Preview
-        private void AddElementsPreview()
-        {
-            List<UIElement> prewiElements = canvas.Children.OfType<UIElement>().Where(n => n.Uid.Contains("ElementPreview")).ToList();
-            foreach (var item in prewiElements)
-            {
-                canvas.Children.Remove(item);
-            }
-            foreach (var item in gridPoints)
-            {
-                int counter = 0;
-                Line check = DrawCheckline(item, 0, 0);
-                foreach (var wall in WpfWalls)
-                {
-                    if (CheckIntersection(wall, check))
-                    {
-                        counter++;
-                    }
-                }
-                if (counter % 2 == 0) continue;
-                Ellipse el = new Ellipse();
-                el.Height = 10;
-                el.Width = 10;
-                el.Stroke = Brushes.Red;
-                el.Fill = Brushes.White;
-                el.Uid = "ElementPreview";
-                Canvas.SetTop(el, item.Y - el.Height / 2);
-                Canvas.SetLeft(el, item.X - el.Width / 2);
-                canvas.Children.Add(el);
-            }
-        }
-
         private int CountInstallElements()
         {
             List<UIElement> prewiElements = canvas.Children.OfType<UIElement>().Where(n => n.Uid.Contains("ElementPreview")).ToList();
-
             int elementCount = prewiElements.Count;
-
             return elementCount;
         }
 
@@ -421,59 +381,5 @@ namespace RevitFamilyBrowser.WPF_Classes
                 canvas.Children.Remove(item);
             }
         }
-
-        private Line DrawCheckline(PointF point, int outterX, int outterY)
-        {
-            Line checkLine = new Line();
-            checkLine.X1 = outterX;
-            checkLine.Y1 = outterY;
-            checkLine.X2 = point.X;
-            checkLine.Y2 = point.Y;
-            return checkLine;
-        }
-
-        private bool CheckIntersection(Line first, Line second)
-        {
-            PointF intersection = tool.GetIntersectionD(first, second);
-
-            if ((float.IsInfinity(intersection.X)) || (float.IsInfinity(intersection.Y)))
-            {
-                return false;
-            }
-
-            bool belongFirst = CheckIfPointBelongToLine(first, intersection);
-            bool belongSecond = CheckIfPointBelongToLine(second, intersection);
-
-            if (belongFirst && belongSecond)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        bool CheckIfPointBelongToLine(Line line, PointF point)
-        {
-            Line check1 = new Line();
-            check1.X1 = line.X1;
-            check1.Y1 = line.Y1;
-            check1.X2 = point.X;
-            check1.Y2 = point.Y;
-
-            Line check2 = new Line();
-            check2.X1 = line.X2;
-            check2.Y1 = line.Y2;
-            check2.X2 = point.X;
-            check2.Y2 = point.Y;
-            double summ = tool.GetLength(check1) + tool.GetLength(check2);
-            double length = tool.GetLength(line);
-
-            double tolerance = Math.Abs(length * .00001);
-            if (Math.Abs(length - summ) < tolerance)
-            {
-                return true;
-            }
-            return false;
-        }
-        #endregion
     }
 }

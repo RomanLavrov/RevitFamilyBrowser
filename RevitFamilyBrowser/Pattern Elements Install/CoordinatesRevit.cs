@@ -37,15 +37,15 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
         {
             PointF intersection = new PointF();
 
-            List<double> line1coef = GetLineEquation(line1);
-            double a1 = line1coef[0];
-            double b1 = line1coef[1];
-            double c1 = line1coef[2];
+            List<double> line1Coef = GetLineEquation(line1);
+            double a1 = line1Coef[0];
+            double b1 = line1Coef[1];
+            double c1 = line1Coef[2];
 
-            List<double> line2coef = GetLineEquation(line2);
-            double a2 = line2coef[0];
-            double b2 = line2coef[1];
-            double c2 = line2coef[2];
+            List<double> line2Coef = GetLineEquation(line2);
+            double a2 = line2Coef[0];
+            double b2 = line2Coef[1];
+            double c2 = line2Coef[2];
 
             double x = (c1 * b2 - c2 * b1) / (a2 * b1 - a1 * b2);
             double y = 0;
@@ -111,7 +111,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
 
         #region Split wall  by distance between objects
 
-        public List<double> LineEquation(Line line)
+        private List<double> LineEquation(Line line)
         {
             List<double> result = new List<double>();
             double a = line.Y2 - line.Y1;
@@ -192,7 +192,8 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             {
                 PointF target = new PointF();
 
-                if (GetSlope(baseWall).CompareTo(0) == 0)
+                double tolerance = 0.00001;
+                if (Math.Abs(GetSlope(baseWall)) < tolerance)
                 {
                     target.X = point.X;
                     target.Y = 0;

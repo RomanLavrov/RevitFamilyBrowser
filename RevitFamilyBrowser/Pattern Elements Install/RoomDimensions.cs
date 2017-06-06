@@ -47,20 +47,14 @@ namespace RevitFamilyBrowser.WPF_Classes
                     System.Windows.Shapes.Line wall = new System.Windows.Shapes.Line();
 
                     var segmentStart = segment.GetCurve().GetEndPoint(0);
-                    ConversionPoint Start = new ConversionPoint(segmentStart);
-                    wall.X1 = Start.X;
-                    wall.Y1 = Start.Y;
-                    //wall.X1 = segmentStart.X * 25.4 * 12;
-                    //wall.Y1 = segmentStart.Y * 25.4 * 12;
+                   
+                    wall.X1 = Convert.ToInt32(segmentStart.X * 25.4 * 12);
+                    wall.Y1 = Convert.ToInt32(segmentStart.Y * 25.4 * 12);
 
                     var segmentEnd = segment.GetCurve().GetEndPoint(1);
-                    ConversionPoint End = new ConversionPoint(segmentEnd);
-                    wall.X2 = End.X;
-                    wall.Y2 = End.Y;
 
-                    //wall.X2 = segmentEnd.X * 25.4 * 12;
-                    //wall.Y2 = segmentEnd.Y * 25.4 * 12;
-
+                    wall.X2 = Convert.ToInt32(segmentEnd.X * 25.4 * 12);
+                    wall.Y2 = Convert.ToInt32(segmentEnd.Y * 25.4 * 12);
 
                     wallCoord.Add(wall);
                 }
