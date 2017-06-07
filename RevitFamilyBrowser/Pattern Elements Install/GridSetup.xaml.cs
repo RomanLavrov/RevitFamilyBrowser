@@ -36,9 +36,10 @@ namespace RevitFamilyBrowser.WPF_Classes
         private const int ExtensionLineExtent = 10;
 
         private WpfCoordinates tool = new WpfCoordinates();
-        List<List<Line>> wallNormals = new List<List<Line>>();
+        //List<List<Line>> wallNormals = new List<List<Line>>();
+        List<Line> wallNormals = new List<Line>();
         List<Line> RevitWallNormals = new List<Line>();
-        public List<System.Drawing.Point> gridPoints = new List<System.Drawing.Point>();
+        public List<System.Drawing.PointF> gridPoints = new List<System.Drawing.PointF>();
         private ElementPreview elementPositionPreview = new ElementPreview();
 
         public GridSetup(ExternalEvent exEvent, GridInstallEvent handler)
