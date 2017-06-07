@@ -30,16 +30,15 @@ namespace RevitFamilyBrowser.WPF_Classes
         public List<Line> WpfWalls { get; set; }
         public List<Line> BoundingBoxLines { get; set; }
         public List<Line> RevitWalls { get; set; }
-        public System.Drawing.PointF Derrivation { get; set; }
+        public PointF Derrivation { get; set; }
 
         private const int ExtensionLineLength = 40;
         private const int ExtensionLineExtent = 10;
 
         private WpfCoordinates tool = new WpfCoordinates();
-        //List<List<Line>> wallNormals = new List<List<Line>>();
         List<Line> wallNormals = new List<Line>();
         List<Line> RevitWallNormals = new List<Line>();
-        public List<System.Drawing.PointF> gridPoints = new List<System.Drawing.PointF>();
+        public List<PointF> gridPoints = new List<PointF>();
         private ElementPreview elementPositionPreview = new ElementPreview();
 
         public GridSetup(ExternalEvent exEvent, GridInstallEvent handler)

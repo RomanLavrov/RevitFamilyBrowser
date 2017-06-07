@@ -28,11 +28,11 @@ namespace RevitFamilyBrowser.WPF_Classes
             return (line.Y2 - line.Y1) / (line.X2 - line.X1);
         }
 
-        public Point GetCenter(Line line)
+        public PointF GetCenter(Line line)
         {
-            Point point = new Point();
-            point.X = (int)(line.X2 + line.X1) / 2;
-            point.Y = (int)(line.Y2 + line.Y1) / 2;
+            PointF point = new PointF();
+            point.X = (float)(line.X2 + line.X1) / 2;
+            point.Y = (float)(line.Y2 + line.Y1) / 2;
             return point;
         }
 
