@@ -83,7 +83,6 @@
     </Compile>
     <Compile Include="App.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Pattern Elements Install\ConversionPoint.cs" />
     <Compile Include="Pattern Elements Install\CoordinatesRevit.cs" />
     <Compile Include="Browser\FolderSelect.cs" />
     <Compile Include="Pattern Elements Install\GridInstallEvent.cs" />
