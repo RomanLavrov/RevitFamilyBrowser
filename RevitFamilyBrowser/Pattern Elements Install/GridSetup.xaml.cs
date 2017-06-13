@@ -30,7 +30,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         public List<Line> WpfWalls { get; set; }
         public List<Line> BoundingBoxLines { get; set; }
         public List<Line> RevitWalls { get; set; }
-        public System.Drawing.PointF Derrivation { get; set; }
+        public PointF Derrivation { get; set; }
 
         private const int ExtensionLineLength = 40;
         private const int ExtensionLineExtent = 10;
@@ -275,7 +275,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             CoordinatesRevit rvt = new CoordinatesRevit();
             Line rvtWall = revitWalls[wallIndex];
 
-            var rvtPointsOnWall = GetRvtPointsOnWall(installType, rvt, rvtWall);
+            List<PointF> rvtPointsOnWall = GetRvtPointsOnWall(installType, rvt, rvtWall);
             List<Line> rvtListPerpendiculars = rvt.GetPerpendiculars(rvtWall, rvtPointsOnWall);
             List<PointF> rvtGridPoints = rvt.GetGridPointsRvt(revitWallNormals, rvtListPerpendiculars);
 
