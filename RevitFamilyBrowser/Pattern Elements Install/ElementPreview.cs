@@ -58,11 +58,44 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
                     }
                 }
                 if (counter % 2 == 0) continue;
+
                 Ellipse el = new Ellipse();
                 el.Height = 10;
                 el.Width = 10;
                 el.Stroke = Brushes.Red;
                 el.Fill = Brushes.White;
+                el.Uid = "ElementPreview";
+                Canvas.SetTop(el, item.Y - el.Height / 2);
+                Canvas.SetLeft(el, item.X - el.Width / 2);
+                grid.canvas.Children.Add(el);
+            }
+        }
+
+        public void AddElementsPreviewF(GridSetup grid)
+        {
+            List<UIElement> prewiElements = grid.canvas.Children.OfType<UIElement>().Where(n => n.Uid.Contains("ElementPreview")).ToList();
+            foreach (var item in prewiElements)
+            {
+                grid.canvas.Children.Remove(item);
+            }
+            foreach (var item in grid.gridPointsF)
+            {
+                int counter = 0;
+                Line check = DrawCheckline(item, wpfOutterCheckpoint, wpfOutterCheckpoint);
+                foreach (var wall in grid.WpfWalls)
+                {
+                    if (CheckIntersection(wall, check))
+                    {
+                        counter++;
+                    }
+                }
+                if (counter % 2 == 0) continue;
+
+                Ellipse el = new Ellipse();
+                el.Height = 10;
+                el.Width = 10;
+                el.Stroke = Brushes.Tomato;
+                el.Fill = Brushes.Aqua;
                 el.Uid = "ElementPreview";
                 Canvas.SetTop(el, item.Y - el.Height / 2);
                 Canvas.SetLeft(el, item.X - el.Width / 2);

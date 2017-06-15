@@ -443,5 +443,31 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             return filteredPoints;
         }
+
+        public List<PointF> GetGridPointsF(List<Line> listPerpendiculars, List<Line> wallNormals)
+        {
+            wallNormals.AddRange(listPerpendiculars);
+            List<PointF> temp = new List<PointF>();
+
+            foreach (var normalA in wallNormals)
+            {
+                foreach (var normalB in wallNormals)
+                {
+                    if (!normalA.Equals(normalB))
+                        temp.Add(GetIntersection(normalA, normalB));
+                }
+            }
+
+            IEnumerable<PointF> distinctPoints = temp.Distinct();
+            List<PointF> filteredPoints = new List<PointF>();
+            foreach (var item in distinctPoints)
+            {
+               // if (item.Y != int.MaxValue && item.Y != int.MinValue)
+                {
+                    filteredPoints.Add(item);
+                }
+            }
+            return filteredPoints;
+        }
     }
 }
