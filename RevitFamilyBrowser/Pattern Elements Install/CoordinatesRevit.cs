@@ -49,12 +49,14 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
 
             double x = (c1 * b2 - c2 * b1) / (a2 * b1 - a1 * b2);
             double y = 0;
-            if (b1.CompareTo(0) == 0)
+
+            double tolerance = 0.00001;
+            if (Math.Abs(b1) < tolerance)
             {
                 y = ((-c2 - a2 * x) / b2);
             }
 
-            else if (b2.CompareTo(0) == 0)
+            else if (Math.Abs(b2) < tolerance)
                 y = (-c1 - a1 * x) / b1;
 
             else
@@ -192,7 +194,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             {
                 PointF target = new PointF();
 
-                double tolerance = 0.00001;
+                double tolerance = 0.000000001;
                 if (Math.Abs(GetSlope(baseWall)) < tolerance)
                 {
                     target.X = point.X;
@@ -235,13 +237,24 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             }
             IEnumerable<PointF> distinctPoints = target.Distinct();
             List<PointF> result = new List<PointF>();
+            string temp = string.Empty;
+            int counter = 0;
             foreach (var point in distinctPoints.ToList())
             {
-                if (!float.IsInfinity(point.X) && !float.IsInfinity(point.Y) && !float.IsNaN(point.X) && !float.IsNaN(point.Y))
+               
+                if (!float.IsInfinity(point.X) && !float.IsNaN(point.X))
+                //!float.IsInfinity(point.Y)
+                //&& !float.IsNaN(point.X) && !float.IsNaN(point.Y))
                 {
+                    //counter++;
                     result.Add(point);
+                    //temp += counter + ". X = " + point.X + "; Y= " + point.Y + " | ";
                 }
             }
+
+           // MessageBox.Show(temp);
+
+
             return result;
         }
     }

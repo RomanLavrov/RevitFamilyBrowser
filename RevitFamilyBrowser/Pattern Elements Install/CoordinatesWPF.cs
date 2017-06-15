@@ -140,6 +140,20 @@ namespace RevitFamilyBrowser.WPF_Classes
             return false;
         }
 
+        public bool IntersectionPositionCheckF(Line line, PointF point)
+        {
+            double lineMaxX = (line.X1 > line.X2 ? line.X1 : line.X2);
+            double lineMinX = (line.X1 < line.X2 ? line.X1 : line.X2);
+            double lineMaxY = (line.Y1 > line.Y2 ? line.Y1 : line.Y2);
+            double lineMinY = (line.Y1 < line.Y2 ? line.Y1 : line.Y2);
+
+            if (point.X <= lineMaxX && point.X >= lineMinX && point.Y <= lineMaxY && point.Y >= lineMinY)
+            {
+                return true;
+            }
+            return false;
+        }
+
 
         //-----If line is paralle to one of axis replace infinity coord to defined
         public Line OrtoNormalization(Line perpend)
@@ -202,6 +216,38 @@ namespace RevitFamilyBrowser.WPF_Classes
             {
                 Point intersection = GetIntersection(side, normal);
                 if (IntersectionPositionCheck(side, intersection))
+                {
+                    allIntersections.Add(intersection);
+                }
+            }
+
+            int count = 0;
+            foreach (var item in allIntersections)
+            {
+                count++;
+                if (count == 1)
+                {
+                    gridLine.X1 = item.X;
+                    gridLine.Y1 = item.Y;
+                }
+                else if (count == 2)
+                {
+                    gridLine.X2 = item.X;
+                    gridLine.Y2 = item.Y;
+                }
+            }
+            return DrawDashedLine(gridLine);
+        }
+
+        public Line BuildInstallAxisF(List<Line> boundingBox, Line perpend)
+        {
+            Line gridLine = new Line();
+           
+            List<PointF> allIntersections = new List<PointF>();
+            foreach (var side in boundingBox)
+            {
+                PointF intersection = GetIntersection(side, perpend);
+                if (IntersectionPositionCheckF(side, intersection))
                 {
                     allIntersections.Add(intersection);
                 }
@@ -397,6 +443,42 @@ namespace RevitFamilyBrowser.WPF_Classes
             return lines;
         }
 
+        public List<Line> GetPerpendicularsF(Line baseWall, List<PointF> points)
+        {
+            List<Line> perpList = new List<Line>();
+
+            foreach (PointF point in points)
+            {
+                PointF target = new PointF();
+
+                double tolerance = 0.000000001;
+                if (Math.Abs(GetSlope(baseWall)) < tolerance)
+                {
+                    target.X = point.X;
+                    target.Y = 0;
+                }
+                else if (double.IsInfinity(GetSlope(baseWall)))
+                {
+                    target.X = 0;
+                    target.Y = point.Y;
+                }
+                else
+                {
+                    double slope = -1 / GetSlope(baseWall);
+                    target.X = 0;
+                    target.Y = (float)(point.Y - (slope * point.X));
+                }
+
+                Line perpendicular = new Line();
+                perpendicular.X1 = target.X;
+                perpendicular.Y1 = target.Y;
+                perpendicular.X2 = point.X;
+                perpendicular.Y2 = point.Y;
+                perpList.Add(perpendicular);
+            }
+            return perpList;
+        }
+
         //-----DrawWalls Center Line on Canvas by given Start and End points
         public Line DrawCenterLine(Line line)
         {
@@ -462,7 +544,6 @@ namespace RevitFamilyBrowser.WPF_Classes
             List<PointF> filteredPoints = new List<PointF>();
             foreach (var item in distinctPoints)
             {
-               // if (item.Y != int.MaxValue && item.Y != int.MinValue)
                 {
                     filteredPoints.Add(item);
                 }

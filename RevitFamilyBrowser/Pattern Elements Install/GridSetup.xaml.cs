@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Autodesk.Revit.DB.Architecture;
 using Brushes = System.Windows.Media.Brushes;
 
 namespace RevitFamilyBrowser.WPF_Classes
@@ -31,6 +32,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         public List<Line> BoundingBoxLines { get; set; }
         public List<Line> RevitWalls { get; set; }
         public PointF Derrivation { get; set; }
+        public Room Room { get; set; }
 
         private const int ExtensionLineLength = 40;
         private const int ExtensionLineExtent = 10;
@@ -153,7 +155,6 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         public void DrawWalls()
         {
-
             WpfWalls = GetWpfWalls();
             foreach (Line myLine in WpfWalls)
             {
@@ -193,18 +194,21 @@ namespace RevitFamilyBrowser.WPF_Classes
             line.Stroke = Brushes.Red;
             List<PointF> listPointsOnWall = GetListPointsOnWall(line, out string InstallType);
             
-            List<Line> listPerpendiculars = tool.DrawPerp(line, listPointsOnWall);
-            foreach (var perpendicular in listPerpendiculars)
+            //List<Line> listPerpendiculars = tool.DrawPerp(line, listPointsOnWall);
+            List<Line> listPerpendicularsF = tool.GetPerpendicularsF(line, listPointsOnWall);
+            foreach (var perpendicular in listPerpendicularsF)
             {
                 canvas.Children.Add(tool.BuildInstallAxis(BoundingBoxLines, perpendicular));
+               // canvas.Children.Add(tool.BuildInstallAxisF(BoundingBoxLines, perpendicular));
             }
 
             gridPoints.Clear();
-            gridPoints = tool.GetGridPoints(listPerpendiculars, wallNormals);
-            gridPointsF = tool.GetGridPointsF(listPerpendiculars, wallNormals);//----------------------------------------------------------
+            gridPointsF.Clear();
+            //gridPoints = tool.GetGridPoints(listPerpendiculars, wallNormals);
+            gridPointsF = tool.GetGridPointsF(listPerpendicularsF, wallNormals);//----------------------------------------------------------
 
             ElementPreview elPreview = new ElementPreview();
-            elPreview.AddElementsPreview(this);
+            //elPreview.AddElementsPreview(this);
             elPreview.AddElementsPreviewF(this);//----------------------------------------------------------
 
             textBoxQuantity.Text = "Items: " + CountInstallElements();

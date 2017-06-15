@@ -56,6 +56,7 @@ namespace RevitFamilyBrowser.Revit_Classes
 
                         var point = selection.PickPoint("Point to create a room");
                         newRoom = doc.Create.NewRoom(view.GenLevel, new UV(point.X, point.Y));
+                        
                     }
                     catch (OperationCanceledException)
                     {
@@ -64,6 +65,7 @@ namespace RevitFamilyBrowser.Revit_Classes
                 //----------------------------------------------------------------------------------------
                 var box = newRoom.get_BoundingBox(view);
                 if (box == null) return Result.Failed;
+
                
                 PointF roomMin = new PointF();
                 roomMin.X = (float) (box.Min.X * FeetToMil);
@@ -99,7 +101,7 @@ namespace RevitFamilyBrowser.Revit_Classes
 
         private PointF GetDerrivation(BoundingBoxXYZ box, GridSetup grid)
         {
-            var derrivationPoint = new PointF();
+            PointF derrivationPoint = new PointF();
 
             PointF roomMin = new PointF();
             roomMin.X = (int)(box.Min.X * FeetToMil);
