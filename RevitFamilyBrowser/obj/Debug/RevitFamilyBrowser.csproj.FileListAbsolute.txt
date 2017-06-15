@@ -1,3 +1,6 @@
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\Pattern Elements Install\GridSetup.baml
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\RevitFamilyBrowser.Properties.Resources.resources
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\RevitFamilyBrowser.pdb
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\bin\Debug\RevitFamilyBrowser.addin
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\bin\Debug\RevitFamilyBrowser.dll.config
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\bin\Debug\RevitFamilyBrowser.dll
@@ -9,9 +12,6 @@ C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFami
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\RevitFamilyBrowser_MarkupCompile.lref
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\AppSettings\SettingsControl.baml
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\Browser\DockPanel.baml
-C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\Pattern Elements Install\GridSetup.baml
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\RevitFamilyBrowser.g.resources
-C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\RevitFamilyBrowser.Properties.Resources.resources
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\RevitFamilyBrowser.csproj.GenerateResource.Cache
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\RevitFamilyBrowser.dll
-C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\RevitFamilyBrowser.pdb
