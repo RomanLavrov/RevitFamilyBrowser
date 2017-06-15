@@ -331,7 +331,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         }
         #endregion 
         public List<Line> GetBoundingBox(PointF min, PointF max, GridSetup grid)
-       // public List<Line> GetBoundingBox(ConversionPoint min, ConversionPoint max, GridSetup grid)
+        // public List<Line> GetBoundingBox(ConversionPoint min, ConversionPoint max, GridSetup grid)
         {
             int scale = grid.Scale;
             float derX = grid.Derrivation.X;
@@ -417,24 +417,18 @@ namespace RevitFamilyBrowser.WPF_Classes
             return line;
         }
 
-        public List<Point> GetGridPoints(List<Line> listPerpendiculars, List<List<Line>> wallNormals)
+        
+        public List<Point> GetGridPoints(List<Line> listPerpendiculars, List<Line> wallNormals)
         {
-           
-            wallNormals.Add(listPerpendiculars);
+            wallNormals.AddRange(listPerpendiculars);
             List<Point> temp = new List<Point>();
 
             foreach (var normalA in wallNormals)
             {
-                foreach (var lineA in normalA)
+                foreach (var normalB in wallNormals)
                 {
-                    foreach (var normalB in wallNormals)
-                    {
-                        foreach (var lineB in normalB)
-                        {
-                            if (!lineA.Equals(lineB))
-                                temp.Add(GetIntersection(lineA, lineB));
-                        }
-                    }
+                    if (!normalA.Equals(normalB))
+                        temp.Add(GetIntersection(normalA, normalB));
                 }
             }
 
@@ -449,40 +443,5 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             return filteredPoints;
         }
-
-
-        //public List<Point> GetIntersectInRoom(List<Line> boundingBox, List<Point> gridPoints)
-        //{
-        //    List<Point> internalPoints = new List<Point>();
-        //    double roomMinX = boundingBox[0].X1;
-        //    double roomMinY = boundingBox[0].Y1;
-        //    double roomMaxX = boundingBox[0].X1;
-        //    double roomMaxY = boundingBox[0].Y1;
-
-        //    foreach (var item in boundingBox)
-        //    {
-        //        if (item.X1 < roomMinX || item.X2 < roomMinX)
-        //            roomMinX = item.X1 < item.X2 ? item.X1 : item.X2;
-
-        //        if (item.Y1 < roomMinY || item.Y2 < roomMinY)
-        //            roomMinY = item.Y1 < item.Y2 ? item.Y1 : item.Y2;
-
-        //        if (item.X1 > roomMinX || item.X2 > roomMinX)
-        //            roomMaxX = item.X1 > item.X2 ? item.X1 : item.X2;
-
-        //        if (item.Y1 > roomMaxY || item.Y2 > roomMaxY)
-        //            roomMaxY = item.Y1 > item.Y2 ? item.Y1 : item.Y2;
-        //    }
-
-        //    foreach (var item in gridPoints)
-        //    {
-        //        if (item.X > roomMinX && item.X < roomMaxX &&
-        //            item.Y > roomMinY && item.Y < roomMaxY)
-        //        {
-        //            internalPoints.Add(item);
-        //        }
-        //    }
-        //    return internalPoints;
-        //}
     }
 }
