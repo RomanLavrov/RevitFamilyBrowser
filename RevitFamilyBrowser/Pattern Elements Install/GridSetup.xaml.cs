@@ -42,7 +42,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         List<Line> wallNormals = new List<Line>();
         List<Line> RevitWallNormals = new List<Line>();
 
-        public List<System.Drawing.Point> gridPoints = new List<System.Drawing.Point>();
+        //public List<System.Drawing.Point> gridPoints = new List<System.Drawing.Point>();
         public List<PointF> gridPointsF = new List<PointF>();
 
         private ElementPreview elementPositionPreview = new ElementPreview();
@@ -202,7 +202,7 @@ namespace RevitFamilyBrowser.WPF_Classes
                // canvas.Children.Add(tool.BuildInstallAxisF(BoundingBoxLines, perpendicular));
             }
 
-            gridPoints.Clear();
+            //gridPoints.Clear();
             gridPointsF.Clear();
             //gridPoints = tool.GetGridPoints(listPerpendiculars, wallNormals);
             gridPointsF = tool.GetGridPointsF(listPerpendicularsF, wallNormals);//----------------------------------------------------------
