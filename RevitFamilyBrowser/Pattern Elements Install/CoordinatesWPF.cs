@@ -50,40 +50,40 @@ namespace RevitFamilyBrowser.WPF_Classes
         }
 
         //-----Get two lines and return intersection point
-        public Point GetIntersection(Line box, Line wall)
-        {
-            Line normalBox = OrtoNormalization(box);
-            Line normalWall = OrtoNormalization(wall);
+        //public Point GetIntersection(Line box, Line wall)
+        //{
+        //    Line normalBox = OrtoNormalization(box);
+        //    Line normalWall = OrtoNormalization(wall);
 
-            List<double> wallCoefs = LineEquation(normalWall);
-            double a1 = wallCoefs[0];
-            double b1 = wallCoefs[1];
-            double c1 = wallCoefs[2];
+        //    List<double> wallCoefs = LineEquation(normalWall);
+        //    double a1 = wallCoefs[0];
+        //    double b1 = wallCoefs[1];
+        //    double c1 = wallCoefs[2];
 
-            List<double> boxCoefs = LineEquation(normalBox);
-            double a2 = boxCoefs[0];
-            double b2 = boxCoefs[1];
-            double c2 = boxCoefs[2];
-            Point intersection = new Point();
+        //    List<double> boxCoefs = LineEquation(normalBox);
+        //    double a2 = boxCoefs[0];
+        //    double b2 = boxCoefs[1];
+        //    double c2 = boxCoefs[2];
+        //    Point intersection = new Point();
 
-            {
-                double x = (c1 * b2 - c2 * b1) / (a2 * b1 - a1 * b2);
-                double y = 0;
-                if (b1.Equals(0))
-                {
-                    y = (int)(-c2 - a2 * x) / b2;
-                }
-                else if (b2.Equals(0))
-                    y = (-c1 - a1 * x) / b1;
+        //    {
+        //        double x = (c1 * b2 - c2 * b1) / (a2 * b1 - a1 * b2);
+        //        double y = 0;
+        //        if (b1.Equals(0))
+        //        {
+        //            y = (int)(-c2 - a2 * x) / b2;
+        //        }
+        //        else if (b2.Equals(0))
+        //            y = (-c1 - a1 * x) / b1;
 
-                else
-                    y = (-c2 - (a2 * x)) / b2;
+        //        else
+        //            y = (-c2 - (a2 * x)) / b2;
 
-                intersection.X = (int)x;
-                intersection.Y = (int)y;
-            }
-            return intersection;
-        }
+        //        intersection.X = (int)x;
+        //        intersection.Y = (int)y;
+        //    }
+        //    return intersection;
+        //}
 
         public PointF GetIntersectionD(Line box, Line wall)
         {
@@ -124,72 +124,57 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             return intersection;
         }
-
-        //-----Check if point belongs to line
-        public bool IntersectionPositionCheck(Line line, Point point)
-        {
-            int lineMaxX = (int)(line.X1 > line.X2 ? line.X1 : line.X2);
-            int lineMinX = (int)(line.X1 < line.X2 ? line.X1 : line.X2);
-            int lineMaxY = (int)(line.Y1 > line.Y2 ? line.Y1 : line.Y2);
-            int lineMinY = (int)(line.Y1 < line.Y2 ? line.Y1 : line.Y2);
-
-            if (point.X <= lineMaxX && point.X >= lineMinX && point.Y <= lineMaxY && point.Y >= lineMinY)
-            {
-                return true;
-            }
-            return false;
-        }
         
         //-----If line is paralle to one of axis replace infinity coord to defined
-        public Line OrtoNormalization(Line perpend)
-        {
-            Line normal = new Line();
-            int xA = 0; int xB = 0;
-            int yA = 0; int yB = 0;
+        //public Line OrtoNormalization(Line perpend)
+        //{
+        //    Line normal = new Line();
+        //    int xA = 0; int xB = 0;
+        //    int yA = 0; int yB = 0;
 
-            if (perpend.X1 != int.MaxValue || perpend.X1 != int.MinValue)
-            {
-                xA = (int)perpend.X1;
-            }
-            if (perpend.Y1 != int.MaxValue || perpend.Y1 != int.MinValue)
-            {
-                yA = (int)perpend.Y1;
-            }
-            if (perpend.X2 != int.MaxValue || perpend.X2 != int.MinValue)
-            {
-                xB = (int)perpend.X2;
-            }
-            if (perpend.Y2 != int.MaxValue || perpend.Y2 != int.MinValue)
-            {
-                yB = (int)perpend.Y2;
-            }
+        //    if (perpend.X1 != int.MaxValue || perpend.X1 != int.MinValue)
+        //    {
+        //        xA = (int)perpend.X1;
+        //    }
+        //    if (perpend.Y1 != int.MaxValue || perpend.Y1 != int.MinValue)
+        //    {
+        //        yA = (int)perpend.Y1;
+        //    }
+        //    if (perpend.X2 != int.MaxValue || perpend.X2 != int.MinValue)
+        //    {
+        //        xB = (int)perpend.X2;
+        //    }
+        //    if (perpend.Y2 != int.MaxValue || perpend.Y2 != int.MinValue)
+        //    {
+        //        yB = (int)perpend.Y2;
+        //    }
 
-            if ((xA == int.MaxValue || xA == int.MinValue) && yA == 0)
-            {
-                yA = 0; xA = xB;
-            }
+        //    if ((xA == int.MaxValue || xA == int.MinValue) && yA == 0)
+        //    {
+        //        yA = 0; xA = xB;
+        //    }
 
-            if ((xB == int.MaxValue || xB == int.MinValue) && yB == 0)
-            {
-                xB = 0; yB = yA;
-            }
+        //    if ((xB == int.MaxValue || xB == int.MinValue) && yB == 0)
+        //    {
+        //        xB = 0; yB = yA;
+        //    }
 
-            if ((yA == int.MaxValue || yA == int.MinValue) && xA == 0)
-            {
-                yA = 0; xA = xB;
-            }
+        //    if ((yA == int.MaxValue || yA == int.MinValue) && xA == 0)
+        //    {
+        //        yA = 0; xA = xB;
+        //    }
 
-            if ((yB == int.MaxValue || yB == int.MinValue) && xB == 0)
-            {
-                yB = 0; xB = xA;
-            }
-            normal.X1 = xA;
-            normal.X2 = xB;
-            normal.Y1 = yA;
-            normal.Y2 = yB;
+        //    if ((yB == int.MaxValue || yB == int.MinValue) && xB == 0)
+        //    {
+        //        yB = 0; xB = xA;
+        //    }
+        //    normal.X1 = xA;
+        //    normal.X2 = xB;
+        //    normal.Y1 = yA;
+        //    normal.Y2 = yB;
 
-            return normal;
-        }
+        //    return normal;
+        //}
        
 
         public Line BuildInstallAxisF(List<Line> boundingBox, Line perpend)
@@ -439,7 +424,7 @@ namespace RevitFamilyBrowser.WPF_Classes
                 foreach (var normalB in wallNormals)
                 {
                     if (!normalA.Equals(normalB))
-                        temp.Add(GetIntersection(normalA, normalB));
+                        temp.Add(GetIntersectionD(normalA, normalB));
                 }
             }
 
@@ -447,6 +432,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             List<PointF> filteredPoints = new List<PointF>();
             foreach (var item in distinctPoints)
             {
+                if (!float.IsInfinity(item.X) && !float.IsNaN(item.X) && !float.IsInfinity(item.Y) && !float.IsNaN(item.Y))
                 {
                     filteredPoints.Add(item);
                 }
