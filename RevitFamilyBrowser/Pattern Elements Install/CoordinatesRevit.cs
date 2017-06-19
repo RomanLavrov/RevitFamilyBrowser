@@ -237,24 +237,15 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             }
             IEnumerable<PointF> distinctPoints = target.Distinct();
             List<PointF> result = new List<PointF>();
-            string temp = string.Empty;
-            int counter = 0;
+           
             foreach (var point in distinctPoints.ToList())
             {
                
                 if (!float.IsInfinity(point.X) && !float.IsNaN(point.X))
-                //!float.IsInfinity(point.Y)
-                //&& !float.IsNaN(point.X) && !float.IsNaN(point.Y))
                 {
-                    //counter++;
                     result.Add(point);
-                    //temp += counter + ". X = " + point.X + "; Y= " + point.Y + " | ";
                 }
             }
-
-           // MessageBox.Show(temp);
-
-
             return result;
         }
     }

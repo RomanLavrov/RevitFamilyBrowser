@@ -194,22 +194,17 @@ namespace RevitFamilyBrowser.WPF_Classes
             line.Stroke = Brushes.Red;
             List<PointF> listPointsOnWall = GetListPointsOnWall(line, out string InstallType);
             
-            //List<Line> listPerpendiculars = tool.DrawPerp(line, listPointsOnWall);
             List<Line> listPerpendicularsF = tool.GetPerpendicularsF(line, listPointsOnWall);
             foreach (var perpendicular in listPerpendicularsF)
             {
-                canvas.Children.Add(tool.BuildInstallAxis(BoundingBoxLines, perpendicular));
-               // canvas.Children.Add(tool.BuildInstallAxisF(BoundingBoxLines, perpendicular));
+                canvas.Children.Add(tool.BuildInstallAxisF(BoundingBoxLines, perpendicular));
             }
-
-            //gridPoints.Clear();
+           
             gridPointsF.Clear();
-            //gridPoints = tool.GetGridPoints(listPerpendiculars, wallNormals);
-            gridPointsF = tool.GetGridPointsF(listPerpendicularsF, wallNormals);//----------------------------------------------------------
+            gridPointsF = tool.GetGridPointsF(listPerpendicularsF, wallNormals);
 
             ElementPreview elPreview = new ElementPreview();
-            //elPreview.AddElementsPreview(this);
-            elPreview.AddElementsPreviewF(this);//----------------------------------------------------------
+            elPreview.AddElementsPreviewF(this);
 
             textBoxQuantity.Text = "Items: " + CountInstallElements();
 

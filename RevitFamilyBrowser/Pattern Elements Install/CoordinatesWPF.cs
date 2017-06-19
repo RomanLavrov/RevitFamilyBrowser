@@ -139,22 +139,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             return false;
         }
-
-        public bool IntersectionPositionCheckF(Line line, PointF point)
-        {
-            double lineMaxX = (line.X1 > line.X2 ? line.X1 : line.X2);
-            double lineMinX = (line.X1 < line.X2 ? line.X1 : line.X2);
-            double lineMaxY = (line.Y1 > line.Y2 ? line.Y1 : line.Y2);
-            double lineMinY = (line.Y1 < line.Y2 ? line.Y1 : line.Y2);
-
-            if (point.X <= lineMaxX && point.X >= lineMinX && point.Y <= lineMaxY && point.Y >= lineMinY)
-            {
-                return true;
-            }
-            return false;
-        }
-
-
+        
         //-----If line is paralle to one of axis replace infinity coord to defined
         public Line OrtoNormalization(Line perpend)
         {
@@ -205,49 +190,17 @@ namespace RevitFamilyBrowser.WPF_Classes
 
             return normal;
         }
-
-        //-----Build dashed line in limits of box around the room
-        public Line BuildInstallAxis(List<Line> boundingBox, Line perpend)
-        {
-            Line gridLine = new Line();
-            Line normal = OrtoNormalization(perpend);
-            List<Point> allIntersections = new List<Point>();
-            foreach (var side in boundingBox)
-            {
-                Point intersection = GetIntersection(side, normal);
-                if (IntersectionPositionCheck(side, intersection))
-                {
-                    allIntersections.Add(intersection);
-                }
-            }
-
-            int count = 0;
-            foreach (var item in allIntersections)
-            {
-                count++;
-                if (count == 1)
-                {
-                    gridLine.X1 = item.X;
-                    gridLine.Y1 = item.Y;
-                }
-                else if (count == 2)
-                {
-                    gridLine.X2 = item.X;
-                    gridLine.Y2 = item.Y;
-                }
-            }
-            return DrawDashedLine(gridLine);
-        }
+       
 
         public Line BuildInstallAxisF(List<Line> boundingBox, Line perpend)
         {
             Line gridLine = new Line();
-           
+
             List<PointF> allIntersections = new List<PointF>();
             foreach (var side in boundingBox)
             {
-                PointF intersection = GetIntersection(side, perpend);
-                if (IntersectionPositionCheckF(side, intersection))
+                PointF intersection = GetIntersectionD(side, perpend);
+                if (!float.IsInfinity(intersection.X) && !float.IsInfinity(intersection.Y))
                 {
                     allIntersections.Add(intersection);
                 }
@@ -359,7 +312,7 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         public PointF GetSecondCoord(Line line, double distance)
         {
-            PointF point = new Point();
+            PointF point = new PointF();
             double angle = GetAngle(line);
             point.X = (float)(line.X1 + distance * Math.Sin(angle));
             point.Y = (float)(line.Y1 + distance * Math.Cos(angle));
@@ -375,9 +328,9 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             return points;
         }
-        #endregion 
+        #endregion 3
+
         public List<Line> GetBoundingBox(PointF min, PointF max, GridSetup grid)
-        // public List<Line> GetBoundingBox(ConversionPoint min, ConversionPoint max, GridSetup grid)
         {
             int scale = grid.Scale;
             float derX = grid.Derrivation.X;
@@ -419,30 +372,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             return boxSides;
         }
-
-        //-----Create perpendiculars to given line in given points
-        public List<Line> DrawPerp(Line baseWall, List<PointF> points)
-        {
-            List<Line> lines = new List<Line>();
-            double slope = -1 / (GetSlope(baseWall));
-
-            foreach (PointF point in points)
-            {
-                Point target = new Point();
-                target.X = 0;
-                target.Y = (int)(point.Y - (slope * point.X));
-
-                Line perpendicular = new Line();
-                perpendicular.X1 = target.X;
-                perpendicular.Y1 = target.Y;
-                perpendicular.X2 = point.X;
-                perpendicular.Y2 = point.Y;
-                // perpendicular.Stroke = System.Windows.Media.Brushes.Red;
-                lines.Add(perpendicular);
-            }
-            return lines;
-        }
-
+        
         public List<Line> GetPerpendicularsF(Line baseWall, List<PointF> points)
         {
             List<Line> perpList = new List<Line>();
@@ -498,34 +428,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             line.StrokeDashArray = dash;
             return line;
         }
-
         
-        public List<Point> GetGridPoints(List<Line> listPerpendiculars, List<Line> wallNormals)
-        {
-            wallNormals.AddRange(listPerpendiculars);
-            List<Point> temp = new List<Point>();
-
-            foreach (var normalA in wallNormals)
-            {
-                foreach (var normalB in wallNormals)
-                {
-                    if (!normalA.Equals(normalB))
-                        temp.Add(GetIntersection(normalA, normalB));
-                }
-            }
-
-            IEnumerable<Point> distinctPoints = temp.Distinct();
-            List<Point> filteredPoints = new List<Point>();
-            foreach (var item in distinctPoints)
-            {
-                if (item.Y != int.MaxValue && item.Y != int.MinValue)
-                {
-                    filteredPoints.Add(item);
-                }
-            }
-            return filteredPoints;
-        }
-
         public List<PointF> GetGridPointsF(List<Line> listPerpendiculars, List<Line> wallNormals)
         {
             wallNormals.AddRange(listPerpendiculars);
