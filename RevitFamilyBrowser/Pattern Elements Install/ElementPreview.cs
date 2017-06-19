@@ -31,7 +31,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
                 Line check = DrawCheckline(point, revitOutterCheckpoint, revitOutterCheckpoint);
                 foreach (var wall in revitWalls)
                 {
-                    PointF intersection = tool.GetIntersectionD(check, wall);
+                    PointF intersection = tool.GetIntersection(check, wall);
                     if (CheckIfPointBelongToLine(check, intersection))
                     {
                         if (CheckIfPointBelongToLine(wall, intersection))
@@ -90,7 +90,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
 
                 foreach (var wall in grid.WpfWalls)
                 {
-                    PointF intersection = tool.GetIntersectionD(check, wall);
+                    PointF intersection = tool.GetIntersection(check, wall);
                     if (CheckIfPointBelongToLine(check, intersection))
                     {
                         if (CheckIfPointBelongToLine(wall, intersection))
@@ -125,7 +125,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
 
         private bool CheckIntersection(Line first, Line second, GridSetup grid)
         {
-            PointF intersection = tool.GetIntersectionD(first, second);
+            PointF intersection = tool.GetIntersection(first, second);
 
             Ellipse gridpoint = new Ellipse();
             gridpoint.Height = 10;

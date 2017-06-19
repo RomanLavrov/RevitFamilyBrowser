@@ -101,7 +101,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
         private void AddExtensionLines(Line line)
         {
             GetWallStartEnd(line);
-            foreach (Line item in tool.GetPerpendicularsF(line, PointList))
+            foreach (Line item in tool.GetPerpendiculars(line, PointList))
             {
                 Line extensionLine = new Line();
                 PointF point = new PointF();

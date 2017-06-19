@@ -14,78 +14,65 @@ namespace RevitFamilyBrowser.WPF_Classes
 {
     public class WpfCoordinates
     {
-        public double X { get; set; }
-        public double Y { get; set; }
-
-
-        public double GetLength(Line line)
+        public Line BuildInstallAxis(List<Line> boundingBox, Line perpend)
         {
-            return Math.Sqrt(Math.Pow((line.X1 - line.X2), 2) + Math.Pow((line.Y1 - line.Y2), 2));
+            Line gridLine = new Line();
+
+            List<PointF> allIntersections = new List<PointF>();
+            foreach (var side in boundingBox)
+            {
+                PointF intersection = GetIntersection(side, perpend);
+                if (!float.IsInfinity(intersection.X) && !float.IsInfinity(intersection.Y))
+                {
+                    allIntersections.Add(intersection);
+                }
+            }
+
+            int count = 0;
+            foreach (var item in allIntersections)
+            {
+                count++;
+                if (count == 1)
+                {
+                    gridLine.X1 = item.X;
+                    gridLine.Y1 = item.Y;
+                }
+                else if (count == 2)
+                {
+                    gridLine.X2 = item.X;
+                    gridLine.Y2 = item.Y;
+                }
+            }
+            return DrawDashedLine(gridLine);
         }
 
-        public double GetSlope(Line line)
+        public List<PointF> GetGridPointsF(List<Line> listPerpendiculars, List<Line> wallNormals)
         {
-            return (line.Y2 - line.Y1) / (line.X2 - line.X1);
+            wallNormals.AddRange(listPerpendiculars);
+            List<PointF> temp = new List<PointF>();
+
+            foreach (var normalA in wallNormals)
+            {
+                foreach (var normalB in wallNormals)
+                {
+                    if (!normalA.Equals(normalB))
+                        temp.Add(GetIntersection(normalA, normalB));
+                }
+            }
+
+            IEnumerable<PointF> distinctPoints = temp.Distinct();
+            List<PointF> filteredPoints = new List<PointF>();
+            foreach (var item in distinctPoints)
+            {
+                if (!float.IsInfinity(item.X) && !float.IsNaN(item.X) && !float.IsInfinity(item.Y) && !float.IsNaN(item.Y))
+                {
+                    filteredPoints.Add(item);
+                }
+            }
+            return filteredPoints;
         }
 
-        public Point GetCenter(Line line)
-        {
-            Point point = new Point();
-            point.X = (int)(line.X2 + line.X1) / 2;
-            point.Y = (int)(line.Y2 + line.Y1) / 2;
-            return point;
-        }
-
-        //-----Return coefficients of Line equation ax+by+c=0
-        public List<double> LineEquation(Line line)
-        {
-            List<double> result = new List<double>();
-            double a = line.Y2 - line.Y1;
-            double b = line.X1 - line.X2;
-            double c = line.Y1 * (line.X1 - line.X2) - line.X1 * (line.Y1 - line.Y2);
-            result.Add(a);
-            result.Add(b);
-            result.Add(-c);
-            return result;
-        }
-
-        //-----Get two lines and return intersection point
-        //public Point GetIntersection(Line box, Line wall)
-        //{
-        //    Line normalBox = OrtoNormalization(box);
-        //    Line normalWall = OrtoNormalization(wall);
-
-        //    List<double> wallCoefs = LineEquation(normalWall);
-        //    double a1 = wallCoefs[0];
-        //    double b1 = wallCoefs[1];
-        //    double c1 = wallCoefs[2];
-
-        //    List<double> boxCoefs = LineEquation(normalBox);
-        //    double a2 = boxCoefs[0];
-        //    double b2 = boxCoefs[1];
-        //    double c2 = boxCoefs[2];
-        //    Point intersection = new Point();
-
-        //    {
-        //        double x = (c1 * b2 - c2 * b1) / (a2 * b1 - a1 * b2);
-        //        double y = 0;
-        //        if (b1.Equals(0))
-        //        {
-        //            y = (int)(-c2 - a2 * x) / b2;
-        //        }
-        //        else if (b2.Equals(0))
-        //            y = (-c1 - a1 * x) / b1;
-
-        //        else
-        //            y = (-c2 - (a2 * x)) / b2;
-
-        //        intersection.X = (int)x;
-        //        intersection.Y = (int)y;
-        //    }
-        //    return intersection;
-        //}
-
-        public PointF GetIntersectionD(Line box, Line wall)
+        public PointF GetIntersection(Line box, Line wall)
         {
             List<double> wallCoefs = LineEquation(wall);
             double a1 = wallCoefs[0];
@@ -124,91 +111,6 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             return intersection;
         }
-        
-        //-----If line is paralle to one of axis replace infinity coord to defined
-        //public Line OrtoNormalization(Line perpend)
-        //{
-        //    Line normal = new Line();
-        //    int xA = 0; int xB = 0;
-        //    int yA = 0; int yB = 0;
-
-        //    if (perpend.X1 != int.MaxValue || perpend.X1 != int.MinValue)
-        //    {
-        //        xA = (int)perpend.X1;
-        //    }
-        //    if (perpend.Y1 != int.MaxValue || perpend.Y1 != int.MinValue)
-        //    {
-        //        yA = (int)perpend.Y1;
-        //    }
-        //    if (perpend.X2 != int.MaxValue || perpend.X2 != int.MinValue)
-        //    {
-        //        xB = (int)perpend.X2;
-        //    }
-        //    if (perpend.Y2 != int.MaxValue || perpend.Y2 != int.MinValue)
-        //    {
-        //        yB = (int)perpend.Y2;
-        //    }
-
-        //    if ((xA == int.MaxValue || xA == int.MinValue) && yA == 0)
-        //    {
-        //        yA = 0; xA = xB;
-        //    }
-
-        //    if ((xB == int.MaxValue || xB == int.MinValue) && yB == 0)
-        //    {
-        //        xB = 0; yB = yA;
-        //    }
-
-        //    if ((yA == int.MaxValue || yA == int.MinValue) && xA == 0)
-        //    {
-        //        yA = 0; xA = xB;
-        //    }
-
-        //    if ((yB == int.MaxValue || yB == int.MinValue) && xB == 0)
-        //    {
-        //        yB = 0; xB = xA;
-        //    }
-        //    normal.X1 = xA;
-        //    normal.X2 = xB;
-        //    normal.Y1 = yA;
-        //    normal.Y2 = yB;
-
-        //    return normal;
-        //}
-       
-
-        public Line BuildInstallAxisF(List<Line> boundingBox, Line perpend)
-        {
-            Line gridLine = new Line();
-
-            List<PointF> allIntersections = new List<PointF>();
-            foreach (var side in boundingBox)
-            {
-                PointF intersection = GetIntersectionD(side, perpend);
-                if (!float.IsInfinity(intersection.X) && !float.IsInfinity(intersection.Y))
-                {
-                    allIntersections.Add(intersection);
-                }
-            }
-
-            int count = 0;
-            foreach (var item in allIntersections)
-            {
-                count++;
-                if (count == 1)
-                {
-                    gridLine.X1 = item.X;
-                    gridLine.Y1 = item.Y;
-                }
-                else if (count == 2)
-                {
-                    gridLine.X2 = item.X;
-                    gridLine.Y2 = item.Y;
-                }
-            }
-            return DrawDashedLine(gridLine);
-        }
-
 
         public List<PointF> SplitLineProportional(Line line, int lineNumber)
         {
@@ -299,10 +201,20 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
             PointF point = new PointF();
             double angle = GetAngle(line);
-            point.X = (float)(line.X1 + distance * Math.Sin(angle));
-            point.Y = (float)(line.Y1 + distance * Math.Cos(angle));
+
+            if (line.X1 < line.X2)
+                point.X = (float)(line.X1 + distance * Math.Sin(angle));
+            else
+                point.X = (float)(line.X1 - distance * Math.Sin(angle));
+
+            if (line.Y1 < line.Y2)
+                point.Y = (float)(line.Y1 + distance * Math.Cos(angle));
+            else
+                point.Y = (float)(line.Y1 - distance * Math.Cos(angle));
+
             return point;
         }
+
         public List<PointF> SplitLineDistance(Line line, double distance)
         {
             List<PointF> points = new List<PointF>();
@@ -313,7 +225,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             return points;
         }
-        #endregion 3
+        #endregion
 
         public List<Line> GetBoundingBox(PointF min, PointF max, GridSetup grid)
         {
@@ -357,15 +269,14 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             return boxSides;
         }
-        
-        public List<Line> GetPerpendicularsF(Line baseWall, List<PointF> points)
+
+        public List<Line> GetPerpendiculars(Line baseWall, List<PointF> points)
         {
             List<Line> perpList = new List<Line>();
 
             foreach (PointF point in points)
             {
                 PointF target = new PointF();
-
                 double tolerance = 0.000000001;
                 if (Math.Abs(GetSlope(baseWall)) < tolerance)
                 {
@@ -413,31 +324,36 @@ namespace RevitFamilyBrowser.WPF_Classes
             line.StrokeDashArray = dash;
             return line;
         }
-        
-        public List<PointF> GetGridPointsF(List<Line> listPerpendiculars, List<Line> wallNormals)
+
+        public double GetLength(Line line)
         {
-            wallNormals.AddRange(listPerpendiculars);
-            List<PointF> temp = new List<PointF>();
+            return Math.Sqrt(Math.Pow((line.X1 - line.X2), 2) + Math.Pow((line.Y1 - line.Y2), 2));
+        }
 
-            foreach (var normalA in wallNormals)
-            {
-                foreach (var normalB in wallNormals)
-                {
-                    if (!normalA.Equals(normalB))
-                        temp.Add(GetIntersectionD(normalA, normalB));
-                }
-            }
+        public double GetSlope(Line line)
+        {
+            return (line.Y2 - line.Y1) / (line.X2 - line.X1);
+        }
 
-            IEnumerable<PointF> distinctPoints = temp.Distinct();
-            List<PointF> filteredPoints = new List<PointF>();
-            foreach (var item in distinctPoints)
-            {
-                if (!float.IsInfinity(item.X) && !float.IsNaN(item.X) && !float.IsInfinity(item.Y) && !float.IsNaN(item.Y))
-                {
-                    filteredPoints.Add(item);
-                }
-            }
-            return filteredPoints;
+        public PointF GetCenter(Line line)
+        {
+            PointF point = new PointF();
+            point.X = (float)(line.X2 + line.X1) / 2;
+            point.Y = (float)(line.Y2 + line.Y1) / 2;
+            return point;
+        }
+
+        //-----Return coefficients of Line equation ax+by+c=0
+        public List<double> LineEquation(Line line)
+        {
+            List<double> result = new List<double>();
+            double a = line.Y2 - line.Y1;
+            double b = line.X1 - line.X2;
+            double c = line.Y1 * (line.X1 - line.X2) - line.X1 * (line.Y1 - line.Y2);
+            result.Add(a);
+            result.Add(b);
+            result.Add(-c);
+            return result;
         }
     }
 }

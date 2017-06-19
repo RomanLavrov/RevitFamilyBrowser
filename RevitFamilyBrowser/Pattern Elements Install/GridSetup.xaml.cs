@@ -194,10 +194,10 @@ namespace RevitFamilyBrowser.WPF_Classes
             line.Stroke = Brushes.Red;
             List<PointF> listPointsOnWall = GetListPointsOnWall(line, out string InstallType);
             
-            List<Line> listPerpendicularsF = tool.GetPerpendicularsF(line, listPointsOnWall);
+            List<Line> listPerpendicularsF = tool.GetPerpendiculars(line, listPointsOnWall);
             foreach (var perpendicular in listPerpendicularsF)
             {
-                canvas.Children.Add(tool.BuildInstallAxisF(BoundingBoxLines, perpendicular));
+                canvas.Children.Add(tool.BuildInstallAxis(BoundingBoxLines, perpendicular));
             }
            
             gridPointsF.Clear();
