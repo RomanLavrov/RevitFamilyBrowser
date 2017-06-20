@@ -17,17 +17,25 @@ namespace RevitFamilyBrowser.WPF_Classes
         public Line BuildInstallAxis(List<Line> boundingBox, Line perpend)
         {
             Line gridLine = new Line();
+            PointF max = BoundingBoxMax(boundingBox);
+            PointF min = BoundingBoxMin(boundingBox);
 
             List<PointF> allIntersections = new List<PointF>();
+            string temp = string.Empty;
             foreach (var side in boundingBox)
             {
                 PointF intersection = GetIntersection(side, perpend);
                 if (!float.IsInfinity(intersection.X) && !float.IsInfinity(intersection.Y))
                 {
-                    allIntersections.Add(intersection);
+                    if (intersection.X <= max.X && intersection.X >= min.X
+                        && intersection.Y <= (max.Y + 0.001) && intersection.Y >= (min.Y - 0.001))
+                    {
+                        temp += ("X = " + intersection.X + "; Y = " + intersection.Y + "\n");
+                        allIntersections.Add(intersection);
+                    }
                 }
             }
-
+           // MessageBox.Show(temp);
             int count = 0;
             foreach (var item in allIntersections)
             {
@@ -46,7 +54,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             return DrawDashedLine(gridLine);
         }
 
-        public List<PointF> GetGridPointsF(List<Line> listPerpendiculars, List<Line> wallNormals)
+        public List<PointF> GetGridPoints(List<Line> listPerpendiculars, List<Line> wallNormals)
         {
             wallNormals.AddRange(listPerpendiculars);
             List<PointF> temp = new List<PointF>();
@@ -110,6 +118,71 @@ namespace RevitFamilyBrowser.WPF_Classes
                 intersection.Y = (float)y;
             }
             return intersection;
+        }
+
+        private PointF BoundingBoxMin(List<Line> boundingBox)
+        {
+            PointF min = new PointF();
+            min.X = (float)boundingBox[0].X1;
+            min.Y = (float)boundingBox[0].Y1;
+
+            foreach (Line side in boundingBox)
+            {
+                if (side.X1 < side.X2)
+                {
+                    if (min.X > side.X1)
+                        min.X = (float)side.X1;
+                }
+                else
+                {
+                    if (min.X > side.X2)
+                        min.X = (float)side.X2;
+                }
+
+                if (side.Y1 < side.Y2)
+                {
+                    if (min.Y > side.Y1)
+                        min.Y = (float)side.Y1;
+                }
+                else
+                {
+                    if (min.Y > side.Y2)
+                        min.Y = (float)side.Y2;
+                }
+            }
+            return min;
+        }
+        private PointF BoundingBoxMax(List<Line> boundingBox)
+        {
+            PointF max = new PointF();
+            max.X = (float)boundingBox[0].X1; ;
+            max.Y = (float)boundingBox[0].Y1;
+
+            foreach (Line side in boundingBox)
+            {
+                if (side.X1 < side.X2 )
+                {
+                    if (max.X < side.X2)
+                        max.X = (float)side.X2;
+                }
+                else
+                {
+                    if (max.X < side.X1)
+                        max.X = (float)side.X1;
+                }
+
+                if (side.Y1 < side.Y2)
+                {
+                    if (max.Y < side.Y2)
+                        max.Y = (float)side.Y2;
+                }
+                else
+                {
+                    if (max.Y < side.Y1)
+                        max.Y = (float)side.Y1;
+                }
+            }
+            return max;
         }
 
         public List<PointF> SplitLineProportional(Line line, int lineNumber)
@@ -200,17 +273,10 @@ namespace RevitFamilyBrowser.WPF_Classes
         public PointF GetSecondCoord(Line line, double distance)
         {
             PointF point = new PointF();
+           
             double angle = GetAngle(line);
-
-            if (line.X1 < line.X2)
-                point.X = (float)(line.X1 + distance * Math.Sin(angle));
-            else
-                point.X = (float)(line.X1 - distance * Math.Sin(angle));
-
-            if (line.Y1 < line.Y2)
-                point.Y = (float)(line.Y1 + distance * Math.Cos(angle));
-            else
-                point.Y = (float)(line.Y1 - distance * Math.Cos(angle));
+            point.X = (float)(line.X1 + distance * Math.Sin(angle));
+            point.Y = (float)(line.Y1 + distance * Math.Cos(angle));
 
             return point;
         }
@@ -223,6 +289,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             {
                 points.Add(GetSecondCoord(line, part));
             }
+            points.Sort();
             return points;
         }
         #endregion
@@ -265,7 +332,8 @@ namespace RevitFamilyBrowser.WPF_Classes
             boxSides.Add(SideD);
             foreach (var item in boxSides)
             {
-                item.Stroke = System.Windows.Media.Brushes.Transparent;
+                item.Stroke = System.Windows.Media.Brushes.Aquamarine;
+                grid.canvas.Children.Add(item);
             }
             return boxSides;
         }
@@ -277,7 +345,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             foreach (PointF point in points)
             {
                 PointF target = new PointF();
-                double tolerance = 0.000000001;
+                double tolerance = 0.0000001;
                 if (Math.Abs(GetSlope(baseWall)) < tolerance)
                 {
                     target.X = point.X;
@@ -315,7 +383,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         }
 
         //-----DrawWalls Dashed Line on Canvas by given Start and End points
-        public Line DrawDashedLine(System.Windows.Shapes.Line line)
+        public Line DrawDashedLine(Line line)
         {
             line.Stroke = System.Windows.Media.Brushes.SteelBlue;
             line.SnapsToDevicePixels = true;

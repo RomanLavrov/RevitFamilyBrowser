@@ -91,7 +91,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
         {
             double angleRad = tool.GetAngle(line);
             double angleDegrees = (angleRad * 180 / Math.PI);
-            if (angleDegrees > 5 && angleDegrees <= 90)
+            if (angleDegrees > 1 && angleDegrees <= 90)
             {
                 angleDegrees = angleDegrees + 180;
             }
@@ -117,7 +117,6 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
                     temp.Y1 = item.Y2;
                     temp.X2 = 2 * item.X2 - item.X1;
                     temp.Y2 = 2 * item.Y2 - item.Y1;
-
                     point = tool.GetSecondCoord(temp, -ExtensionLineLength);
                 }
 

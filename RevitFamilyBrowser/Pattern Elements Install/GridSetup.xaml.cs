@@ -201,7 +201,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
            
             gridPointsF.Clear();
-            gridPointsF = tool.GetGridPointsF(listPerpendicularsF, wallNormals);
+            gridPointsF = tool.GetGridPoints(listPerpendicularsF, wallNormals);
 
             ElementPreview elPreview = new ElementPreview();
             elPreview.AddElementsPreviewF(this);
@@ -310,6 +310,8 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
             List<Line> parts = new List<Line>();
 
+            
+            
             Line startline = new Line();
             startline.X1 = wall.X1;
             startline.Y1 = wall.Y1;
