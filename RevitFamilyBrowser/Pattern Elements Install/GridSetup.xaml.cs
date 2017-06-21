@@ -38,7 +38,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         private const int ExtensionLineExtent = 10;
 
         private WpfCoordinates tool = new WpfCoordinates();
-       
+
         List<Line> wallNormals = new List<Line>();
         List<Line> RevitWallNormals = new List<Line>();
 
@@ -193,18 +193,23 @@ namespace RevitFamilyBrowser.WPF_Classes
             Line line = (Line)sender;
             line.Stroke = Brushes.Red;
             List<PointF> listPointsOnWall = GetListPointsOnWall(line, out string InstallType);
-            
+
             List<Line> listPerpendicularsF = tool.GetPerpendiculars(line, listPointsOnWall);
             foreach (var perpendicular in listPerpendicularsF)
             {
                 canvas.Children.Add(tool.BuildInstallAxis(BoundingBoxLines, perpendicular));
             }
-           
+
             gridPointsF.Clear();
             gridPointsF = tool.GetGridPoints(listPerpendicularsF, wallNormals);
 
             ElementPreview elPreview = new ElementPreview();
-            elPreview.AddElementsPreviewF(this);
+            // elPreview.AddElementsPreviewF(this);
+            foreach (var item in elPreview.AddElementsPreviewF(this))
+            {
+                MessageBox.Show((item.X - Derrivation.X)*Scale/(25.4*12)  + "; " + (item.Y-Derrivation.Y)*Scale/(25.4*12));
+            }
+
 
             textBoxQuantity.Text = "Items: " + CountInstallElements();
 
@@ -305,13 +310,13 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             return rvtPointsOnWall;
         }
-       
+
         private List<Line> WallPartsAfterSplit(List<PointF> points, Line wall)
         {
             List<Line> parts = new List<Line>();
 
-            
-            
+
+
             Line startline = new Line();
             startline.X1 = wall.X1;
             startline.Y1 = wall.Y1;

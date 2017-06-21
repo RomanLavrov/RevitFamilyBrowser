@@ -20,7 +20,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
         private readonly WpfCoordinates tool = new WpfCoordinates();
         private double revitOutterCheckpoint = 10000;
         private int wpfOutterCheckpoint = 0;
-
+        
         public void GetRvtInstallPoints(List<Line> revitWalls, List<PointF> rvtGridPoints)
         {
             Properties.Settings.Default.InstallPoints = string.Empty;
@@ -42,6 +42,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
 
                     Properties.Settings.Default.InstallPoints += (point.X) / (25.4 * 12) + "*" + (point.Y) / (25.4 * 12) + "\n";
             }
+            MessageBox.Show(Properties.Settings.Default.InstallPoints);
         }
 
         //public void AddElementsPreview(GridSetup grid)
@@ -76,8 +77,9 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
         //    }
         //}
 
-        public void AddElementsPreviewF(GridSetup grid)
+        public List<PointF> AddElementsPreviewF(GridSetup grid)
         {
+            List<PointF> FilteredPoints = new List<PointF>();
             List<UIElement> prewiElements = grid.canvas.Children.OfType<UIElement>().Where(n => n.Uid.Contains("ElementPreview")).ToList();
             foreach (var item in prewiElements)
             {
@@ -108,8 +110,11 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
                 el.Uid = "ElementPreview";
                 Canvas.SetTop(el, item.Y - el.Height / 2);
                 Canvas.SetLeft(el, item.X - el.Width / 2);
+                FilteredPoints.Add(item);
                 grid.canvas.Children.Add(el);
+
             }
+            return FilteredPoints;
         }
 
         private Line DrawCheckline(PointF point, double outterX, double outterY)

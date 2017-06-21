@@ -56,8 +56,8 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         public List<PointF> GetGridPoints(List<Line> listPerpendiculars, List<Line> wallNormals)
         {
-            wallNormals.AddRange(listPerpendiculars);
             List<PointF> temp = new List<PointF>();
+            wallNormals.AddRange(listPerpendiculars);
 
             foreach (var normalA in wallNormals)
             {
@@ -96,11 +96,12 @@ namespace RevitFamilyBrowser.WPF_Classes
             {
                 double x = (c1 * b2 - c2 * b1) / (a2 * b1 - a1 * b2);
                 double y = 0;
-                if (b1.Equals(0))
+                double tolerance = 0.0001;
+                if (Math.Abs(b1) < tolerance)
                 {
-                    y = (int)(-c2 - a2 * x) / b2;
+                    y = (-c2 - a2 * x) / b2;
                 }
-                else if (b2.Equals(0))
+                else if (Math.Abs(b2) < tolerance)
                     y = (-c1 - a1 * x) / b1;
 
                 else
