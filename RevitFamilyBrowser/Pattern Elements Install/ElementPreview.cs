@@ -52,7 +52,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
         //    {
         //        grid.canvas.Children.Remove(item);
         //    }
-        //    foreach (var item in grid.gridPointsF)
+        //    foreach (var item in grid.gridPoints)
         //    {
         //        int counter = 0;
         //        Line check = DrawCheckline(item, wpfOutterCheckpoint, wpfOutterCheckpoint);
@@ -85,7 +85,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
             {
                 grid.canvas.Children.Remove(item);
             }
-            foreach (var item in grid.gridPointsF)
+            foreach (var item in grid.gridPoints)
             {
                 int counter = 0;
                 Line check = DrawCheckline(item, wpfOutterCheckpoint, wpfOutterCheckpoint);
@@ -112,8 +112,8 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
                 Canvas.SetLeft(el, item.X - el.Width / 2);
                 FilteredPoints.Add(item);
                 grid.canvas.Children.Add(el);
-
             }
+
             return FilteredPoints;
         }
 

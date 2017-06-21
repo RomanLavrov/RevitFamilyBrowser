@@ -43,7 +43,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         List<Line> RevitWallNormals = new List<Line>();
 
         //public List<System.Drawing.Point> gridPoints = new List<System.Drawing.Point>();
-        public List<PointF> gridPointsF = new List<PointF>();
+        public List<PointF> gridPoints = new List<PointF>();
 
         private ElementPreview elementPositionPreview = new ElementPreview();
 
@@ -200,8 +200,8 @@ namespace RevitFamilyBrowser.WPF_Classes
                 canvas.Children.Add(tool.BuildInstallAxis(BoundingBoxLines, perpendicular));
             }
 
-            gridPointsF.Clear();
-            gridPointsF = tool.GetGridPoints(listPerpendicularsF, wallNormals);
+            gridPoints.Clear();
+            gridPoints = tool.GetGridPoints(listPerpendicularsF, wallNormals);
 
             ElementPreview elPreview = new ElementPreview();
             // elPreview.AddElementsPreviewF(this);
@@ -313,21 +313,46 @@ namespace RevitFamilyBrowser.WPF_Classes
         private List<Line> WallPartsAfterSplit(List<PointF> points, Line wall)
         {
             List<Line> parts = new List<Line>();
+            
+            Line startA = new Line();
+            startA.X1 = wall.X1;
+            startA.Y1 = wall.Y1;
+            startA.X2 = points[0].X;
+            startA.Y2 = points[0].Y;
 
+            Line startB = new Line();
+            startB.X1 = points[0].X;
+            startB.Y1 = points[0].Y;
+            startB.X2 = wall.X2;
+            startB.Y2 = wall.Y2;
 
+            Line endA = new Line();
+            endA.X1 = points[points.Count - 1].X;
+            endA.Y1 = points[points.Count - 1].Y;
+            endA.X2 = wall.X2;
+            endA.Y2 = wall.Y2;
+
+            Line endB = new Line();
+            endB.X1 = points[points.Count - 1].X;
+            endB.Y1 = points[points.Count - 1].Y;
+            endB.X2 = wall.X1;
+            endB.Y2 = wall.Y1;
 
             Line startline = new Line();
-            startline.X1 = wall.X1;
-            startline.Y1 = wall.Y1;
-            startline.X2 = points[0].X;
-            startline.Y2 = points[0].Y;
-            parts.Add(startline);
-
             Line endLine = new Line();
-            endLine.X1 = points[points.Count - 1].X;
-            endLine.Y1 = points[points.Count - 1].Y;
-            endLine.X2 = wall.X2;
-            endLine.Y2 = wall.Y2;
+
+            if (tool.GetLength(startA) < tool.GetLength(startB))
+            {
+                startline = startA;
+                endLine = endA;
+            }
+            else
+            {
+                startline = startB;
+                endLine = endB;
+            }
+         
+            parts.Add(startline);
             parts.Add(endLine);
 
             PointF pointA = new PointF();

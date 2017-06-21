@@ -235,11 +235,60 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
             List<PointF> points = new List<PointF>();
             List<double> partSizes = GetPartsSizes(line, distance);
-            foreach (var part in partSizes)
+
+            double tolerance = 0.01;
+            if ((line.X1 > line.X2) && (Math.Abs(line.Y1 - line.Y2) < tolerance))
             {
-                points.Add(GetSecondCoord(line, part));
+               // MessageBox.Show("Ok X");
+                Line reverse = new Line();
+                reverse.X1 = line.X2;
+                reverse.Y1 = line.Y2;
+                reverse.X2 = line.X1;
+                reverse.Y2 = line.Y1;
+                foreach (var part in partSizes)
+                {
+                    points.Add(GetSecondCoord(reverse, part));
+                }
             }
+
+            else if ((Math.Abs(line.X1 - line.X2) < tolerance) && (line.Y1 > line.Y2))
+            {
+               // MessageBox.Show("Ok Y");
+                Line reverse = new Line();
+                reverse.X1 = line.X2;
+                reverse.Y1 = line.Y2;
+                reverse.X2 = line.X1;
+                reverse.Y2 = line.Y1;
+                foreach (var part in partSizes)
+                {
+                    points.Add(GetSecondCoord(reverse, part));
+                }
+            }
+
+            else
+            {
+                foreach (var part in partSizes)
+                {
+                    points.Add(GetSecondCoord(line, part));
+                }
+            }
+
+
             return points;
+        }
+
+        private List<double> GetPartsSizes(Line line, double distance)
+        {
+            List<double> partLenghts = new List<double>();
+            int parts = GetLinePartsNumber(line, distance);
+            double firstPart = (GetLength(line) - ((parts - 1) * distance)) / 2;
+            partLenghts.Add(firstPart);
+            for (int i = 1; i <= parts - 1; i++)
+            {
+                double part = firstPart + i * distance;
+                partLenghts.Add(part);
+            }
+            return partLenghts;
         }
 
         private int GetLinePartsNumber(Line line, double distance)
@@ -260,28 +309,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             return parts;
         }
-
-        private List<double> GetPartsSizes(Line line, double distance)
-        {
-            List<double> partLenghts = new List<double>();
-            int parts = GetLinePartsNumber(line, distance);
-            double firstPart = (GetLength(line) - ((parts - 1) * distance)) / 2;
-            partLenghts.Add(firstPart);
-            for (int i = 1; i <= parts - 1; i++)
-            {
-                double part = firstPart + i * distance;
-                partLenghts.Add(part);
-            }
-            return partLenghts;
-        }
-
-        public double GetAngle(Line line)
-        {
-            List<double> lineCoefs = LineEquation(line);
-            double angle = -Math.Atan(lineCoefs[1] / lineCoefs[0]);
-            return angle;
-        }
-
+       
         public PointF GetSecondCoord(Line line, double distance)
         {
             PointF point = new PointF();
@@ -293,7 +321,13 @@ namespace RevitFamilyBrowser.WPF_Classes
             return point;
         }
 
-       
+        public double GetAngle(Line line)
+        {
+            List<double> lineCoefs = LineEquation(line);
+            double angle = -Math.Atan(lineCoefs[1] / lineCoefs[0]);
+            return angle;
+        }
+
         #endregion
 
         public List<Line> GetBoundingBox(PointF min, PointF max, GridSetup grid)
