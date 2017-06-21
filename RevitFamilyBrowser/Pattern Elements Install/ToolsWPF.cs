@@ -366,11 +366,11 @@ namespace RevitFamilyBrowser.WPF_Classes
             SideD.X2 = min.X / scale + derX - offset;
             SideD.Y2 = -min.Y / scale + derY + offset;
             boxSides.Add(SideD);
-            foreach (var item in boxSides)
-            {
-                item.Stroke = System.Windows.Media.Brushes.Aquamarine;
-                grid.canvas.Children.Add(item);
-            }
+            //foreach (var item in boxSides)
+            //{
+            //    item.Stroke = System.Windows.Media.Brushes.Aquamarine;
+            //    grid.canvas.Children.Add(item);
+            //}
             return boxSides;
         }
 

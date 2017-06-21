@@ -91,7 +91,7 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
         {
             double angleRad = tool.GetAngle(line);
             double angleDegrees = (angleRad * 180 / Math.PI);
-            if (angleDegrees > 1 && angleDegrees <= 90)
+            if (angleDegrees > 6 && angleDegrees <= 90)
             {
                 angleDegrees = angleDegrees + 180;
             }

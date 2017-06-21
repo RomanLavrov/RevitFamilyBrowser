@@ -45,8 +45,6 @@ namespace RevitFamilyBrowser.WPF_Classes
         //public List<System.Drawing.Point> gridPoints = new List<System.Drawing.Point>();
         public List<PointF> gridPoints = new List<PointF>();
 
-        private ElementPreview elementPositionPreview = new ElementPreview();
-
         public GridSetup(ExternalEvent exEvent, GridInstallEvent handler)
         {
             InitializeComponent();
@@ -192,7 +190,7 @@ namespace RevitFamilyBrowser.WPF_Classes
         {
             Line line = (Line)sender;
             line.Stroke = Brushes.Red;
-            List<PointF> listPointsOnWall = GetListPointsOnWall(line, out string InstallType);
+            List<PointF> listPointsOnWall = GetListPointsOnWall(line);
 
             List<Line> listPerpendicularsF = tool.GetPerpendiculars(line, listPointsOnWall);
             foreach (var perpendicular in listPerpendicularsF)
@@ -204,11 +202,12 @@ namespace RevitFamilyBrowser.WPF_Classes
             gridPoints = tool.GetGridPoints(listPerpendicularsF, wallNormals);
 
             ElementPreview elPreview = new ElementPreview();
-            // elPreview.AddElementsPreviewF(this);
+            Properties.Settings.Default.InstallPoints = string.Empty;
             foreach (var item in elPreview.AddElementsPreviewF(this))
             {
-                //MessageBox.Show((item.X - Derrivation.X)*Scale/(25.4*12)  + "; " + (-1)*(item.Y-Derrivation.Y)*Scale/(25.4*12));
-                Properties.Settings.Default.InstallPoints += (item.X - Derrivation.X) * Scale / (25.4 * 12) + "*" + (-1)*(item.Y - Derrivation.Y) * Scale / (25.4 * 12) + "\n";
+                double revitX = (item.X - Derrivation.X) * Scale / (25.4 * 12);
+                double revitY = -(item.Y - Derrivation.Y) * Scale / (25.4 * 12);
+                Properties.Settings.Default.InstallPoints += revitX + "*" + revitY + "\n";
             }
             textBoxQuantity.Text = "Items: " + CountInstallElements();
 
@@ -219,9 +218,6 @@ namespace RevitFamilyBrowser.WPF_Classes
                 Dimension partDim = new Dimension(30, 7, HorizontalAlignment.Center);
                 partDim.DrawWallDimension(item, this);
             }
-
-            //var wallIndex = GetWallIndex(sender);
-            //GetRevitInstallCoordinates(RevitWallNormals, RevitWalls, wallIndex, InstallType);
         }
 
         private void line_MouseUp(object sender, MouseButtonEventArgs e)
@@ -245,31 +241,28 @@ namespace RevitFamilyBrowser.WPF_Classes
                 };
                 wpfWalls.Add(myLine);
             }
-
             return wpfWalls;
         }
 
-        private List<PointF> GetListPointsOnWall(Line line, out string InstallType)
+        private List<PointF> GetListPointsOnWall(Line line)
         {
             List<PointF> listPointsOnWall;
             WpfCoordinates wpfCoord = new WpfCoordinates();
 
             if (radioEqual.IsChecked == true)
             {
-                listPointsOnWall = wpfCoord.SplitLineEqual(line, Convert.ToInt32(this.TextBoxSplitPartNumber.Text));
-                InstallType = "Equal";
+                int parts = Convert.ToInt32(this.TextBoxSplitPartNumber.Text);
+                listPointsOnWall = wpfCoord.SplitLineEqual(line, parts);
             }
             else if (radioProportoinal.IsChecked == true)
             {
-                listPointsOnWall =
-                    wpfCoord.SplitLineProportional(line, Convert.ToInt32(this.TextBoxSplitPartNumber.Text));
-                InstallType = "Proportional";
+                int parts = Convert.ToInt32(TextBoxSplitPartNumber.Text);
+                listPointsOnWall = wpfCoord.SplitLineProportional(line, parts);
             }
             else
             {
-                double distance = (Convert.ToDouble(TextBoxDistance.Text) / Scale);
-                listPointsOnWall = wpfCoord.SplitLineDistance(line, Convert.ToDouble(distance));
-                InstallType = "Distance";
+                double distance = Convert.ToDouble(TextBoxDistance.Text) / Scale;
+                listPointsOnWall = wpfCoord.SplitLineDistance(line, distance);
             }
             return listPointsOnWall;
         }
@@ -280,40 +273,10 @@ namespace RevitFamilyBrowser.WPF_Classes
                 radioDistance.IsChecked = true;
         }
 
-        //private void GetRevitInstallCoordinates(List<Line> revitWallNormals, List<Line> revitWalls, int wallIndex, string installType)
-        //{
-        //    CoordinatesRevit rvt = new CoordinatesRevit();
-        //    Line rvtWall = revitWalls[wallIndex];
-
-        //    List<PointF> rvtPointsOnWall = GetRvtPointsOnWall(installType, rvt, rvtWall);
-        //    List<Line> rvtListPerpendiculars = rvt.GetPerpendiculars(rvtWall, rvtPointsOnWall);
-        //    List<PointF> rvtGridPoints = rvt.GetGridPointsRvt(revitWallNormals, rvtListPerpendiculars);
-
-        //    elementPositionPreview.GetRvtInstallPoints(revitWalls, rvtGridPoints);
-        //}
-
-        //private List<PointF> GetRvtPointsOnWall(string installType, CoordinatesRevit rvt, Line rvtWall)
-        //{
-        //    List<PointF> rvtPointsOnWall = new List<PointF>();
-        //    if (installType == "Equal")
-        //    {
-        //        rvtPointsOnWall = rvt.GetSplitPointsEqual(rvtWall, Convert.ToInt32(TextBoxSplitPartNumber.Text));
-        //    }
-        //    else if (installType == "Proportional")
-        //    {
-        //        rvtPointsOnWall = rvt.GetSplitPointsProportional(rvtWall, Convert.ToInt32(TextBoxSplitPartNumber.Text));
-        //    }
-        //    else if (installType == "Distance")
-        //    {
-        //        rvtPointsOnWall = rvt.GetSplitPointsDistance(rvtWall, Convert.ToInt32(TextBoxDistance.Text));
-        //    }
-        //    return rvtPointsOnWall;
-        //}
-
         private List<Line> WallPartsAfterSplit(List<PointF> points, Line wall)
         {
             List<Line> parts = new List<Line>();
-            
+
             Line startA = new Line();
             startA.X1 = wall.X1;
             startA.Y1 = wall.Y1;
@@ -351,7 +314,7 @@ namespace RevitFamilyBrowser.WPF_Classes
                 startline = startB;
                 endLine = endB;
             }
-         
+
             parts.Add(startline);
             parts.Add(endLine);
 
@@ -369,17 +332,6 @@ namespace RevitFamilyBrowser.WPF_Classes
             }
             return parts;
         }
-
-        //private int GetWallIndex(object sender)
-        //{
-        //    int wallIndex = 0;
-        //    foreach (var item in WpfWalls)
-        //    {
-        //        if (sender.Equals(item))
-        //            wallIndex = WpfWalls.IndexOf(item);
-        //    }
-        //    return wallIndex;
-        //}
 
         private int CountInstallElements()
         {
