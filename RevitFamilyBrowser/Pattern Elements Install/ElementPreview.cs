@@ -21,29 +21,29 @@ namespace RevitFamilyBrowser.Pattern_Elements_Install
         private double revitOutterCheckpoint = 10000;
         private int wpfOutterCheckpoint = 0;
         
-        public void GetRvtInstallPoints(List<Line> revitWalls, List<PointF> rvtGridPoints)
-        {
-            Properties.Settings.Default.InstallPoints = string.Empty;
+        //public void GetRvtInstallPoints(List<Line> revitWalls, List<PointF> rvtGridPoints)
+        //{
+        //    Properties.Settings.Default.InstallPoints = string.Empty;
 
-            foreach (PointF point in rvtGridPoints)
-            {
-                int counter = 0;
-                Line check = DrawCheckline(point, revitOutterCheckpoint, revitOutterCheckpoint);
-                foreach (var wall in revitWalls)
-                {
-                    PointF intersection = tool.GetIntersection(check, wall);
-                    if (CheckIfPointBelongToLine(check, intersection))
-                    {
-                        if (CheckIfPointBelongToLine(wall, intersection))
-                            counter++;
-                    }
-                }
-                if (counter % 2 != 0)
+        //    foreach (PointF point in rvtGridPoints)
+        //    {
+        //        int counter = 0;
+        //        Line check = DrawCheckline(point, revitOutterCheckpoint, revitOutterCheckpoint);
+        //        foreach (var wall in revitWalls)
+        //        {
+        //            PointF intersection = tool.GetIntersection(check, wall);
+        //            if (CheckIfPointBelongToLine(check, intersection))
+        //            {
+        //                if (CheckIfPointBelongToLine(wall, intersection))
+        //                    counter++;
+        //            }
+        //        }
+        //        if (counter % 2 != 0)
 
-                    Properties.Settings.Default.InstallPoints += (point.X) / (25.4 * 12) + "*" + (point.Y) / (25.4 * 12) + "\n";
-            }
-            MessageBox.Show(Properties.Settings.Default.InstallPoints);
-        }
+        //            Properties.Settings.Default.InstallPoints += (point.X) / (25.4 * 12) + "*" + (point.Y) / (25.4 * 12) + "\n";
+        //    }
+        //    MessageBox.Show(Properties.Settings.Default.InstallPoints);
+        //}
 
         //public void AddElementsPreview(GridSetup grid)
         //{

@@ -231,6 +231,17 @@ namespace RevitFamilyBrowser.WPF_Classes
 
         #region Split line on parts by segment lenght
 
+        public List<PointF> SplitLineDistance(Line line, double distance)
+        {
+            List<PointF> points = new List<PointF>();
+            List<double> partSizes = GetPartsSizes(line, distance);
+            foreach (var part in partSizes)
+            {
+                points.Add(GetSecondCoord(line, part));
+            }
+            return points;
+        }
+
         private int GetLinePartsNumber(Line line, double distance)
         {
             int parts;
@@ -282,17 +293,7 @@ namespace RevitFamilyBrowser.WPF_Classes
             return point;
         }
 
-        public List<PointF> SplitLineDistance(Line line, double distance)
-        {
-            List<PointF> points = new List<PointF>();
-            List<double> partSizes = GetPartsSizes(line, distance);
-            foreach (var part in partSizes)
-            {
-                points.Add(GetSecondCoord(line, part));
-            }
-            points.Sort();
-            return points;
-        }
+       
         #endregion
 
         public List<Line> GetBoundingBox(PointF min, PointF max, GridSetup grid)
