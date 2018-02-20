@@ -118,7 +118,7 @@
     <None Include="Resources\Settings.png" />
     <Content Include="images\Grid.png" />
     <None Include="Resources\Grid.png" />
-    <Content Include="RevitFamilyBrowser.addin">
+    <Content Include="zRevitFamilyBrowser.addin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -155,8 +155,6 @@
   </Target>
   <PropertyGroup>
     <PostBuildEvent>copy "$(ProjectDir)RevitFamilyBrowser.addin" "$(AppData)\Autodesk\REVIT\Addins\2016"
-copy "$(ProjectDir)bin\debug\RevitFamilyBrowser.dll" "$(AppData)\Autodesk\REVIT\Addins\2016"
-copy "$(ProjectDir)RevitFamilyBrowser.addin" "$(AppData)\Autodesk\REVIT\Addins\2017"
-copy "$(ProjectDir)bin\debug\RevitFamilyBrowser.dll" "$(AppData)\Autodesk\REVIT\Addins\2017"</PostBuildEvent>
+copy "$(ProjectDir)bin\debug\RevitFamilyBrowser.dll" "$(AppData)\Autodesk\REVIT\Addins\2016"</PostBuildEvent>
   </PropertyGroup>
 </Project>
