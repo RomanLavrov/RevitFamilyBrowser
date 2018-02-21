@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RevitFamilyBrowser.WPF_Classes;
+using zRevitFamilyBrowser.WPF_Classes;
 using System.Windows;
 using System.Windows.Controls;
 using Autodesk.Revit.DB;
@@ -13,7 +13,7 @@ using Brushes = System.Windows.Media.Brushes;
 using Ellipse = System.Windows.Shapes.Ellipse;
 using Line = System.Windows.Shapes.Line;
 
-namespace RevitFamilyBrowser.Pattern_Elements_Install
+namespace zRevitFamilyBrowser.Pattern_Elements_Install
 {
     class ElementPreview
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.Attributes;
 using System.IO;
-using RevitFamilyBrowser.WPF_Classes;
+using zRevitFamilyBrowser.WPF_Classes;
 using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Drawing;
@@ -14,7 +14,7 @@ using System.Diagnostics;
 using Ookii.Dialogs.Wpf;
 using TaskDialog = Autodesk.Revit.UI.TaskDialog;
 
-namespace RevitFamilyBrowser.Revit_Classes
+namespace zRevitFamilyBrowser.Revit_Classes
 {
     [Transaction(TransactionMode.Manual)]
     public class FolderSelect : IExternalCommand

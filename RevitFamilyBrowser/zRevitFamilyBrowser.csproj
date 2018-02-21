@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
       None
@@ -18,7 +18,7 @@
     <ProjectGuid>{495FE08A-59CF-4E46-9B1E-5B0AF12F0C8F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RevitFamilyBrowser</RootNamespace>
+    <RootNamespace>zRevitFamilyBrowser</RootNamespace>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -44,6 +44,9 @@
     <StartAction>Program</StartAction>
     <StartProgram>$(ProgramW6432)\Autodesk\Revit Copernicus\Revit.exe</StartProgram>
     <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyName>zRevitFamilyBrowser</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ookii.Dialogs.Wpf, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0c15020868fd6249, processorArchitecture=MSIL">
@@ -154,7 +157,9 @@
     <Delete Files="$(AppData)\Autodesk\REVIT\Addins\2016\RevitFamilyBrowser.dll" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>copy "$(ProjectDir)RevitFamilyBrowser.addin" "$(AppData)\Autodesk\REVIT\Addins\2016"
-copy "$(ProjectDir)bin\debug\RevitFamilyBrowser.dll" "$(AppData)\Autodesk\REVIT\Addins\2016"</PostBuildEvent>
+    <PostBuildEvent>copy "$(ProjectDir)zRevitFamilyBrowser.addin" "$(AppData)\Autodesk\REVIT\Addins\2016"
+copy "$(ProjectDir)bin\debug\zRevitFamilyBrowser.dll" "$(AppData)\Autodesk\REVIT\Addins\2016"
+copy "$(ProjectDir)zRevitFamilyBrowser.addin" "$(AppData)\Autodesk\REVIT\Addins\2017"
+copy "$(ProjectDir)bin\debug\zRevitFamilyBrowser.dll" "$(AppData)\Autodesk\REVIT\Addins\2017"</PostBuildEvent>
   </PropertyGroup>
 </Project>

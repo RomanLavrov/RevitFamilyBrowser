@@ -1,0 +1,18 @@
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\bin\Release\RevitFamilyBrowser.addin
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\bin\Release\Ookii.Dialogs.Wpf.dll
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Release\AppSettings\SettingsControl.g.cs
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Release\Browser\DockPanel.g.cs
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Release\Pattern Elements Install\GridSetup.g.cs
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Release\AppSettings\SettingsControl.baml
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Release\Browser\DockPanel.baml
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Release\Pattern Elements Install\GridSetup.baml
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Release\RevitFamilyBrowser.csproj.GenerateResource.Cache
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\bin\Release\zRevitFamilyBrowser.dll.config
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\bin\Release\zRevitFamilyBrowser.dll
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\bin\Release\zRevitFamilyBrowser.pdb
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Release\zRevitFamilyBrowser_MarkupCompile.cache
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Release\zRevitFamilyBrowser_MarkupCompile.lref
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Release\zRevitFamilyBrowser.g.resources
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Release\zRevitFamilyBrowser.Properties.Resources.resources
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Release\zRevitFamilyBrowser.dll
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Release\zRevitFamilyBrowser.pdb

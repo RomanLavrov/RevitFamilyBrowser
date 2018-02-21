@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Autodesk.Revit.UI;
-using RevitFamilyBrowser.Revit_Classes;
+using zRevitFamilyBrowser.Revit_Classes;
 using System.IO;
 using System.Windows.Data;
 using System.ComponentModel;
@@ -13,7 +13,7 @@ using System.Reflection;
 using System.Drawing;
 using System.Linq;
 
-namespace RevitFamilyBrowser.WPF_Classes
+namespace zRevitFamilyBrowser.WPF_Classes
 {
     public partial class DockPanel : UserControl, IDockablePaneProvider
     {

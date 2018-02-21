@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
-namespace RevitFamilyBrowser
+namespace zRevitFamilyBrowser
 {
     public static class Tools
     {

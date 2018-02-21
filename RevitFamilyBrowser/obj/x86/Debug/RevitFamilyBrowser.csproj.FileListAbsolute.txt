@@ -1,0 +1,5 @@
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x86\Debug\AppSettings\SettingsControl.g.cs
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x86\Debug\Browser\DockPanel.g.cs
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x86\Debug\Pattern Elements Install\GridSetup.g.cs
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x86\Debug\RevitFamilyBrowser_MarkupCompile.cache
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x86\Debug\RevitFamilyBrowser_MarkupCompile.lref

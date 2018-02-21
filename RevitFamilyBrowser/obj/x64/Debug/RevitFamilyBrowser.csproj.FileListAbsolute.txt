@@ -1,0 +1,18 @@
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\bin\x64\Debug\RevitFamilyBrowser.addin
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\bin\x64\Debug\RevitFamilyBrowser.dll.config
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\bin\x64\Debug\RevitFamilyBrowser.dll
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\bin\x64\Debug\RevitFamilyBrowser.pdb
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\bin\x64\Debug\Ookii.Dialogs.Wpf.dll
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x64\Debug\AppSettings\SettingsControl.g.cs
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x64\Debug\Browser\DockPanel.g.cs
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x64\Debug\Pattern Elements Install\GridSetup.g.cs
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x64\Debug\RevitFamilyBrowser_MarkupCompile.cache
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x64\Debug\RevitFamilyBrowser_MarkupCompile.lref
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x64\Debug\AppSettings\SettingsControl.baml
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x64\Debug\Browser\DockPanel.baml
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x64\Debug\Pattern Elements Install\GridSetup.baml
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x64\Debug\RevitFamilyBrowser.g.resources
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x64\Debug\RevitFamilyBrowser.Properties.Resources.resources
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x64\Debug\RevitFamilyBrowser.csproj.GenerateResource.Cache
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x64\Debug\RevitFamilyBrowser.dll
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\x64\Debug\RevitFamilyBrowser.pdb

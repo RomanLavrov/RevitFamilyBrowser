@@ -15,7 +15,7 @@ using System.Windows.Shapes;
 using Ookii.Dialogs.Wpf;
 using System.IO;
 
-namespace RevitFamilyBrowser.Settings
+namespace zRevitFamilyBrowser.Settings
 {
     public partial class SettingsControl : UserControl
     {

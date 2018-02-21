@@ -2,9 +2,9 @@
 using System;
 using Autodesk.Revit.UI;
 using System.Reflection;
-using RevitFamilyBrowser.WPF_Classes;
-using RevitFamilyBrowser.Revit_Classes;
-using RevitFamilyBrowser.Properties;
+using zRevitFamilyBrowser.WPF_Classes;
+using zRevitFamilyBrowser.Revit_Classes;
+using zRevitFamilyBrowser.Properties;
 using System.IO;
 using Autodesk.Revit.DB.Events;
 using Autodesk.Revit.DB;
@@ -17,7 +17,7 @@ using System.Linq;
 
 #endregion
 
-namespace RevitFamilyBrowser
+namespace zRevitFamilyBrowser
 {
     class App : IExternalApplication
     {
@@ -39,22 +39,22 @@ namespace RevitFamilyBrowser
             DockablePaneId dpID = new DockablePaneId(new Guid("FA0C04E6-F9E7-413A-9D33-CFE32622E7B8"));
             a.RegisterDockablePane(dpID, "Familien Browser", (IDockablePaneProvider)dockPanel);
 
-            PushButtonData btnShow = new PushButtonData("ShowPanel", "Panel\nanzeigen", path, "RevitFamilyBrowser.Revit_Classes.ShowPanel"); //Panel anzeigen ShowPanel
+            PushButtonData btnShow = new PushButtonData("ShowPanel", "Panel\nanzeigen", path, "zRevitFamilyBrowser.Revit_Classes.ShowPanel"); //Panel anzeigen ShowPanel
             btnShow.LargeImage = Tools.GetImage(Resources.IconShowPanel.GetHbitmap());
             RibbonItem ri1 = G17.AddItem(btnShow);
 
-            PushButtonData btnFolder = new PushButtonData("OpenFolder", "Verzeichnis\nöffnen", path, "RevitFamilyBrowser.Revit_Classes.FolderSelect");   //Verzeichnis  öffnen      
+            PushButtonData btnFolder = new PushButtonData("OpenFolder", "Verzeichnis\nöffnen", path, "zRevitFamilyBrowser.Revit_Classes.FolderSelect");   //Verzeichnis  öffnen      
             btnFolder.LargeImage = Tools.GetImage(Resources.OpenFolder.GetHbitmap());
             RibbonItem ri2 = G17.AddItem(btnFolder);
 
-            PushButtonData btnSpace = new PushButtonData("Space", "Grid Elements\nInstall", path, "RevitFamilyBrowser.Revit_Classes.Space");
+            PushButtonData btnSpace = new PushButtonData("Space", "Grid Elements\nInstall", path, "zRevitFamilyBrowser.Revit_Classes.Space");
             btnSpace.LargeImage = Tools.GetImage(Resources.Grid.GetHbitmap());
             btnSpace.ToolTip =
                 "1. Select item form browser.\n2. Pick room in project\n3. Adjust item position and quantity.";
             RibbonItem ri3 = G17.AddItem(btnSpace);
 
             G17.AddSeparator();
-            PushButtonData btnSettings = new PushButtonData("Settings", "Settings", path, "RevitFamilyBrowser.Revit_Classes.Settings");
+            PushButtonData btnSettings = new PushButtonData("Settings", "Settings", path, "zRevitFamilyBrowser.Revit_Classes.Settings");
             btnSettings.LargeImage = Tools.GetImage(Resources.settings.GetHbitmap());
             RibbonItem ri4 = G17.AddItem(btnSettings);
 

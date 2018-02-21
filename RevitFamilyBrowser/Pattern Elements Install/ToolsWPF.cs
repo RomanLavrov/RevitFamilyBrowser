@@ -1,4 +1,4 @@
-﻿using RevitFamilyBrowser.Revit_Classes;
+﻿using zRevitFamilyBrowser.Revit_Classes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,7 +10,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using Point = System.Drawing.Point;
 
-namespace RevitFamilyBrowser.WPF_Classes
+namespace zRevitFamilyBrowser.WPF_Classes
 {
     public class WpfCoordinates
     {

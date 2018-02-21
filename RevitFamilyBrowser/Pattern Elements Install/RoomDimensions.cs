@@ -2,7 +2,7 @@
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
-using RevitFamilyBrowser.Revit_Classes;
+using zRevitFamilyBrowser.Revit_Classes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace RevitFamilyBrowser.WPF_Classes
+namespace zRevitFamilyBrowser.WPF_Classes
 {
 
     //This class transform Revit coordinates into WPF canvas coordinates

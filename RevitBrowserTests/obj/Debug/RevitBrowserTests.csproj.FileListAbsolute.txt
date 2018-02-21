@@ -1,4 +1,3 @@
-C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\bin\Debug\RevitFamilyBrowser.addin
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
@@ -6,12 +5,12 @@ C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrow
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\bin\Debug\RevitBrowserTests.pdb
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
-C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\bin\Debug\RevitFamilyBrowser.dll
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\bin\Debug\Ookii.Dialogs.Wpf.dll
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\obj\Debug\RevitBrowserTests.csprojResolveAssemblyReference.cache
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\obj\Debug\RevitBrowserTests.dll
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\obj\Debug\RevitBrowserTests.pdb
-C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\bin\Debug\RevitFamilyBrowser.pdb
-C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\bin\Debug\RevitFamilyBrowser.dll.config
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\bin\Debug\zRevitFamilyBrowser.dll
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\bin\Debug\zRevitFamilyBrowser.pdb
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitBrowserTests\bin\Debug\zRevitFamilyBrowser.addin

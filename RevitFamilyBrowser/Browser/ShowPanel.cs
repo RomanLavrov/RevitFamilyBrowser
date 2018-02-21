@@ -5,7 +5,7 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Events;
 using Autodesk.Revit.ApplicationServices;
 
-namespace RevitFamilyBrowser.Revit_Classes
+namespace zRevitFamilyBrowser.Revit_Classes
 {
     [Transaction(TransactionMode.Manual)]
     class ShowPanel : IExternalCommand

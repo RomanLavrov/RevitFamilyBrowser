@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RevitFamilyBrowser.WPF_Classes
+namespace zRevitFamilyBrowser.WPF_Classes
 {
     public class FamilyData
     {

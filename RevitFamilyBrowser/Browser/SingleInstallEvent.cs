@@ -4,7 +4,7 @@ using System.Linq;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
-namespace RevitFamilyBrowser.Revit_Classes
+namespace zRevitFamilyBrowser.Revit_Classes
 {
     public class SingleInstallEvent : IExternalEventHandler
     {

@@ -5,12 +5,12 @@ using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
-using RevitFamilyBrowser.WPF_Classes;
+using zRevitFamilyBrowser.WPF_Classes;
 using Brushes = System.Windows.Media.Brushes;
 using OperationCanceledException = Autodesk.Revit.Exceptions.OperationCanceledException;
 using Point = System.Drawing.Point;
 
-namespace RevitFamilyBrowser.Revit_Classes
+namespace zRevitFamilyBrowser.Revit_Classes
 {
     [Transaction(TransactionMode.Manual)]
     public class Space : IExternalCommand

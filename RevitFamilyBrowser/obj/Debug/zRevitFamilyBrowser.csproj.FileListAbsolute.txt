@@ -10,8 +10,8 @@ C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFami
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\Browser\DockPanel.baml
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\Pattern Elements Install\GridSetup.baml
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\zRevitFamilyBrowser.g.resources
-C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\RevitFamilyBrowser.Properties.Resources.resources
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\zRevitFamilyBrowser.csproj.GenerateResource.Cache
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\zRevitFamilyBrowser.dll
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\zRevitFamilyBrowser.pdb
+C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\obj\Debug\zRevitFamilyBrowser.Properties.Resources.resources
 C:\Users\user\Documents\Visual Studio 2015\Projects\RevitFamilyBrowser\RevitFamilyBrowser\bin\Debug\zRevitFamilyBrowser.addin

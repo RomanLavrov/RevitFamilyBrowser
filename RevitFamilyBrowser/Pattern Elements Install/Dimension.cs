@@ -1,5 +1,5 @@
 ﻿using System;
-using RevitFamilyBrowser.WPF_Classes;
+using zRevitFamilyBrowser.WPF_Classes;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -9,7 +9,7 @@ using System.Windows;
 using Brushes = System.Windows.Media.Brushes;
 using Point = System.Drawing.Point;
 
-namespace RevitFamilyBrowser.Pattern_Elements_Install
+namespace zRevitFamilyBrowser.Pattern_Elements_Install
 {
     public class Dimension
     {

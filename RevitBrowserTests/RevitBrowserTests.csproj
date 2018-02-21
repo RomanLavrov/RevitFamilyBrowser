@@ -60,7 +60,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RevitFamilyBrowser\RevitFamilyBrowser.csproj">
+    <ProjectReference Include="..\RevitFamilyBrowser\zRevitFamilyBrowser.csproj">
       <Project>{495fe08a-59cf-4e46-9b1e-5b0af12f0c8f}</Project>
       <Name>RevitFamilyBrowser</Name>
     </ProjectReference>

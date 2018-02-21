@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Autodesk.Revit.DB;
 using System.Windows;
-using RevitFamilyBrowser.Settings;
+using zRevitFamilyBrowser.Settings;
 
-namespace RevitFamilyBrowser.Revit_Classes
+namespace zRevitFamilyBrowser.Revit_Classes
 {
     [Transaction(TransactionMode.Manual)]
     class Settings : IExternalCommand

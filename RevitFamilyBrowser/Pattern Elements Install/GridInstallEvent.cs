@@ -11,7 +11,7 @@ using System.Windows;
 using Application = Autodesk.Revit.ApplicationServices.Application;
 using ArgumentException = Autodesk.Revit.Exceptions.ArgumentException;
 
-namespace RevitFamilyBrowser.Revit_Classes
+namespace zRevitFamilyBrowser.Revit_Classes
 {
     [Transaction(TransactionMode.Manual)]
     public class GridInstallEvent : IExternalEventHandler
