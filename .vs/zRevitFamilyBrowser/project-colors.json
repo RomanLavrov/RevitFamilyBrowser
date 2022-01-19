@@ -1,0 +1,21 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "495fe08a-59cf-4e46-9b1e-5b0af12f0c8f": {
+      "ProjectGuid": "495fe08a-59cf-4e46-9b1e-5b0af12f0c8f",
+      "DisplayName": "zRevitFamilyBrowser",
+      "ColorIndex": 0
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "4dca3199-c6eb-4dbf-a194-53db33d37a19": {
+      "ProjectGuid": "4dca3199-c6eb-4dbf-a194-53db33d37a19",
+      "DisplayName": "RevitBrowserTests",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}

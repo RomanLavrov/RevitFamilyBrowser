@@ -155,9 +155,16 @@
     <Delete Files="$(AppData)\Autodesk\REVIT\Addins\2016\RevitFamilyBrowser.dll" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>copy "$(ProjectDir)zRevitFamilyBrowser.addin" "$(AppData)\Autodesk\REVIT\Addins\2016"
-copy "$(ProjectDir)bin\debug\zRevitFamilyBrowser.dll" "$(AppData)\Autodesk\REVIT\Addins\2016"
-copy "$(ProjectDir)zRevitFamilyBrowser.addin" "$(AppData)\Autodesk\REVIT\Addins\2017"
-copy "$(ProjectDir)bin\debug\zRevitFamilyBrowser.dll" "$(AppData)\Autodesk\REVIT\Addins\2017"</PostBuildEvent>
+    <PostBuildEvent>copy "$(ProjectDir)*.addin" "$(ProgramData)\Autodesk\REVIT\Addins\2022"
+copy "$(ProjectDir)bin\debug\*.dll" "$(ProgramData)\Autodesk\REVIT\Addins\2022"
+
+copy "$(ProjectDir)*.addin" "$(ProgramData)\Autodesk\REVIT\Addins\2021"
+copy "$(ProjectDir)bin\debug\*.dll" "$(ProgramData)\Autodesk\REVIT\Addins\2021"
+
+copy "$(ProjectDir)*.addin" "$(ProgramData)\Autodesk\REVIT\Addins\2020"
+copy "$(ProjectDir)bin\debug\*.dll" "$(ProgramData)\Autodesk\REVIT\Addins\2020"
+
+copy "$(ProjectDir)*.addin" "$(ProgramData)\Autodesk\REVIT\Addins\2019"
+copy "$(ProjectDir)bin\debug\*.dll" "$(ProgramData)\Autodesk\REVIT\Addins\2019"</PostBuildEvent>
   </PropertyGroup>
 </Project>

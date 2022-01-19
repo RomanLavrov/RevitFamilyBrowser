@@ -1,9 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\RevitFamilyBrowser\\Browser",
-    "\\RevitFamilyBrowser\\Pattern Elements Install"
+    ""
   ],
-  "SelectedNode": "\\RevitFamilyBrowser",
+  "SelectedNode": "\\zRevitFamilyBrowser.sln",
   "PreviewInSolutionExplorer": true
 }
