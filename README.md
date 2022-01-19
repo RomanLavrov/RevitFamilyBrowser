@@ -16,7 +16,7 @@ The `History` tab works with different documents simultaneously.
 
 To start working with this add-in, copy the dll and addin file to the Revit `AddIns` folder:
 
-    C:\Users\user\AppData\Roaming\Autodesk\Revit\Addins\2016 (or 2017 - if you use Revit 2017).
+    C:\Users\user\AppData\Roaming\Autodesk\Revit\Addins\<REVIT VERSION> (REVIT VERSION is a year in format <2022>).
     
 Alternatively, you can build the add-in from source code in VisualStudio &ndash; all necessary files will be automatically copied to the appropriate locations during the build process.
 
