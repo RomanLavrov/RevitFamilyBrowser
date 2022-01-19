@@ -1,0 +1,691 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RevitAddInUtility</name>
+    </assembly>
+    <members>
+        <member name="T:Autodesk.RevitAddIns.VisibilityMode">
+            <summary> Describes the conditions under which a particular external command will be visible in the Revit UI. </summary>
+            <remarks> Note that there are a few conditions where the Revit API framework prevents commands from being available always:
+            <list type="number">
+            <item> When the user has another Revit command active, e.g. creating Windows, Doors, or editing sketches. </item>
+            <item> When the active view is in perspective mode, or when the view is a Walkthrough, Drawings Lists, View Lists,
+            Note Blocks, View Lists, etc. </item>
+            <item> When the user is editing an in-place family. </item>
+            </list>
+            </remarks>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.VisibilityMode.AlwaysVisible">
+            <summary> The command is available in all possible modes supported by the Revit API. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.VisibilityMode.NotVisibleInProject">
+            <summary> The command is invisible when there is a project document active. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.VisibilityMode.NotVisibleInFamily">
+            <summary> The command is invisible when there is a family document active. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.VisibilityMode.NotVisibleWhenNoActiveDocument">
+            <summary> The command is invisible when there is no active document. </summary>
+        </member>
+        <member name="T:Autodesk.RevitAddIns.Discipline">
+            <summary> Describes the conditions under which a particular external command will be visible in the Revit UI. </summary>
+            <remarks> Note that there are a few conditions where the Revit API framework prevents commands from being available always:
+            <list type="number">
+            <item> When the user has another Revit command active, e.g. creating Windows, Doors, or editing sketches. </item>
+            <item> When the active view is in perspective mode, or when the view is a Walkthrough, Drawings Lists, View Lists,
+            Note Blocks, View Lists, etc. </item>
+            </list>
+            </remarks>
+            <since>2013</since>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.Discipline.Any">
+            <summary> The command is available in all possible disciplines. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.Discipline.Architecture">
+            <summary> The command is available in the Architecture discipline. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.Discipline.Structure">
+            <summary> The command is available in the Structure discipline. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.Discipline.StructuralAnalysis">
+            <summary> The command is available in the StructuralAnalysis discipline. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.Discipline.MassingAndSite">
+            <summary> The command is available in the Massing and Site discipline. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.Discipline.EnergyAnalysis">
+            <summary> The command is available in the EnergyAnalysis discipline. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.Discipline.Mechanical">
+            <summary> The command is available in the Mechanical discipline. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.Discipline.Electrical">
+            <summary> The command is available in the Electrical discipline. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.Discipline.Piping">
+            <summary> The command is available in the Piping discipline. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.Discipline.MechanicalAnalysis">
+            <summary> The command is available in the MechanicalAnalysis discipline. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.Discipline.PipingAnalysis">
+            <summary> The command is available in the PipingAnalysis discipline. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.Discipline.ElectricalAnalysis">
+            <summary> The command is available in the ElectricalAnalysis discipline. </summary>
+        </member>
+        <member name="T:Autodesk.RevitAddIns.WarningType">
+            <summary> Defines types of warnings issued by Revit related to Add-In failures. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.WarningType.NoWarning">
+            <summary> There is no warning in this AddIn.  </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.WarningType.ClassNotFound">
+            <summary> Revit could not find the indicated class in the assembly file.  </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.WarningType.WrongAssemblyPath">
+            <summary> Revit could not find the assembly file. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.WarningType.UncaughtException">
+            <summary> Unhandled exceptions were caught when the AddIn was executed.  </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.WarningType.GUIDConflict">
+            <summary> There is another add-in which registered the same Id (GUID). </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.WarningType.NoFullClassName">
+            <summary> Missing the required value of the FullClassName node. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.WarningType.NoClientId">
+            <summary> Missing the required value of the ClientId node. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.WarningType.NoAssembly">
+            <summary> Missing the required value of the Assembly node. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.WarningType.NoApplicationName">
+            <summary> Missing the required value of the Name node for application add-in. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.WarningType.InvalidFormatClientId">
+            <summary> Revit could not interop. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.WarningType.WrongAvailabilityClass">
+            <summary> Revit could not invoke IExternalCommandAvailability correctly. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.WarningType.UncaughtExceptionInAvailabilityClass">
+            <summary> Unhandled exceptions were caught when the availability command was executed. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.WarningType.InvalidTransactionAttributeError">
+            <summary> Not a valid transaction attribute. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.WarningType.InvalidRegenerationAttributeError">
+            <summary> Not a valid regeneration attribute. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.WarningType.NoVendorId">
+            <summary> Missing the required value of the VendorId node. </summary>
+        </member>
+        <member name="T:Autodesk.RevitAddIns.AddInArchitecture">
+            <summary> Defines the operating system architectures recognized by the Add-In utility. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.AddInArchitecture.OS32bit">
+            <summary> 32-bit operating system.  </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.AddInArchitecture.OS64bit">
+            <summary> 64-bit operating system. </summary>
+        </member>
+        <member name="T:Autodesk.RevitAddIns.RevitVersion">
+            <summary> Defines the versions of Revit supported by the Add-In utility. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.RevitVersion.Unknown">
+            <summary> Unknown. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.RevitVersion.Revit2011">
+            <summary> Revit 2011. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.RevitVersion.Revit2012">
+            <summary> Revit 2012. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.RevitVersion.Revit2013">
+            <summary> Revit 2013. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.RevitVersion.Revit2014">
+            <summary> Revit 2014. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.RevitVersion.Revit2015">
+            <summary> Revit 2015. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.RevitVersion.Revit2016">
+            <summary> Revit 2016. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.RevitVersion.Revit2017">
+            <summary> Revit 2017. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.RevitVersion.Revit2018">
+            <summary> Revit 2018. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.RevitVersion.Revit2019">
+            <summary> Revit 2019. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.RevitVersion.Revit2020">
+            <summary> Revit 2020. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.RevitVersion.Revit2021">
+            <summary> Revit 2021. </summary>
+        </member>
+        <member name="T:Autodesk.RevitAddIns.LanguageType">
+            <summary> Defines the language type of Revit Add-In. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.LanguageType.Unknown">
+            <summary> Unknown. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.LanguageType.English_USA">
+            <summary> English USA. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.LanguageType.German">
+            <summary> German. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.LanguageType.Spanish">
+            <summary> Spanish. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.LanguageType.French">
+            <summary> French. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.LanguageType.Italian">
+            <summary> Italian. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.LanguageType.Dutch">
+            <summary> Dutch. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.LanguageType.Chinese_Simplified">
+            <summary> Chinese Simplified. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.LanguageType.Chinese_Traditional">
+            <summary> Chinese Traditional. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.LanguageType.Japanese">
+            <summary> Japanese. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.LanguageType.Korean">
+            <summary> Korean. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.LanguageType.Russian">
+            <summary> Russian. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.LanguageType.Czech">
+            <summary> Czech. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.LanguageType.Polish">
+            <summary> Polish. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.LanguageType.Hungarian">
+            <summary> Hungarian. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.LanguageType.Brazilian_Portuguese">
+            <summary> Brazilian Portuguese. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.LanguageType.English_GB">
+            <summary> English GB. </summary>
+        </member>
+        <member name="T:Autodesk.RevitAddIns.ProductType">
+            <summary>An enumerated type containing the possible Revit product types. </summary>
+            <since>
+               2012
+            </since>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.ProductType.Architecture">
+            <summary> Architecture. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.ProductType.Structure">
+            <summary> Structure. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.ProductType.MEP">
+            <summary> MEP. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.ProductType.Revit">
+            <summary> Revit. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.ProductType.Unknown">
+            <summary> Unknown. </summary>
+        </member>
+        <member name="T:Autodesk.RevitAddIns.AddInManifestUtility">
+            <summary> This static class provides access to read the contents of manifests from Revit .addin files. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.AddInManifestUtility.GetRevitAddInManifest(System.String)">
+            <summary> Reads an AddInManifest from the input .addin file. </summary>
+            <param name="fileName"> The full path to a .addin file. </param>
+            <returns> The AddInManifest read from the file. </returns>
+            <exception cref="T:System.ArgumentNullException"> Thrown when input argument is <see langword="null"/>. </exception>
+            <exception cref="T:System.ArgumentException"> Thrown when file name is incorrect (it is not a .addin file),
+            or when the .addin file has an unrecognized format. </exception>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.AddInManifestUtility.GetRevitAddInManifests(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary> Reads all AddInManifests from the .addin files available in a folder. </summary>
+            <param name="folderPath"> The folder that contains some .addin files. </param>
+            <param name="invalidFormatManifestDictionary"> The dictionary is to hold invalid format manifest information,
+            and these invalid information can be handled later.
+            If it is <see langword="null"/>, those exceptions will be ignored simply.</param>
+            <returns> The collection of AddInManifests read from the file(s). </returns>
+            <exception cref="T:System.ArgumentNullException"> Thrown when the input argument is <see langword="null"/>. </exception>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.AddInManifestUtility.GetRevitAddInBundleManifests(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary> Reads all AddInManifests in bundle folders which are matched with revit version and os. </summary>
+            <param name="revitVersion"> Revit version. </param>
+            <param name="osString"> OS type, Win32 or Win64. </param>
+            <param name="invalidFormatManifestDictionary"> The dictionary is to hold invalid format manifest information,
+            and these invalid information can be handled later.
+            If it is <see langword="null"/>, those exceptions will be ignored simply.</param>
+            <returns> The collection of AddInManifests. </returns>
+            <exception cref="T:System.ArgumentNullException"> Thrown when the input argument is <see langword="null"/>. </exception>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.AddInManifestUtility.createRevitAddInManifest(System.String)">
+            <summary> Creates an AddInManifest with the input file name. </summary>
+            <param name="fileName"> The full path to a .addin file. </param>
+            <returns> The AddInManifest read from the file. </returns>
+            <exception cref="T:System.ArgumentNullException"> Thrown when input argument is <see langword="null"/>. </exception>
+            <exception cref="T:System.ArgumentException"> Thrown when file name is incorrect (it is not a .addin file),
+            or when the .addin file has an unrecognized format. </exception>
+            <remarks>This method will only create a new instance of RevitAddInManifest file with the input file name. It would not load the content of the manifest file.
+            To create a RevitAddInManifest file and load the content, please call <see cref="M:Autodesk.RevitAddIns.AddInManifestUtility.GetRevitAddInManifest(System.String)"/>
+            </remarks>
+        </member>
+        <member name="T:Autodesk.RevitAddIns.RevitAddInApplication">
+            <summary> Represents a Revit external application. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInApplication.#ctor(System.String,System.String,System.Guid,System.String,System.String)">
+            <summary> Creates a new instance of the external application info class. </summary>
+            <param name="name"> The application name. </param>
+            <param name="assembly"> The path and file name for the application assembly. </param>
+            <param name="addInId"> The unique identifier for the application. </param>
+            <param name="fullClassName"> The class name that implements IExternalApplication. </param>
+            <param name="vendorId"> The vendor id. </param>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInApplication.Name">
+            <summary> Application name. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInApplication.AddInName">
+            <summary> The readable name of the AddInItem. </summary>
+        </member>
+        <member name="T:Autodesk.RevitAddIns.RevitAddInCommand">
+            <summary> Represents a Revit external command. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInCommand.#ctor(System.String,System.Guid,System.String,System.String)">
+            <summary> Creates a new instance of the Add-In command info class. </summary>
+            <param name="assembly"> The path and file name for the command assembly. </param>
+            <param name="addInId"> The unique identifier for the command. </param>
+            <param name="fullClassName"> The class name that implements IExternalCommand. </param>
+            <param name="vendorId"> The vendor id. </param>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInCommand.Text">
+            <summary> The text displayed on the external command button. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInCommand.Description">
+            <summary> The short description and short tooltip for the command. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInCommand.LargeImage">
+            <summary> The path to the large image for the command button. </summary>
+            <remarks> This image will be shown on the button in the External Tools pulldown.
+            The image should be 32 x 32 pixels. If the image is larger it will be adjusted to fit the button. </remarks>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInCommand.LongDescription">
+            <summary> The text shown in the extended command tooltip. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInCommand.TooltipImage">
+            <summary> The image shown in the extended command tooltip. </summary>
+            <remarks> Recommended image size is 304 * 188 pixels. </remarks>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInCommand.VisibilityMode">
+            <summary> The modes in which the external command will be visible. </summary>
+            <remarks> There are 2 sets of modes where visibility can be set:
+            <item> Visibility affected by the type of active document. </item>
+            </remarks>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInCommand.Discipline">
+            <summary> The modes in which the external command will be visible. </summary>
+            <remarks> There is 1 set of mode where visibility can be set:
+            <item> Visibility affected by the availability of a certain discipline. </item>
+            </remarks>
+            <since>2013</since>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInCommand.AvailabilityClassName">
+            <summary> The full class name for the class providing the entry point to decide availability of this command. </summary>
+            <remarks> This is the class implementing IExternalCommandAvailability interface. </remarks>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInCommand.LanguageType">
+            <summary>
+            The language type of Revit Add-In.
+            </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInCommand.AddInName">
+            <summary> The readable name of the AddInItem. </summary>
+        </member>
+        <member name="T:Autodesk.RevitAddIns.RevitAddInDBApplication">
+            <summary> Represents a Revit DB external application. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInDBApplication.#ctor(System.String,System.String,System.Guid,System.String,System.String)">
+            <summary> Creates a new instance of the external DB application info class. </summary>
+            <param name="name"> The DB application name. </param>
+            <param name="assembly"> The path and file name for the DB application assembly. </param>
+            <param name="addInId"> The unique identifier for the application. </param>
+            <param name="fullClassName"> The class name that implements IExternalDBApplication. </param>
+            <param name="vendorId"> The vendor id. </param>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInDBApplication.Name">
+            <summary> DB Application name. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInDBApplication.LoadInRevitWorker">
+            <summary>Indicates whether or not a RevitWorker process will load this add-in.</summary>
+            <remarks>The default is false.</remarks>
+            <since>2017</since>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInDBApplication.AddInName">
+            <summary> The readable name of the AddInItem. </summary>
+        </member>
+        <member name="T:Autodesk.RevitAddIns.CodeSigningStatus">
+            <summary> The code signing status of the add in. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.CodeSigningStatus.Signed">
+            <summary> Signed. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.CodeSigningStatus.Unsigned">
+            <summary> Unsigned. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.CodeSigningStatus.Corrupt">
+            <summary> Corrupt. </summary>
+        </member>
+        <member name="T:Autodesk.RevitAddIns.RevitAddInItem">
+            <summary> Represents a single Revit Add-In. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.Assembly">
+            <summary> The file path for the assembly which defines the Add-In. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.AddInId">
+            <summary> The id for the Add-In. Each add-in must be assigned a unique identifier. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.FullClassName">
+            <summary> The full class name for the class providing the entry point into the Add-In. </summary>
+            <remarks> This is the class implementing IExternalCommand or IExternalApplication. </remarks>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.VendorId">
+            <summary> The vendor id. </summary>
+            <remarks> This is required by add-in application. </remarks>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.VendorDescription">
+            <summary> The vendor description. </summary>
+            <remarks>This should be a string that the user can use to identify the vendor. </remarks>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.SuppressedWarning">
+            <summary> A startup failure which, if it occurs, will be suppressed from the user. </summary>
+            <remarks> When Revit attempts to start an Add-In and fails to do so, it will show a message to the user about the error.
+            Users have the option to ignore that error in the future. This property is used to represent the user's choice to ignore an error.
+            Note that if a different error occurs for the Add-In, it will still be shown to the user. </remarks>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.ProductImage">
+            <summary> The product image. </summary>
+            <since>2014</since>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.ProductDescription">
+            <summary> The product description. </summary>
+            <since>2014</since>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.AllowLoadingIntoExistingSession">
+            <summary> The flag of loading permission. </summary>
+            <since>2014</since>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.ProductVersion">
+            <summary> The product version. </summary>
+            <since>2014</since>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.LoadCancelledByUser">
+            <summary> Indicates if load add in is cancelled by user or not. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.SigningStatus">
+            <summary> Code signing status of the add in.  </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.ClientIdString">
+            <summary> store the addInId string in case its invalid. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.IsInternalAddIn">
+            <summary>Indicates if the addin is internal or not.</summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.AbsoluteAssemblyPath">
+            <summary> The absolute file path for the assembly which defines the Add-In. </summary>
+            <remarks> NULL returns until set with the absolute file path in AddInManagerUtils::loadAddins().</remarks>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.AddInName">
+            <summary> The readable name of the AddInItem. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.ErrorTypeString">
+            <summary> The error type of the AddInItem. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInItem.AssemblyVersion">
+            <summary> The assembly version of the AddInItem. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInItem.#ctor">
+            <summary>
+            Creates a new instance of the Add-In info class.
+            </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInItem.#ctor(System.String,System.Guid,System.String,System.String)">
+            <summary> Creates a new instance of the Add-In info class. </summary>
+            <param name="assembly"> The path and file name for the addin assembly. </param>
+            <param name="addInId"> The unique identifier for the addin. </param>
+            <param name="fullClassName"> The class name of the addin. </param>
+            <param name="vendorId"> The vendor id. </param>
+        </member>
+        <member name="T:Autodesk.RevitAddIns.RevitAddInManifest">
+            <summary> Represents the contents of a single .addin file. </summary>
+            <remarks> The manifest contains a collection of external commands and external applications listed in the .addin file. </remarks>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.#ctor">
+            <summary> Constructs a new empty manifest. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInManifest.Name">
+            <summary> The file name which is associated with the manifest. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInManifest.FullName">
+            <summary> The full path and file name which is associated with the manifest. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInManifest.AddInApplications">
+            <summary> The collection of all external applications in the manifest. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInManifest.AddInDBApplications">
+            <summary> The collection of all external DB applications in the manifest. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInManifest.AddInCommands">
+            <summary> The collection of all external commands in the manifest. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.Save">
+            <summary> Saves the information in the manifest to its associated .addin file location. </summary>
+            <exception cref="T:System.ArgumentNullException"> Thrown when FullName is <see langword="null"/> or empty. </exception>
+            <exception cref="T:System.ArgumentException"> Thrown when FullName is incorrect (it is not a .addin file).
+            Or there are no external commands or applications to write to manifest file. </exception>
+            <exception cref="T:System.Xml.XmlException"> The operation would not result in a well formed XML document
+            (for example, no document element or duplicate XML declarations). </exception>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.SaveAs(System.String)">
+            <summary> Saves the information in the manifest as a new .addin file.. </summary>
+            <param name="fileName"> The full path and file name which is associated with the manifest. </param>
+            <exception cref="T:System.ArgumentNullException"> Thrown when file name argument is <see langword="null"/> or empty. </exception>
+            <exception cref="T:System.ArgumentException"> Thrown when file name is incorrect (it is not a .addin file).
+            Or there are no external commands or applications to write to manifest file.</exception>
+            <exception cref="T:System.Xml.XmlException"> The operation would not result in a well formed XML document
+            (for example, no document element or duplicate XML declarations). </exception>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.#ctor(System.String)">
+            <summary>Constructor, create a RevitAddInManifest which bind to an addin file,
+            if this addin file already exist, then we get and set information on this addin file, otherwise,
+            we create a new addin file. This constructor is a interface for user to create new addin file. </summary>
+            <param name="fileName">input an addin file</param>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.Load">
+            <summary> Reloads AddInManifest from addin file. </summary>
+            <exception cref="T:System.ArgumentNullException"> Thrown when input argument is <see langword="null"/>. </exception>
+            <exception cref="T:System.ArgumentException"> Filename is a zero-length string, contains only white space, or contains invalid characters. </exception>
+            <exception cref="T:System.Xml.XmlException"> There is a load or parse error in the XML. </exception>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.addAddIn(Autodesk.RevitAddIns.RevitAddInItem)">
+            <summary>Adds an AddIn to the manifest file. </summary>
+            <param name="addin">AddIn to be added.</param>
+            <remarks>The input addin will be added to AddInCommands, AddInApplications and AddInDBApplications based on its type.</remarks>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.removeAddIn(Autodesk.RevitAddIns.RevitAddInItem)">
+            <summary>Removes an AddIn from the manifest file. </summary>
+            <param name="addin">AddIn to be removed.</param>
+            <remarks>The input addin will be removed from AddInCommands, AddInApplications or AddInDBApplications based on its type.</remarks>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.addInExists(Autodesk.RevitAddIns.RevitAddInItem)">
+            <summary>Checks whether the manifest file includes the specified AddIn.</summary>
+            <param name="addin">AddIn to be checked.</param>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitAddInManifest.IsInternalAddIn">
+            <summary>Indicates if the addin is internal or not.</summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.getAddInItems">
+            <summary> Gets all the items registered in the manifest. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.createXMLForManifest">
+            <summary> Gets all the RevitAddInApplication and RevitAddInCommands from manifest and writes them to addin file. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.addAddInItemToXmlElement(System.Xml.XmlElement,Autodesk.RevitAddIns.RevitAddInItem)">
+            <summary> Writes info for RevitAddInItem to addin file, such ClientId, Assembly.....</summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.addApplicationToXmlElement(System.Xml.XmlElement,Autodesk.RevitAddIns.RevitAddInApplication)">
+            <summary> Writes info for RevitAddInApplication to addin file. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.addDBApplicationToXmlElement(System.Xml.XmlElement,Autodesk.RevitAddIns.RevitAddInDBApplication)">
+            <summary> Writes info for RevitAddInDBApplication to addin file. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.addCommandToXmlElement(System.Xml.XmlElement,Autodesk.RevitAddIns.RevitAddInCommand)">
+            <summary> Writes info for RevitAddInCommand to addin file, such as Text, TooltipImage ....</summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.parseExternalApplications(System.Xml.XmlNode)">
+            <summary> Parse addin file and get a list of external application. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.parseExternalDBApplications(System.Xml.XmlNode)">
+            <summary> Parse addin file and get a list of external DB application. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.parseExternalCommands(System.Xml.XmlNode)">
+            <summary> Parse addin file and get a list of external command. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.parseAddInItem(Autodesk.RevitAddIns.RevitAddInItem,System.Xml.XmlNode)">
+            <summary> Parse addin file and properties for AddInItem, such as ClientId, Assembly...</summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.parseCommandItems(Autodesk.RevitAddIns.RevitAddInCommand,System.Xml.XmlNode)">
+            <summary> Parse addin file and properties for application, such as Text, TooltipImage ...</summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.parseApplicationItems(Autodesk.RevitAddIns.RevitAddInApplication,System.Xml.XmlNode)">
+            <summary> Parse addin file and properties for application. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.parseDBApplicationItems(Autodesk.RevitAddIns.RevitAddInDBApplication,System.Xml.XmlNode)">
+            <summary> Parse addin file and properties for DB application. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.parseSuppressedWarning(System.String)">
+            <summary> Parse a string of WarningType. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.getFullPath(System.String)">
+            <summary> Check the validity of the input file name, and parse relative path. </summary>
+        </member>
+        <member name="T:Autodesk.RevitAddIns.RevitAddInManifest.IncorrectTagType">
+            <summary> Different types of error of tag name. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.getExceptionMessage(Autodesk.RevitAddIns.RevitAddInManifest.IncorrectTagType,System.String)">
+            <summary> Gets corresponding error message from error type. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitAddInManifest.getFilePath(System.String)">
+            <summary> Parses user's input file path, delete quotes, trim.... </summary>
+        </member>
+        <member name="T:Autodesk.RevitAddIns.RevitProduct">
+            <summary> Represents an installed instance of Revit on the local machine. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitProduct.AllUsersAddInFolder">
+            <summary> The folder path in which .addin files associated to all users will be located for this product. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitProduct.CurrentUserAddInFolder">
+            <summary> The folder path in which .addin files associated to the current user will be located for this product. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitProduct.InstallLocation">
+            <summary> The folder path where this Revit product is installed. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitProduct.Name">
+            <summary> User-visible name for this Revit product. such as : 'Autodesk Revit Architecture 2010'. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitProduct.Architecture">
+            <summary> The system architecture of this Revit product installation. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitProduct.ProductCode">
+            <summary> The id used to locate and identify the Revit product from the registry. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitProduct.Version">
+            <summary> The version for this Revit product. Such as: '2010'. </summary>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitProduct.Subversion">
+            <summary> The release subversion. </summary>
+            <since>
+               2012
+            </since>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitProduct.Product">
+            <summary> The product type. </summary>
+            <since>
+               2012
+            </since>
+        </member>
+        <member name="P:Autodesk.RevitAddIns.RevitProduct.ReleaseSubVersion">
+            <summary>The string for the release sub versions.</summary>
+            <remarks>SubVersion releases may have additional APIs and functionality not available in the standard customer releases. Add-ins written to support standard Revit releases should be compatible with Subversion releases, but add-ins written specifically targeting new features in Subversion releases would not be compatible with the standard releases. </remarks>
+            <since>
+               2018
+            </since>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitProduct.GetInstalledLanguages">
+            <summary> Gets the installed language types. </summary>
+            <returns>
+               The installed language types.
+            </returns>
+            <since>
+               2014
+            </since>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitProduct.#ctor">
+            <summary> Default constructor </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitProduct.#ctor(System.Guid,Autodesk.RevitAddIns.ProductType,Autodesk.RevitAddIns.AddInArchitecture,Autodesk.RevitAddIns.RevitVersion)">
+            <summary> Constructor, set basic info for an Revit product. </summary>
+            <param name="productCode"> Use to uniquely identify each product, it's a GUID. </param>
+            <param name="product"> Use to identify product type. </param>
+            <param name="architecture"> Architecture information, such as 32bit or 64bit. </param>
+            <param name="version"> Define the version number, such as 2010, 2011. </param>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitProduct.getSubscriptionValue">
+            <summary>Gets the SubscriptionUpdate value from the registry. </summary>
+        </member>
+        <member name="T:Autodesk.RevitAddIns.RevitProductUtility">
+            <summary> Provides access to installed versions of Revit on the local machine. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitProductUtility.GetAllInstalledRevitProducts">
+            <summary> Gets a list of Revit products installed on this machine. </summary>
+            <remarks>This operation parses the registry for necessary information about the installation(s).
+            An incomplete or incorrect installation of Revit may not be returned correctly by this utility.</remarks>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitProductUtility.initializeProductsDictionary">
+             <summary>
+             Initialize a dictionary to store all the RevitProducts which
+             can be supported by this RevitAddInUtility
+            
+             NOTE: This method only initializes the product codes for Revit 2011 and RVT 2013.
+             Since 2012 we analysis the Revit product code (not include the dynamo) of RevitDB.dll component with a fixed pattern,
+             please see RevitProductUtility::getRevitProduct method for more details.
+             </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitProductUtility.getInstalledProductInfo(System.String)">
+            <summary> Gets information of installed Revit from registry. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitProductUtility.getInstalledRevitProductCodes">
+            <summary> Gets product codes of the installed Revits. </summary>
+        </member>
+        <member name="M:Autodesk.RevitAddIns.RevitProductUtility.getRevitProduct(System.String)">
+            <summary> Gets product information with the product code. </summary>
+        </member>
+        <member name="F:Autodesk.RevitAddIns.RevitProductUtility.m_productsHashtable">
+            <summary> Is used to store all the RevitProduct which can be supported by this RevitAddInUtility.</summary>
+        </member>
+    </members>
+</doc>
